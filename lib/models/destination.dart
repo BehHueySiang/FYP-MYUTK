@@ -28,7 +28,7 @@ class Des {
   Des.fromJson(Map<String, dynamic> json) {
     DesId = json['Des_id'];
     userId = json['userid'];
-    DesName = json['Des_name'];
+    DesName = json['Des_Name'];
     Url = json['Url'];
     OpenTime = json['Open_Time'];
     CloseTime = json['Close_Time'];
@@ -44,7 +44,7 @@ class Des {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Des_id'] = DesId;
     data['user_id'] = userId;
-    data['Des_name'] = DesName;
+    data['Des_Name'] = DesName;
     data['Url'] = Url;
     data['Open_Time'] = OpenTime;
     data['Close_Time'] = CloseTime;

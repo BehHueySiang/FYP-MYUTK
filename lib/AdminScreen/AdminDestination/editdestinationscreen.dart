@@ -9,16 +9,16 @@ import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 
 
-class adddestinationscreen extends StatefulWidget {
+class editdestinationscreen extends StatefulWidget {
   final User user;
   final Des destinationinfo;
-  const adddestinationscreen({super.key, required this.user, required this.destinationinfo});
+  const editdestinationscreen({super.key, required this.user, required this.destinationinfo});
 
   @override
-  State<adddestinationscreen> createState() => _adddestinationscreenState();
+  State<editdestinationscreen> createState() => _editdestinationscreenState();
 }
 
-class _adddestinationscreenState extends State<adddestinationscreen> {
+class _editdestinationscreenState extends State<editdestinationscreen> {
      List<File?> _images = List.generate(3, (_) => null);
      int index = 0;
      List<Des> DesList = <Des>[];
@@ -50,6 +50,22 @@ class _adddestinationscreenState extends State<adddestinationscreen> {
         ];
 
       @override
+       void initState() {
+    super.initState();
+    _DesnameEditingController.text = widget.destinationinfo.DesName.toString();
+    _UrlEditingController.text = widget.destinationinfo.Url.toString();
+    _OpenTimeEditingController.text =widget.destinationinfo.OpenTime.toString() ;
+    _CloseTimeEditingController.text = widget.destinationinfo.CloseTime.toString();
+    _SuggestTimeEditingController.text = widget.destinationinfo.DesBudget.toString();
+    _ActivityEditingController.text = widget.destinationinfo.Activity.toString();
+    _DesBudgetEditingController.text = widget.destinationinfo.DesBudget.toString();
+    
+    DesRate = widget.destinationinfo.DesRate.toString();
+    DesState = widget.destinationinfo.DesState.toString();
+  }
+
+
+      @override
         Widget build(BuildContext context) {
            screenHeight = MediaQuery.of(context).size.height;
            screenWidth = MediaQuery.of(context).size.width;
@@ -68,7 +84,7 @@ class _adddestinationscreenState extends State<adddestinationscreen> {
               ]
             ),
             backgroundColor: Colors.amber[50],
-            
+            //////////////////////////
              body: SingleChildScrollView( // Make the entire body scrollable
       child: Column(children: [ SizedBox(
                           height: screenHeight / 3, 
@@ -202,7 +218,10 @@ class _adddestinationscreenState extends State<adddestinationscreen> {
                                     const SizedBox(height: 20,),
                TextFormField(
                               textInputAction: TextInputAction.next,
-                              
+                              validator: (val) =>
+                                  val!.isEmpty || (val.length < 3)
+                                      ? ""
+                                      : null,
                                maxLines: 4,       
                               onFieldSubmitted: (v) {},
                               controller: _ActivityEditingController,
@@ -285,7 +304,12 @@ class _adddestinationscreenState extends State<adddestinationscreen> {
                           flex: 3,
                           child:  TextFormField(
                               textInputAction: TextInputAction.next,
-                             
+                              validator: (val) =>
+                                  val!.isEmpty || (val.length < 3)
+                                      ? ""
+                                      : null,
+                                    
+                              onFieldSubmitted: (v) {},
                               controller: _DesBudgetEditingController,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
@@ -419,7 +443,7 @@ void insertDestination() {
     String CloseTime = _CloseTimeEditingController.text;
     String SuggestTime = _SuggestTimeEditingController.text;
     String Activity = _ActivityEditingController.text;
-    String DesBudget = _DesBudgetEditingController.text;
+    String DesBudget = _ActivityEditingController.text;
 
     String base64Image = base64Encode(_images[0]!.readAsBytesSync());
     String base64Image1 = base64Encode(_images[1]!.readAsBytesSync());
@@ -460,4 +484,22 @@ void insertDestination() {
       }
     });
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

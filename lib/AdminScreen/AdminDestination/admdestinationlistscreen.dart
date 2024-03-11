@@ -30,15 +30,15 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
   late List<Widget> tabchildren;
   String maintitle = "Adm Destination List";
     int numofpage = 1, curpage = 1;
-  List<Des> DesList = <Des>[];
+  List<Des> Deslist = <Des>[];
   int index = 0;
   var color;
   Des destinationinfo = Des();
   @override
   void initState() {
     super.initState();
-    loadDes(index);
-    print("Owner");
+    loaddes(index);
+    print("AddDesList");
   }
 
 
@@ -55,7 +55,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
     if (screenWidth > 600) {
       axiscount = 3;
     } else {
-      axiscount = 2;
+      axiscount = 1;
     }
     return Scaffold(
       appBar: AppBar(
@@ -117,50 +117,102 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
                   ),
                 ),
               ),
-              
-           Expanded(child: DesList.isEmpty
+              const SizedBox(height: 10,),
+           Expanded(
+            
+            child: Deslist.isEmpty
               ? Center(
                   child: Text("No Data"),
                 )
 : GridView.builder(
+
     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: axiscount,
+      childAspectRatio: (6/ 2), // Adjust this value according to your images aspect ratio
       // You may need to adjust childAspectRatio according to your item's aspect ratio
     ),
-    itemCount: DesList.length,
+    itemCount: Deslist.length,
     itemBuilder: (context, index) {
-      return Card(
-        elevation: 2,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: CachedNetworkImage(
-                fit: BoxFit.cover,
-                imageUrl: "${MyConfig().SERVER}/myutk/assets/Des/${DesList[index].DesId}_image0.png?v=${DateTime.now().millisecondsSinceEpoch}",
-                placeholder: (context, url) => const LinearProgressIndicator(),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+      return Container(
+                  width: 380, // Adjust width as needed
+                  height: 350, 
+                  // Adjust height as needed
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10), // Adjust border radius as needed
+                    color: Colors.white, // You can set any color you like for the background
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child:Card(
+  elevation: 2, // Optional: Adds a slight shadow to the card
+  child: Row(
+    children: <Widget>[
+      Expanded(
+        flex: 3, // Adjust the flex to control the size ratio between the image and the text/icons
+        child: CachedNetworkImage(
+          fit: BoxFit.cover,
+          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Deslist[index].DesId}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+          placeholder: (context, url) => const LinearProgressIndicator(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
+      ),
+      Expanded(
+  flex: 4, // Adjust the flex to control the size ratio between the image and the text/icons
+  child: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add padding around the text and icons
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded( // Wrap the text in an Expanded widget to allow for centering.
+          child: FittedBox( // Ensures that the text fits within the available space.
+            fit: BoxFit.scaleDown,
+            child: Text(
+               Deslist[index].DesName.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
+              textAlign: TextAlign.center, // Center text horizontally.
             ),
-           
-            ButtonBar(
-              alignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    // Your edit action
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    // Your delete action
-                  },
-                ),
-              ],
+          ),
+        ),
+        // The icons row will be aligned at the bottom.
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end, // Aligns the icons to the right
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                // Your edit action
+              },
             ),
-            SizedBox(
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                 onDeleteDialog(index);
+                
+              },
+            ),
+          ],
+        ),
+      ],
+    ),
+  ),
+),
+
+    ],
+  ),
+));
+    },
+  ),
+),SizedBox(
                 height: 50,
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -177,7 +229,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
                     return TextButton(
                         onPressed: () {
                           curpage = index + 1;
-                          loadDes(index + 1);
+                          loaddes(index + 1);
                         },
                         child: Text(
                           (index + 1).toString(),
@@ -186,12 +238,6 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
                   },
                 ),
               ),
-          ],
-        ),
-      );
-    },
-  ),
-),
             ]),
       floatingActionButton: FloatingActionButton(
           onPressed: () async {
@@ -204,7 +250,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
                   MaterialPageRoute(
                       builder: (content) => adddestinationscreen(user: widget.user, destinationinfo: destinationinfo)
                           ));
-              loadDes(index);
+              loaddes(index);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Please login/register an account")));
@@ -214,10 +260,11 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
             "+",
             style: TextStyle(fontSize: 32),
           ),backgroundColor: Colors.amber,),
+          
           ); 
   }
 
-  void loadDes(int pg) {
+  void loaddes(int pg) {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -225,24 +272,24 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/mybarter/php/load_Des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
         body: {"userid": widget.user.id}).then((response) {
-      //print(response.body);
+      print(response.body);
       //log(response.body);
-      DesList.clear();
+      Deslist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
           var extractdata = jsondata['data'];
-          extractdata['Dess'].forEach((v) {
-            DesList.add(Des.fromJson(v));
+          extractdata['Des'].forEach((v) {
+            Deslist.add(Des.fromJson(v));
              
-          DesList.forEach((element) {
+          Deslist.forEach((element) {
            
           });
 
           });
-          print(DesList[0].DesName);
+          print(Deslist[0].DesName);
         }
         setState(() {});
       }
@@ -256,7 +303,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            "Delete ${DesList[index].DesName}?",
+            "Delete ${Deslist[index].DesName}?",
           ),
           content: const Text("Are you sure?", style: TextStyle()),
           actions: <Widget>[
@@ -286,19 +333,19 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
   }
 
   void deleteDes(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/mybarter/php/delete_Des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_des.php"),
         body: {
           "userid": widget.user.id,
-          "Desid": DesList[index].DesId
+          "DesId": Deslist[index].DesId
         }).then((response) {
       print(response.body);
-      //DesList.clear();
+      //Deslist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Delete Success")));
-          loadDes(index);
+          loaddes(index);
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Failed")));
@@ -306,11 +353,29 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
       }
     });
   }
- 
+ void _performSearch(String keyword) {
+  
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+        body: {
+          "userid":  widget.user.id,
+          "search": keyword
+        }).then((response) {
+      //print(response.body);
+      log(response.body);
+      Deslist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          var extractdata = jsondata['data'];
+          extractdata['Des'].forEach((v) {
+            Deslist.add(Des.fromJson(v));
+          });
+          print(Deslist[0].DesName);
+        }
+        setState(() {});
+      }
+    });
+  
+  }
    
 }
-void _performSearch(String keyword) {
-    // Implement your search logic here
-    print('Searching for: $keyword');
-    // Add your logic to handle the search results
-  }
