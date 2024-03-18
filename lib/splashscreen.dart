@@ -9,102 +9,119 @@ import 'package:http/http.dart' as http;
 import 'models/user.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => SplashScreenState();
 }
 
 class SplashScreenState extends State<SplashScreen> {
-  
+  final TextEditingController _emailEditingController =
+      TextEditingController();
+  final TextEditingController _passEditingController =
+      TextEditingController();
+
+  late double screenHeight, screenWidth, cardwitdh;
+  bool _isChecked = false;
+
   @override
-  
   void initState() {
     super.initState();
     checkAndLogin();
-    //loadPref();
-    // Timer(
-    //     const Duration(seconds: 3),
-    //     () => Navigator.pushReplacement(context,
-    //         MaterialPageRoute(builder: (content) =>  MainScreen())));
+    loadPref();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
             decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/images/splashscreen.png'),
-                    fit: BoxFit.cover))),
-       
-              
-              CircularProgressIndicator(),
-              
-           
-      ],
-    ));
+              image: DecorationImage(
+                image: AssetImage('assets/images/splashscreen.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          CircularProgressIndicator(),
+        ],
+      ),
+    );
   }
 
-  checkAndLogin() async {
+  Future<void> checkAndLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String email = (prefs.getString('email')) ?? '';
-    String password = (prefs.getString('pass')) ?? '';
-    bool ischeck = (prefs.getBool('checkbox')) ?? false;
-    late User user  ;
+    String email = prefs.getString('email') ?? '';
+    String password = prefs.getString('password') ?? '';
+    bool ischeck = prefs.getBool('checkbox') ?? false;
+
+    late User user;
+
     if (ischeck) {
-       try {
-        http.post(
-            Uri.parse("${MyConfig().SERVER}/myutkdraf/php/login_user.php"),
-            body: {"email": email, "password": password}).then((response) {
-          
-           var jsondata = jsonDecode(response.body);
-          if (response.statusCode == 200 && jsondata['data']!=null) {
-            user = User.fromJson(jsondata['data']);
-            Timer(
-                const Duration(seconds: 3),
-                () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (content) =>  MainScreen(user: user))));
+      try {
+        http.Response response = await http.post(
+          Uri.parse("${MyConfig().SERVER}/myutkdraf/php/login_user.php"),
+          body: {"email": email, "password": password},
+        );
+
+        if (response.statusCode == 200) {
+          var jsonResponse = jsonDecode(response.body);
+          if (jsonResponse['data'] != null) {
+            user = User.fromJson(jsonResponse['data']);
           } else {
-            user = User(
-                id: "na",
-                name: "na",
-                email: "na",
-                phone: "na",
-                datereg: "na",
-                password: "na",
-                otp: "na");
-            Timer(
-                const Duration(seconds: 3),
-                () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (content) => MainScreen(user: user))));
+            // Handle case where data is null
+            throw Exception('Data is null');
           }
-        }).timeout(const Duration(seconds: 5), onTimeout: () {
-          // Time has run out, do what you wanted to do.
-        });
-         } on TimeoutException catch (_) {
-        print("Time out");
-      }
-    } else {
-      user = User(
+        } else {
+          // Handle non-200 status code
+          throw Exception('Failed to load data');
+        }
+      } catch (e) {
+        // Handle error during HTTP request or JSON parsing
+        print('Error: $e');
+        user = User(
           id: "na",
           name: "na",
           email: "na",
           phone: "na",
           datereg: "na",
           password: "na",
-          otp: "na");
-      Timer(
-          const Duration(seconds: 3),
-          () => Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (content) =>  MainScreen(user: user))));
+          otp: "na",
+        );
+      }
+    } else {
+      user = User(
+        id: "na",
+        name: "na",
+        email: "na",
+        phone: "na",
+        datereg: "na",
+        password: "na",
+        otp: "na",
+      );
+    }
+
+    Timer(
+      const Duration(seconds: 3),
+      () => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (content) => MainScreen(user: user)),
+      ),
+    );
+  }
+
+  Future<void> loadPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String email = prefs.getString('email') ?? '';
+    String password = prefs.getString('password') ?? '';
+    _isChecked = prefs.getBool('checkbox') ?? false;
+    if (_isChecked) {
+      setState(() {
+        _emailEditingController.text = email;
+        _passEditingController.text = password;
+      });
     }
   }
 }

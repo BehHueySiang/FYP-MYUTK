@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/models/user.dart';
+import 'package:myutk/models/destination.dart';
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/registrationscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  
   final TextEditingController _emailEditingController =
       TextEditingController();
   final TextEditingController _passEditingController =
@@ -183,7 +185,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void onLogin() {
+  void onLogin() async {
+    
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Check your input")));
@@ -193,6 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String pass = _passEditingController.text;
     print(pass);
     try {
+     
       http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/login_user.php"),
           body: {
             "email": email,
@@ -208,9 +212,10 @@ class _LoginScreenState extends State<LoginScreen> {
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(content: Text("Login Success")));
             if (pass == adminPassword) {
+          
                Navigator.pushReplacement(
               context,
-               MaterialPageRoute(builder: (content) => AdminMainScreen(user: user)),
+               MaterialPageRoute(builder: (content) => AdminMainScreen(user: user, )),
                );
             } else {
               Navigator.pushReplacement(

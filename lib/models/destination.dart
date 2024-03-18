@@ -1,58 +1,58 @@
 class Des {
-  String? DesId;
+  String? desid;
   String? userId;
-  String? DesName;
-  String? Url;
-  String? OpenTime;
-  String? CloseTime;
-  String? SuggestTime;
-  String? Activity;
-  String? DesState;
-  String? DesRate;
-  String? DesBudget;
+  String? desname;
+  String? url;
+  String? opentime;
+  String? closetime;
+  String? suggesttime;
+  String? activity;
+  String? desstate;
+  String? desrate;
+  String? desbudget;
   
 
   Des(
-      {this.DesId,
+      {this.desid,
       this.userId,
-      this.DesName,
-      this.Url,
-      this.OpenTime,
-      this.CloseTime,
-      this.SuggestTime,
-      this.Activity,
-      this.DesState,
-      this.DesRate,
-      this.DesBudget});
+      this.desname,
+      this.url,
+      this.opentime,
+      this.closetime,
+      this.suggesttime,
+      this.activity,
+      this.desstate,
+      this.desrate,
+      this.desbudget});
 
   Des.fromJson(Map<String, dynamic> json) {
-    DesId = json['Des_id'];
+    desid = json['Des_id'];
     userId = json['userid'];
-    DesName = json['Des_Name'];
-    Url = json['Url'];
-    OpenTime = json['Open_Time'];
-    CloseTime = json['Close_Time'];
-    SuggestTime = json['Suggest_Time'];
-    Activity = json['Activity'];
-    DesState = json['Des_State'];
-    DesRate = json['Des_Rate'];
-    DesBudget = json['Des_Budget'];
+    desname = json['Des_Name'];
+    url = json['Url'];
+    opentime = json['Open_Time'];
+    closetime = json['Close_Time'];
+    suggesttime = json['Suggest_Time'];
+    activity = json['Activity'];
+    desstate = json['Des_State'];
+    desrate = json['Des_Rate'];
+    desbudget = json['Des_Budget'];
     
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Des_id'] = DesId;
+    data['Des_id'] = desid;
     data['user_id'] = userId;
-    data['Des_Name'] = DesName;
-    data['Url'] = Url;
-    data['Open_Time'] = OpenTime;
-    data['Close_Time'] = CloseTime;
-    data['Suggest_Time'] = SuggestTime;
-    data['Activity'] = Activity;
-    data['Des_State'] = DesState;
-    data['Des_Rate'] = DesRate;
-    data['Des_Budget'] = DesBudget;
+    data['Des_Name'] = desname;
+    data['Url'] = url;
+    data['Open_Time'] = opentime;
+    data['Close_Time'] = closetime;
+    data['Suggest_Time'] = suggesttime;
+    data['Activity'] = activity;
+    data['Des_State'] = desstate;
+    data['Des_Rate'] = desrate;
+    data['Des_Budget'] = desbudget;
     return data;
   }
 }

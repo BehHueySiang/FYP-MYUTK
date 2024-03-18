@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myutk/models/user.dart';
 import 'package:myutk/models/destination.dart';
@@ -11,8 +12,8 @@ import 'package:myutk/ipconfig.dart';
 
 class editdestinationscreen extends StatefulWidget {
   final User user;
-  final Des destinationinfo;
-  const editdestinationscreen({super.key, required this.user, required this.destinationinfo});
+   Des destination;
+   editdestinationscreen({super.key, required this.user, required this.destination});
 
   @override
   State<editdestinationscreen> createState() => _editdestinationscreenState();
@@ -21,7 +22,7 @@ class editdestinationscreen extends StatefulWidget {
 class _editdestinationscreenState extends State<editdestinationscreen> {
      List<File?> _images = List.generate(3, (_) => null);
      int index = 0;
-     List<Des> DesList = <Des>[];
+     List<Des> Deslist = <Des>[];
     
      var pathAsset = "assets/images/camera1.png";
      final _formKey = GlobalKey<FormState>();
@@ -40,11 +41,11 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
           TextEditingController();
       final TextEditingController _DesBudgetEditingController =
           TextEditingController();
-      String DesRate = "1";
+      String desrate = "1";
         List<String> Ratelist = [
           "1","2","3","4","5","6","7","8","9","10",
         ];
-        String DesState = "Kedah";
+        String desstate = "Kedah";
         List<String> Statelist = [
           "Kedah","Pulau Penang","Perlis"
         ];
@@ -52,16 +53,27 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
       @override
        void initState() {
     super.initState();
-    _DesnameEditingController.text = widget.destinationinfo.DesName.toString();
-    _UrlEditingController.text = widget.destinationinfo.Url.toString();
-    _OpenTimeEditingController.text =widget.destinationinfo.OpenTime.toString() ;
-    _CloseTimeEditingController.text = widget.destinationinfo.CloseTime.toString();
-    _SuggestTimeEditingController.text = widget.destinationinfo.DesBudget.toString();
-    _ActivityEditingController.text = widget.destinationinfo.Activity.toString();
-    _DesBudgetEditingController.text = widget.destinationinfo.DesBudget.toString();
-    
-    DesRate = widget.destinationinfo.DesRate.toString();
-    DesState = widget.destinationinfo.DesState.toString();
+    print('Debug destination: ${widget.destination.toJson()}');
+    _DesnameEditingController.text = widget.destination.desname.toString();
+    _UrlEditingController.text = widget.destination.url.toString();
+    _OpenTimeEditingController.text = widget.destination.opentime.toString();
+    _CloseTimeEditingController.text = widget.destination.closetime.toString();
+    _SuggestTimeEditingController.text = widget.destination.suggesttime.toString();
+    _ActivityEditingController.text = widget.destination.activity.toString();
+    _DesBudgetEditingController.text = widget.destination.desbudget.toString();
+    desrate = widget.destination.desrate.toString();
+    desstate = widget.destination.desstate.toString();
+     if (!Ratelist.contains(widget.destination.desrate)) {
+    desrate = Ratelist.first;
+  }
+
+  // Check if the selected desstate is in the Statelist, if not set it to the first item
+  if (!Statelist.contains(widget.destination.desstate)) {
+    desstate = Statelist.first;
+  
+}
+
+ 
   }
 
 
@@ -86,29 +98,61 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
             backgroundColor: Colors.amber[50],
             //////////////////////////
              body: SingleChildScrollView( // Make the entire body scrollable
-      child: Column(children: [ SizedBox(
-                          height: screenHeight / 3, 
-                      child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      children: List.generate(3, (index) {
-                      return GestureDetector(
-                         onTap: () {
-                         _selectFromCamera(index);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                            child: Card(
-                              child: Container(
-                                  width: screenWidth,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: _images[index] == null
-                                          ? AssetImage(pathAsset)
-                                          : FileImage(_images[index]!) as ImageProvider,
-                                      fit: BoxFit.contain,
-                        ),)),),), ); }))
+      child: Column(children: [ Card(
+            child: SizedBox(
+              height: screenHeight / 2.5,
+             child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                    child: Card(
+                      child: Container(
+                        width: screenWidth,
+                        child: CachedNetworkImage(
+                          width: screenWidth,
+                          fit: BoxFit.cover,
+                          imageUrl:  "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          placeholder: (context, url) => const LinearProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                        ),
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                    child: Card(
+                      child: Container(
+                        width: screenWidth,
+                        child: CachedNetworkImage(
+                          width: screenWidth,
+                          fit: BoxFit.cover,
+                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          placeholder: (context, url) => const LinearProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                    child: Card(
+                      child: Container(
+                        width: screenWidth,
+                        child: CachedNetworkImage(
+                          width: screenWidth,
+                          fit: BoxFit.cover,
+                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          placeholder: (context, url) => const LinearProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
                    
           
         
@@ -123,21 +167,25 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                   
                         
                         TextFormField(
-                              textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? "Destination name must be longer than 3"
-                                      : null,
-                              onFieldSubmitted: (v) {},
-                              controller: _DesnameEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Destination Name',
-                                  labelStyle: TextStyle(color: Colors.amber),
-                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),)),),
+                                          textInputAction: TextInputAction.next,
+                                          validator: (val) =>
+                                              val!.isEmpty || (val.length < 3)
+                                                  ? "Destination name must be longer than 3"
+                                                  : null,
+                                          onFieldSubmitted: (v) {},
+                                          controller: _DesnameEditingController,
+                                          keyboardType: TextInputType.text,
+                                          decoration: const InputDecoration(
+                                            labelText: 'Destination Name',
+                                            labelStyle: TextStyle(color: Colors.amber),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(width: 2.0),
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(width: 2.0),
+                                            ),
+                                          ),
+                                        ),
                                     const SizedBox(height: 20,),
                     TextFormField(
                               textInputAction: TextInputAction.next,
@@ -235,7 +283,7 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                                     borderSide: BorderSide(width: 2.0),)),),
                                const SizedBox(height: 20,),
                   //DesState
-                  SizedBox(
+                    SizedBox(
                               height: 60,
                               child: DropdownButtonFormField(
                                 decoration: const InputDecoration(
@@ -248,18 +296,18 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                                     borderSide: BorderSide(width: 2.0),
                                   ),
                                 ),
-                                value: DesState,
+                                value: desstate,
                                 onChanged: (newValue) {
                                   setState(() {
-                                    DesState = newValue!;
-                                    print(DesState);
+                                    desstate = newValue!;
+                                    print(desstate);
                                   });
                                 },
-                                items: Statelist.map((DesState) {
+                                items: Statelist.map((desstate) {
                                   return DropdownMenuItem(
-                                    value: DesState,
+                                    value: desstate,
                                     child: Text(
-                                      DesState,
+                                      desstate,
                                     ),
                                   );
                                 }).toList(),
@@ -280,18 +328,18 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                                     borderSide: BorderSide(width: 2.0),
                                   ),
                                 ),
-                                value: DesRate,
+                                value: desrate,
                                 onChanged: (newValue) {
                                   setState(() {
-                                    DesRate = newValue!;
-                                    print(DesRate);
+                                    desrate = newValue!;
+                                    print(desrate);
                                   });
                                 },
-                                items: Ratelist.map((DesRate) {
+                                items: Ratelist.map((desrate) {
                                   return DropdownMenuItem(
-                                    value: DesRate,
+                                    value: desrate,
                                     child: Text(
-                                      DesRate,
+                                      desrate,
                                     ),
                                   );
                                 }).toList(),
@@ -327,7 +375,7 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                       height: 50,
                       child: ElevatedButton(
                           onPressed: () {
-                            insertDialog();
+                            updateDestination();
                           },
                           child: const Text("Submit",style: TextStyle(color: Colors.black), ),
                           style: ButtonStyle(
@@ -340,129 +388,32 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
             ),]),),);
     
   }
-Future<void> _selectFromCamera(index) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxHeight: 1200,
-      maxWidth: 800,
-    );
 
-    if (pickedFile != null) {
-      _images[index] = File(pickedFile.path);
-      cropImage(index);
-    } else {
-      print('No image selected.');
-    }
-  }
- Future<void> cropImage(index) async {
-    CroppedFile? croppedFile = await ImageCropper().cropImage(
-      sourcePath: _images[index]!.path,
-      aspectRatioPresets: [
-        
-        CropAspectRatioPreset.ratio3x2,
-        
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.ratio3x2,
-            lockAspectRatio: true),
-        IOSUiSettings(
-          title: 'Cropper',
-        ),
-      ],
-    );
-    if (croppedFile != null) {
-      File imageFile = File(croppedFile.path);
-      _images[index] = imageFile;
-      int? sizeInBytes = _images[index]?.lengthSync();
-      double sizeInMb = sizeInBytes! / (1024 * 1024);
-      print(sizeInMb);
-
-      setState(() {});
-    }
-  }
- void insertDialog() {
-    if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Check your input")));
-      return;
-    }
-    if (_images[index] == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Please take picture")));
-      return;
-    }
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: const Text(
-            "Insert your Destination?",
-            style: TextStyle(),
-          ),
-          content: const Text("Are you sure?", style: TextStyle()),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                "Yes",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                insertDestination();
-                //registerUser();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                "No",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-           
-          ],
-        );
-      },
-    );
-  }
-
-  //////////////
-void insertDestination() {
+  
+void updateDestination() {
     String DesName = _DesnameEditingController.text;
     String Url = _UrlEditingController.text;
     String OpenTime = _OpenTimeEditingController.text;
     String CloseTime = _CloseTimeEditingController.text;
     String SuggestTime = _SuggestTimeEditingController.text;
     String Activity = _ActivityEditingController.text;
-    String DesBudget = _ActivityEditingController.text;
+    String DesBudget = _DesBudgetEditingController.text;
 
-    String base64Image = base64Encode(_images[0]!.readAsBytesSync());
-    String base64Image1 = base64Encode(_images[1]!.readAsBytesSync());
-    String base64Image2 = base64Encode(_images[2]!.readAsBytesSync());
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/insert_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/update_des.php"),
         body: {
           "userid": widget.user.id.toString(),
-          "DesName": DesName,
-          "Url": Url,
-          "OpenTime": OpenTime,
-          "CloseTime": CloseTime,
-          "SuggestTime": SuggestTime,
-          "Activity": Activity,
-          "DesBudget": DesBudget,
-          "DesState": DesState,
-          "DesRate": DesRate,
-          "image": base64Image,
-          "image1": base64Image1,
-          "image2": base64Image2
+          "DesId": widget.destination.desid,
+          "desname": DesName,
+          "url": Url,
+          "opentime": OpenTime,
+          "closetime": CloseTime,
+          "suggesttime": SuggestTime,
+          "activity": Activity,
+          "desbudget": DesBudget,
+          "desrate": desrate,
+          "desstate": desstate,
+        
+   
         }).then((response) {
       print(response.body);
       if (response.statusCode == 200) {
@@ -484,22 +435,5 @@ void insertDestination() {
       }
     });
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

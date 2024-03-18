@@ -12,32 +12,34 @@ import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:myutk/UserScreen/UserDestination/destinationdetailscreen.dart';
 import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.dart';
+import 'package:myutk/AdminScreen/AdminDestination/editdestinationscreen.dart';
 
 
 class admdestinationlistscreen extends StatefulWidget {
   final User user;
-  final Des destinationinfo;
-  const admdestinationlistscreen({super.key, required this.user,required this.destinationinfo});
+  
+  const admdestinationlistscreen({super.key, required this.user,});
 
   @override
   State<admdestinationlistscreen> createState() => _admdestinationlistscreenState();
 }
 
 class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
+  Des destination = Des ();
   late double screenHeight, screenWidth;
   TextEditingController _searchController = TextEditingController();
   late int axiscount = 2;
   late List<Widget> tabchildren;
   String maintitle = "Adm Destination List";
-    int numofpage = 1, curpage = 1;
+    int numofpage = 1, curpage = 1, numberofresult = 0;
   List<Des> Deslist = <Des>[];
-  int index = 0;
+ 
   var color;
-  Des destinationinfo = Des();
+  
   @override
   void initState() {
     super.initState();
-    loaddes(index);
+    loaddes(1);
     print("AddDesList");
   }
 
@@ -133,10 +135,9 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
     ),
     itemCount: Deslist.length,
     itemBuilder: (context, index) {
-      return Container(
-                  width: 380, // Adjust width as needed
-                  height: 350, 
-                  // Adjust height as needed
+      return Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10), // Adjust border radius as needed
                     color: Colors.white, // You can set any color you like for the background
@@ -150,20 +151,27 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
                     ],
                   ),
                   child:Card(
-  elevation: 2, // Optional: Adds a slight shadow to the card
+                    child: InkWell(
+                     onTap: () async {
+                                
+                                Des destination =Des.fromJson(Deslist[index].toJson());
+                                await Navigator.push(context, MaterialPageRoute(builder: (content)=>AdmDestinationDetailScreen(user: widget.user, destination: destination )));
+                                loaddes(1);
+                              },
+   // Optional: Adds a slight shadow to the card
   child: Row(
     children: <Widget>[
       Expanded(
-        flex: 3, // Adjust the flex to control the size ratio between the image and the text/icons
+        flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
         child: CachedNetworkImage(
           fit: BoxFit.cover,
-          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Deslist[index].DesId}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Deslist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
           placeholder: (context, url) => const LinearProgressIndicator(),
           errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
       ),
       Expanded(
-  flex: 4, // Adjust the flex to control the size ratio between the image and the text/icons
+  flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
   child: Padding(
     padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add padding around the text and icons
     child: Column(
@@ -174,7 +182,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           child: FittedBox( // Ensures that the text fits within the available space.
             fit: BoxFit.scaleDown,
             child: Text(
-               Deslist[index].DesName.toString(),
+               Deslist[index].desname.toString(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -189,8 +197,16 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.edit),
-              onPressed: () {
-                // Your edit action
+              onPressed: () async{
+                Des desitm =Des.fromJson(Deslist[index].toJson());
+                       await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              
+                              builder: (content) => editdestinationscreen(user: widget.user, destination: desitm ,)
+                            
+                            ),
+                          );  loaddes(1);
               },
             ),
             IconButton(
@@ -209,8 +225,8 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
 
     ],
   ),
-));
-    },
+)))
+ ); },
   ),
 ),SizedBox(
                 height: 50,
@@ -248,9 +264,9 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
               await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (content) => adddestinationscreen(user: widget.user, destinationinfo: destinationinfo)
+                      builder: (content) => adddestinationscreen(user: widget.user)
                           ));
-              loaddes(index);
+              loaddes(1);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Please login/register an account")));
@@ -264,7 +280,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           ); 
   }
 
-  void loaddes(int pg) {
+  void loaddes(int pageno) {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -273,13 +289,19 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
     }
 
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
-        body: {"userid": widget.user.id}).then((response) {
+        body: {
+          
+          "pageno": pageno.toString()
+          }).then((response) {
       print(response.body);
       //log(response.body);
       Deslist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
+          numofpage = int.parse(jsondata['numofpage']); //get number of pages
+          numberofresult = int.parse(jsondata['numberofresult']);
+          print(numberofresult);
           var extractdata = jsondata['data'];
           extractdata['Des'].forEach((v) {
             Deslist.add(Des.fromJson(v));
@@ -289,7 +311,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           });
 
           });
-          print(Deslist[0].DesName);
+          print(Deslist[0].desname);
         }
         setState(() {});
       }
@@ -303,7 +325,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            "Delete ${Deslist[index].DesName}?",
+            "Delete ${Deslist[index].desname}?",
           ),
           content: const Text("Are you sure?", style: TextStyle()),
           actions: <Widget>[
@@ -336,7 +358,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_des.php"),
         body: {
           "userid": widget.user.id,
-          "DesId": Deslist[index].DesId
+          "DesId": Deslist[index].desid
         }).then((response) {
       print(response.body);
       //Deslist.clear();
@@ -370,7 +392,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           extractdata['Des'].forEach((v) {
             Deslist.add(Des.fromJson(v));
           });
-          print(Deslist[0].DesName);
+          print(Deslist[0].desname);
         }
         setState(() {});
       }

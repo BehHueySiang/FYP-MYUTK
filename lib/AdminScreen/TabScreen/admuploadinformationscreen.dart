@@ -14,7 +14,8 @@ import 'package:myutk/AdminScreen/AdminDestination/admdestinationlistscreen.dart
 
 class admuploadinformationscreen extends StatefulWidget {
   final User user;
-  const admuploadinformationscreen({super.key, required this.user});
+
+  const admuploadinformationscreen({super.key, required this.user,});
 
   @override
   State<admuploadinformationscreen> createState() => _admuploadinformationscreenState();
@@ -23,7 +24,7 @@ class admuploadinformationscreen extends StatefulWidget {
 class _admuploadinformationscreenState extends State<admuploadinformationscreen> {
   TextEditingController _searchController = TextEditingController();
   String maintitle = "Admupload";
- 
+ Des destination = new Des();
   late double screenHeight, screenWidth;
   late int axiscount = 2;
   int numofpage = 1, curpage = 1;
@@ -97,7 +98,7 @@ class _admuploadinformationscreenState extends State<admuploadinformationscreen>
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (content) => admdestinationlistscreen(user: widget.user, destinationinfo: destinationinfo)
+                              builder: (content) => admdestinationlistscreen(user: widget.user, )
                             ),
                           );},
                   child: Stack(
@@ -144,7 +145,7 @@ class _admuploadinformationscreenState extends State<admuploadinformationscreen>
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (content) => admdestinationlistscreen(user: widget.user, destinationinfo: destinationinfo)
+                              builder: (content) => admdestinationlistscreen(user: widget.user, )
                             ),
                           );},
                   child: Stack(
@@ -191,7 +192,7 @@ class _admuploadinformationscreenState extends State<admuploadinformationscreen>
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (content) => admdestinationlistscreen(user: widget.user, destinationinfo: destinationinfo)
+                              builder: (content) => admdestinationlistscreen(user: widget.user,)
                             ),
                           );},
                   child: Stack(

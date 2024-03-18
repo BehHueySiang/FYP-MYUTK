@@ -11,8 +11,8 @@ import 'package:myutk/ipconfig.dart';
 
 class adddestinationscreen extends StatefulWidget {
   final User user;
-  final Des destinationinfo;
-  const adddestinationscreen({super.key, required this.user, required this.destinationinfo});
+  
+  const adddestinationscreen({super.key, required this.user});
 
   @override
   State<adddestinationscreen> createState() => _adddestinationscreenState();
@@ -307,7 +307,8 @@ class _adddestinationscreenState extends State<adddestinationscreen> {
                           },
                           child: const Text("Submit",style: TextStyle(color: Colors.black), ),
                           style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),)),))]
+                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),)),))
+                                    ]
                     ),
                     const SizedBox(height: 30,),
                   ],
@@ -427,15 +428,15 @@ void insertDestination() {
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/insert_des.php"),
         body: {
           "userid": widget.user.id.toString(),
-          "DesName": DesName,
-          "Url": Url,
-          "OpenTime": OpenTime,
-          "CloseTime": CloseTime,
-          "SuggestTime": SuggestTime,
-          "Activity": Activity,
-          "DesBudget": DesBudget,
-          "DesState": DesState,
-          "DesRate": DesRate,
+          "desname": DesName,
+          "url": Url,
+          "opentime": OpenTime,
+          "closetime": CloseTime,
+          "suggesttime": SuggestTime,
+          "activity": Activity,
+          "desbudget": DesBudget,
+          "desstate": DesState,
+          "desrate": DesRate,
           "image": base64Image,
           "image1": base64Image1,
           "image2": base64Image2

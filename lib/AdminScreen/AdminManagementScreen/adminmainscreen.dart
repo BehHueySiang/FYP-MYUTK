@@ -9,6 +9,7 @@ import 'package:myutk/AdminScreen/TabScreen/admprofiletabscreen.dart';
 
 
 import '../../../models/user.dart';
+import '../../../models/destination.dart';
 
 
 
@@ -16,6 +17,7 @@ import '../../../models/user.dart';
 
 class AdminMainScreen extends StatefulWidget {
   final User user;
+
 
 
 
@@ -40,7 +42,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       admhometabscreen(user: widget.user),
       admbudgettabscreen(user: widget.user),
       admitinerarytabscreen(user: widget.user),
-      admuploadinformationscreen(user: widget.user),
+      admuploadinformationscreen(user: widget.user,),
       admProfileTabScreen(user: widget.user,),
    
     ];
