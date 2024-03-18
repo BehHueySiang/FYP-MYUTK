@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/src/legacy_api.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:myutk/AdminScreen/AdminDestination/admdestinationlistscreen.dart';
 import 'package:myutk/models/user.dart';
 import 'package:myutk/models/destination.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 
 
@@ -26,6 +28,8 @@ class AdmDestinationDetailScreen extends StatefulWidget {
 class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen> {
   late double screenHeight, screenWidth;
   late int axiscount = 2;
+  
+  
 
   @override
   void initState() {
@@ -175,9 +179,14 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                               ),
                             ),
                             TableCell(
-                              child: Text(
-                                widget.destination.url.toString(),
-                                style: TextStyle(fontSize: 16, height: 2),
+                             child: ElevatedButton(
+                               onPressed: (){_launchUrl(widget.destination.url.toString());},
+                                
+                                      
+                                child: Text(
+                                  widget.destination.url.toString(),
+                                  style: TextStyle(fontSize: 16),
+                                ),
                               ),
                             ),
                           ]),
@@ -367,6 +376,13 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
         ],
       ),
     );
+  }
+  Future<void> _launchUrl( urlString) async {
+    if (await canLaunch(urlString)) {
+      await launch(urlString);
+    } else {
+      throw 'Could not launch $urlString';
+    }
   }
 }
 

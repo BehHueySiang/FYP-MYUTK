@@ -46,6 +46,7 @@ dependencies:
   cached_network_image: ^3.2.3
   intl: ^0.18.1
   webview_flutter: ^3.0.4
+  url_launcher: ^6.2.5
   firebase_database: ^10.2.4
   carousel_slider: ^4.0.0
 dev_dependencies:
