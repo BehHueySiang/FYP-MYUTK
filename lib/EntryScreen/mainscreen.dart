@@ -59,45 +59,49 @@ class _MainScreenState extends State<MainScreen> {
       body: tabchildren[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
           onTap: onTabTapped,
+          backgroundColor: Colors.amber[100],
+           selectedItemColor: Colors.black, // Selected item color
+            unselectedItemColor: Colors.grey,
+           
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
           items: const [
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.home,
-                  color: Colors.amber,
+                  
                 ),
                 label: "Home"),
                 
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.attach_money_rounded,
-                  color: Colors.amber,
+                  
                 ),
                 label: "Budget"),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.text_snippet,
-                  color: Colors.amber,
+                  
                 ),
                 label: "Itinerary"),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.upload_file_sharp,
-                  color: Colors.amber,
+                 
                 ),
                 label: "upload"),
             
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.person,
-                  color: Colors.amber,
+                 
                 ),
                 label: "Profile"),
             
           ],
-               selectedItemColor: Colors.amber[700],
-           selectedLabelStyle: TextStyle(color: Colors.amber[700],)
+               
+           
           ),
     );
   }

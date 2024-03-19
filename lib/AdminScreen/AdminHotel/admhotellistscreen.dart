@@ -4,43 +4,43 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:myutk/AdminScreen/AdminDestination/adddestinationscreen.dart';
-import 'package:myutk/models/destination.dart';
+import 'package:myutk/AdminScreen/AdminHotel/addhotelscreen.dart';
+import 'package:myutk/models/hotel.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
-import 'package:myutk/UserScreen/UserDestination/destinationdetailscreen.dart';
-import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.dart';
-import 'package:myutk/AdminScreen/AdminDestination/editdestinationscreen.dart';
+
+import 'package:myutk/AdminScreen/AdminHotel/admhoteldetailscreen.dart';
+import 'package:myutk/AdminScreen/AdminHotel/edithotelscreen.dart';
 
 
-class admdestinationlistscreen extends StatefulWidget {
+class admhotellistscreen extends StatefulWidget {
   final User user;
   
-  const admdestinationlistscreen({super.key, required this.user,});
+  const admhotellistscreen({super.key, required this.user,});
 
   @override
-  State<admdestinationlistscreen> createState() => _admdestinationlistscreenState();
+  State<admhotellistscreen> createState() => _admhotellistscreenState();
 }
 
-class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
-  Des destination = Des ();
+class _admhotellistscreenState extends State<admhotellistscreen> {
+  Hotel hotel = Hotel ();
   late double screenHeight, screenWidth;
   TextEditingController _searchController = TextEditingController();
   late int axiscount = 2;
   late List<Widget> tabchildren;
-  String maintitle = "Adm Destination List";
+  String maintitle = "Adm Hotel List";
     int numofpage = 1, curpage = 1, numberofresult = 0;
-  List<Des> Deslist = <Des>[];
+  List<Hotel> Hotellist = <Hotel>[];
  
   var color;
   
   @override
   void initState() {
     super.initState();
-    loaddes(1);
-    print("AddDesList");
+    loadhotel(1);
+    print("AddHotelList");
   }
 
 
@@ -79,7 +79,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Destination',
+                        'Hotel',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
               const SizedBox(height: 10,),
            Expanded(
             
-            child: Deslist.isEmpty
+            child: Hotellist.isEmpty
               ? Center(
                   child: Text("No Data"),
                 )
@@ -133,7 +133,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
       childAspectRatio: (6/ 2), // Adjust this value according to your images aspect ratio
       // You may need to adjust childAspectRatio according to your item's aspect ratio
     ),
-    itemCount: Deslist.length,
+    itemCount: Hotellist.length,
     itemBuilder: (context, index) {
       return Padding(
                  padding: const EdgeInsets.all(8.0),
@@ -155,9 +155,9 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
                     child: InkWell(
                      onTap: () async {
                                 
-                                Des destination =Des.fromJson(Deslist[index].toJson());
-                                await Navigator.push(context, MaterialPageRoute(builder: (content)=>AdmDestinationDetailScreen(user: widget.user, destination: destination )));
-                                loaddes(1);
+                                Hotel hotel =Hotel.fromJson(Hotellist[index].toJson());
+                                await Navigator.push(context, MaterialPageRoute(builder: (content)=>AdmHotelDetailScreen(user: widget.user, hotel: hotel )));
+                                loadhotel(1);
                               },
    // Optional: Adds a slight shadow to the card
   child: Row(
@@ -166,7 +166,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
         flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
         child: CachedNetworkImage(
           fit: BoxFit.cover,
-          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Deslist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+          imageUrl: "${MyConfig().SERVER}/myutk/assets/Hotel/${Hotellist[index].hotelid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
           placeholder: (context, url) => const LinearProgressIndicator(),
           errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
@@ -183,7 +183,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           child: FittedBox( // Ensures that the text fits within the available space.
             fit: BoxFit.scaleDown,
             child: Text(
-               Deslist[index].desname.toString(),
+               Hotellist[index].hotelname.toString(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -199,15 +199,15 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () async{
-                Des desitm =Des.fromJson(Deslist[index].toJson());
+                Hotel hotelitm =Hotel.fromJson(Hotellist[index].toJson());
                        await Navigator.push(
                             context,
                             MaterialPageRoute(
                               
-                              builder: (content) => editdestinationscreen(user: widget.user, destination: desitm ,)
+                              builder: (content) => edithotelscreen(user: widget.user, hotel: hotelitm ,)
                             
                             ),
-                          );  loaddes(1);
+                          );  loadhotel(1);
               },
             ),
             IconButton(
@@ -246,7 +246,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
                     return TextButton(
                         onPressed: () {
                           curpage = index + 1;
-                          loaddes(index + 1);
+                          loadhotel(index + 1);
                         },
                         child: Text(
                           (index + 1).toString(),
@@ -265,9 +265,9 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
               await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (content) => adddestinationscreen(user: widget.user)
+                      builder: (content) => addhotelscreen(user: widget.user)
                           ));
-              loaddes(1);
+              loadhotel(1);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Please login/register an account")));
@@ -281,7 +281,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           ); 
   }
 
-  void loaddes(int pageno) {
+  void loadhotel(int pageno) {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -289,14 +289,14 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_hotel.php"),
         body: {
           
           "pageno": pageno.toString()
           }).then((response) {
       print(response.body);
       //log(response.body);
-      Deslist.clear();
+      Hotellist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
@@ -304,15 +304,15 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           numberofresult = int.parse(jsondata['numberofresult']);
           print(numberofresult);
           var extractdata = jsondata['data'];
-          extractdata['Des'].forEach((v) {
-            Deslist.add(Des.fromJson(v));
+          extractdata['Hotel'].forEach((v) {
+            Hotellist.add(Hotel.fromJson(v));
              
-          Deslist.forEach((element) {
+          Hotellist.forEach((element) {
            
           });
 
           });
-          print(Deslist[0].desname);
+          print(Hotellist[0].hotelname);
         }
         setState(() {});
       }
@@ -326,7 +326,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-            "Delete ${Deslist[index].desname}?",
+            "Delete ${Hotellist[index].hotelname}?",
           ),
           content: const Text("Are you sure?", style: TextStyle()),
           actions: <Widget>[
@@ -336,7 +336,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
                 style: TextStyle(),
               ),
               onPressed: () {
-                deleteDes(index);
+                deleteHotel(index);
                 Navigator.of(context).pop();
               },
             ),
@@ -355,11 +355,11 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
     );
   }
 
-  void deleteDes(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_des.php"),
+  void deleteHotel(int index) {
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_hotel.php"),
         body: {
           "userid": widget.user.id,
-          "DesId": Deslist[index].desid
+          "HotelId": Hotellist[index].hotelid
         }).then((response) {
       print(response.body);
       //Deslist.clear();
@@ -368,7 +368,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
         if (jsondata['status'] == "success") {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Delete Success")));
-          loaddes(index);
+          loadhotel(index);
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Failed")));
@@ -378,22 +378,22 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
   }
  void _performSearch(String keyword) {
   
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_hotel.php"),
         body: {
           "userid":  widget.user.id,
           "search": keyword
         }).then((response) {
       //print(response.body);
       log(response.body);
-      Deslist.clear();
+      Hotellist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
           var extractdata = jsondata['data'];
-          extractdata['Des'].forEach((v) {
-            Deslist.add(Des.fromJson(v));
+          extractdata['Hotel'].forEach((v) {
+            Hotellist.add(Hotel.fromJson(v));
           });
-          print(Deslist[0].desname);
+          print(Hotellist[0].hotelname);
         }
         setState(() {});
       }

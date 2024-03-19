@@ -5,77 +5,70 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myutk/models/user.dart';
-import 'package:myutk/models/destination.dart';
+import 'package:myutk/models/hotel.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 
 
-class editdestinationscreen extends StatefulWidget {
+class edithotelscreen extends StatefulWidget {
   final User user;
-   Des destination;
-   editdestinationscreen({super.key, required this.user, required this.destination});
+  Hotel hotel;
+   edithotelscreen({super.key, required this.user,required this.hotel});
 
   @override
-  State<editdestinationscreen> createState() => _editdestinationscreenState();
+  State<edithotelscreen> createState() => _edithotelscreenState();
 }
 
-class _editdestinationscreenState extends State<editdestinationscreen> {
+class _edithotelscreenState extends State<edithotelscreen> {
      List<File?> _images = List.generate(3, (_) => null);
      int index = 0;
-     List<Des> Deslist = <Des>[];
+     List<Hotel> HotelList = <Hotel>[];
     
      var pathAsset = "assets/images/camera1.png";
      final _formKey = GlobalKey<FormState>();
       late double screenHeight, screenWidth, cardwitdh;
-      final TextEditingController _DesnameEditingController =
+      final TextEditingController _HotelnameEditingController =
           TextEditingController();
-      final TextEditingController _UrlEditingController =
+      final TextEditingController _BookUrlEditingController =
           TextEditingController();
-      final TextEditingController _OpenTimeEditingController =
+      final TextEditingController _HotelUrlEditingController =
           TextEditingController();
-      final TextEditingController _CloseTimeEditingController =
+      final TextEditingController _NoteEditingController =
           TextEditingController();
-      final TextEditingController _SuggestTimeEditingController =
+      final TextEditingController _HotelBudgetEditingController =
           TextEditingController();
-      final TextEditingController _ActivityEditingController =
-          TextEditingController();
-      final TextEditingController _DesBudgetEditingController =
-          TextEditingController();
-      String desrate = "1";
+      String hotelrate = "1";
         List<String> Ratelist = [
           "1","2","3","4","5","6","7","8","9","10",
         ];
-        String desstate = "Kedah";
+        String hotelstate = "Kedah";
         List<String> Statelist = [
           "Kedah","Pulau Penang","Perlis"
         ];
 
-      @override
+       @override
        void initState() {
     super.initState();
-    print('Debug destination: ${widget.destination.toJson()}');
-    _DesnameEditingController.text = widget.destination.desname.toString();
-    _UrlEditingController.text = widget.destination.url.toString();
-    _OpenTimeEditingController.text = widget.destination.opentime.toString();
-    _CloseTimeEditingController.text = widget.destination.closetime.toString();
-    _SuggestTimeEditingController.text = widget.destination.suggesttime.toString();
-    _ActivityEditingController.text = widget.destination.activity.toString();
-    _DesBudgetEditingController.text = widget.destination.desbudget.toString();
-    desrate = widget.destination.desrate.toString();
-    desstate = widget.destination.desstate.toString();
-     if (!Ratelist.contains(widget.destination.desrate)) {
-    desrate = Ratelist.first;
+    print('Debug destination: ${widget.hotel.toJson()}');
+    _HotelnameEditingController.text = widget.hotel.hotelname.toString();
+    _BookUrlEditingController.text = widget.hotel.bookurl.toString();
+    _HotelUrlEditingController.text = widget.hotel.hotelurl.toString();
+    _NoteEditingController.text = widget.hotel.note.toString();
+    _HotelBudgetEditingController.text = widget.hotel.hotelbudget.toString();
+    hotelrate = widget.hotel.hotelrate.toString();
+    hotelstate = widget.hotel.hotelstate.toString();
+     if (!Ratelist.contains(widget.hotel.hotelrate)) {
+    hotelrate = Ratelist.first;
   }
 
   // Check if the selected desstate is in the Statelist, if not set it to the first item
-  if (!Statelist.contains(widget.destination.desstate)) {
-    desstate = Statelist.first;
+  if (!Statelist.contains(widget.hotel.hotelstate)) {
+    hotelstate = Statelist.first;
   
 }
 
  
   }
-
 
       @override
         Widget build(BuildContext context) {
@@ -96,7 +89,7 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
               ]
             ),
             backgroundColor: Colors.amber[50],
-            //////////////////////////
+            
              body: SingleChildScrollView( // Make the entire body scrollable
       child: Column(children: [ Card(
             child: SizedBox(
@@ -112,7 +105,7 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl:  "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl:  "${MyConfig().SERVER}/myutk/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -127,7 +120,7 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -142,7 +135,7 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -153,6 +146,9 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
               ),
             ),
           ),
+                   
+          
+        
           
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -164,25 +160,21 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                   
                         
                         TextFormField(
-                                          textInputAction: TextInputAction.next,
-                                          validator: (val) =>
-                                              val!.isEmpty || (val.length < 3)
-                                                  ? "Destination name must be longer than 3"
-                                                  : null,
-                                          onFieldSubmitted: (v) {},
-                                          controller: _DesnameEditingController,
-                                          keyboardType: TextInputType.text,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Destination Name',
-                                            labelStyle: TextStyle(color: Colors.amber),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(width: 2.0),
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(width: 2.0),
-                                            ),
-                                          ),
-                                        ),
+                              textInputAction: TextInputAction.next,
+                              validator: (val) =>
+                                  val!.isEmpty || (val.length < 3)
+                                      ? "Hotel name must be longer than 3"
+                                      : null,
+                              onFieldSubmitted: (v) {},
+                              controller: _HotelnameEditingController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  labelText: 'Hotel Name',
+                                  labelStyle: TextStyle(color: Colors.amber),
+                                   focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 2.0),
+                                  ),border: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 2.0),)),),
                                     const SizedBox(height: 20,),
                     TextFormField(
                               textInputAction: TextInputAction.next,
@@ -191,88 +183,44 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                                       ? ""
                                       : null,
                               onFieldSubmitted: (v) {},
-                              controller: _UrlEditingController,
+                              controller: _BookUrlEditingController,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
-                                  labelText: 'Redirect Link',
+                                  labelText: 'Booking Link',
                                   labelStyle: TextStyle(color: Colors.amber),
                                    focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),
                                   ),border: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),)),),
                                     const SizedBox(height: 20,),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 5,
-                          child: TextFormField(
+                     TextFormField(
                               textInputAction: TextInputAction.next,
                               validator: (val) =>
                                   val!.isEmpty || (val.length < 3)
                                       ? ""
                                       : null,
                               onFieldSubmitted: (v) {},
-                              controller: _OpenTimeEditingController,
+                              controller: _HotelUrlEditingController,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
-                                  labelText: 'Open Time',
+                                  labelText: 'Hotel Direction',
                                   labelStyle: TextStyle(color: Colors.amber),
                                    focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),
                                   ),border: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),)),),
-                        ),const SizedBox(width: 20,),
-                        Flexible(
-                          flex: 5,
-                          child:TextFormField(
-                              textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? ""
-                                      : null,
-                              onFieldSubmitted: (v) {},
-                              controller: _CloseTimeEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Close Time',
-                                  labelStyle: TextStyle(color: Colors.amber),
-                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),)),),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20,),
-                  TextFormField(
-                              textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? ""
-                                      : null,
-                              onFieldSubmitted: (v) {},
-                              controller: _SuggestTimeEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Suggest Time',
-                                  labelStyle: TextStyle(color: Colors.amber),
-                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),)),),
-                                    const SizedBox(height: 20,),
+                        const SizedBox(width: 20,),
+                        
+                    
                TextFormField(
                               textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? ""
-                                      : null,
+                              
                                maxLines: 4,       
                               onFieldSubmitted: (v) {},
-                              controller: _ActivityEditingController,
+                              controller: _NoteEditingController,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
-                                  labelText: 'Activities',
+                                  labelText: 'Note',
                                   labelStyle: TextStyle(color: Colors.amber),
                                    focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),
@@ -280,7 +228,7 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                                     borderSide: BorderSide(width: 2.0),)),),
                                const SizedBox(height: 20,),
                   //DesState
-                    SizedBox(
+                  SizedBox(
                               height: 60,
                               child: DropdownButtonFormField(
                                 decoration: const InputDecoration(
@@ -293,18 +241,18 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                                     borderSide: BorderSide(width: 2.0),
                                   ),
                                 ),
-                                value: desstate,
+                                value: hotelstate,
                                 onChanged: (newValue) {
                                   setState(() {
-                                    desstate = newValue!;
-                                    print(desstate);
+                                    hotelstate = newValue!;
+                                    print(hotelstate);
                                   });
                                 },
-                                items: Statelist.map((desstate) {
+                                items: Statelist.map((hotelstate) {
                                   return DropdownMenuItem(
-                                    value: desstate,
+                                    value: hotelstate,
                                     child: Text(
-                                      desstate,
+                                      hotelstate,
                                     ),
                                   );
                                 }).toList(),
@@ -325,18 +273,18 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                                     borderSide: BorderSide(width: 2.0),
                                   ),
                                 ),
-                                value: desrate,
+                                value: hotelrate,
                                 onChanged: (newValue) {
                                   setState(() {
-                                    desrate = newValue!;
-                                    print(desrate);
+                                    hotelrate = newValue!;
+                                    print(hotelrate);
                                   });
                                 },
-                                items: Ratelist.map((desrate) {
+                                items: Ratelist.map((hotelrate) {
                                   return DropdownMenuItem(
-                                    value: desrate,
+                                    value: hotelrate,
                                     child: Text(
-                                      desrate,
+                                      hotelrate,
                                     ),
                                   );
                                 }).toList(),
@@ -349,13 +297,8 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                           flex: 3,
                           child:  TextFormField(
                               textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? ""
-                                      : null,
-                                    
-                              onFieldSubmitted: (v) {},
-                              controller: _DesBudgetEditingController,
+                             
+                              controller: _HotelBudgetEditingController,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
                                   labelText: 'Estimate Budget Per/Person',
@@ -372,11 +315,12 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                       height: 50,
                       child: ElevatedButton(
                           onPressed: () {
-                            updateDestination();
+                            insertDialog();
                           },
                           child: const Text("Submit",style: TextStyle(color: Colors.black), ),
                           style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),)),))]
+                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),)),))
+                                    ]
                     ),
                     const SizedBox(height: 30,),
                   ],
@@ -385,32 +329,120 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
             ),]),),);
     
   }
+Future<void> _selectFromCamera(index) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 1200,
+      maxWidth: 800,
+    );
 
-  
-void updateDestination() {
-    String DesName = _DesnameEditingController.text;
-    String Url = _UrlEditingController.text;
-    String OpenTime = _OpenTimeEditingController.text;
-    String CloseTime = _CloseTimeEditingController.text;
-    String SuggestTime = _SuggestTimeEditingController.text;
-    String Activity = _ActivityEditingController.text;
-    String DesBudget = _DesBudgetEditingController.text;
+    if (pickedFile != null) {
+      _images[index] = File(pickedFile.path);
+      cropImage(index);
+    } else {
+      print('No image selected.');
+    }
+  }
+ Future<void> cropImage(index) async {
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
+      sourcePath: _images[index]!.path,
+      aspectRatioPresets: [
+        
+        CropAspectRatioPreset.ratio3x2,
+        
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.ratio3x2,
+            lockAspectRatio: true),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+      ],
+    );
+    if (croppedFile != null) {
+      File imageFile = File(croppedFile.path);
+      _images[index] = imageFile;
+      int? sizeInBytes = _images[index]?.lengthSync();
+      double sizeInMb = sizeInBytes! / (1024 * 1024);
+      print(sizeInMb);
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/update_des.php"),
+      setState(() {});
+    }
+  }
+ void insertDialog() {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Check your input")));
+      return;
+    }
+    if (_images[index] == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Please take picture")));
+      return;
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: const Text(
+            "Insert this hotel?",
+            style: TextStyle(),
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                updatehotel();
+                //registerUser();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+           
+          ],
+        );
+      },
+    );
+  }
+
+  //////////////
+void updatehotel() {
+    String HotelName = _HotelnameEditingController.text;
+    String BookUrl = _BookUrlEditingController.text;
+    String HotelUrl = _HotelUrlEditingController.text;
+    String Note = _NoteEditingController.text;
+    String HotelBudget = _HotelBudgetEditingController.text;
+
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/update_hotel.php"),
         body: {
           "userid": widget.user.id.toString(),
-          "DesId": widget.destination.desid,
-          "desname": DesName,
-          "url": Url,
-          "opentime": OpenTime,
-          "closetime": CloseTime,
-          "suggesttime": SuggestTime,
-          "activity": Activity,
-          "desbudget": DesBudget,
-          "desrate": desrate,
-          "desstate": desstate,
-        
-   
+          "hotelname": HotelName,
+          "bookurl": BookUrl,
+          "hotelurl": HotelUrl,
+          "note": Note,
+          "hotelbudget": HotelBudget,
+          "hotelstate": hotelstate,
+          "hotelrate": hotelrate,
+          
         }).then((response) {
       print(response.body);
       if (response.statusCode == 200) {
@@ -432,5 +464,4 @@ void updateDestination() {
       }
     });
   }
-
 }

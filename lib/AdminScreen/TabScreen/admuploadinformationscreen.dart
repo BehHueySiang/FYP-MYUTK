@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:myutk/AdminScreen/AdminDestination/admdestinationlistscreen.dart';
-
+import 'package:myutk/AdminScreen/AdminHotel/admhotellistscreen.dart';
 
 
 class admuploadinformationscreen extends StatefulWidget {
@@ -145,7 +145,7 @@ class _admuploadinformationscreenState extends State<admuploadinformationscreen>
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (content) => admdestinationlistscreen(user: widget.user, )
+                              builder: (content) => admhotellistscreen(user: widget.user, )
                             ),
                           );},
                   child: Stack(

@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/src/legacy_api.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:myutk/AdminScreen/AdminDestination/admdestinationlistscreen.dart';
+import 'package:myutk/AdminScreen/AdminHotel/admhotellistscreen.dart';
 import 'package:myutk/models/user.dart';
-import 'package:myutk/models/destination.dart';
+import 'package:myutk/models/hotel.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -14,17 +14,17 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 
 
-class AdmDestinationDetailScreen extends StatefulWidget {
+class AdmHotelDetailScreen extends StatefulWidget {
   final User user;
- Des destination;
+ Hotel hotel;
 
-   AdmDestinationDetailScreen({super.key, required this.user, required this.destination});
+   AdmHotelDetailScreen({super.key, required this.user, required this.hotel});
 
   @override
-  State<AdmDestinationDetailScreen> createState() => _AdmDestinationDetailScreenState();
+  State<AdmHotelDetailScreen> createState() => _AdmHotelDetailScreenState();
 }
 
-class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen> {
+class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
   late double screenHeight, screenWidth;
   late int axiscount = 2;
   
@@ -33,7 +33,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
   @override
   void initState() {
     super.initState();
-    print("Destination List");
+    print("Hotel Detail");
   }
 
   @override
@@ -82,7 +82,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Destination',
+                              'Hotel',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -106,7 +106,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl:  "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl:  "${MyConfig().SERVER}/myutk/assets/Destination/${widget.hotel.hotelid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
@@ -121,7 +121,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.hotel.hotelid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
@@ -136,7 +136,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.hotel.hotelid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
@@ -159,90 +159,76 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                           TableRow(children: [
                             const TableCell(
                               child: Text(
-                                "Destination Name: ",
+                                "Hotel Name: ",
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 5),
                               ),
                             ),
                             TableCell(
                               child: Text(
-                                widget.destination.desname.toString(),
+                                widget.hotel.hotelname.toString(),
                                 style: TextStyle(fontSize: 16, height: 5),
                               ),
                             )
                           ]),
                           
-                          // Third TableRow with 4 columns (open time and close time in the same row)
-                          TableRow(children: [
-                            TableCell(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 6,
-                                    child: Text(
-                                      "Open Time: ",
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 2),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 5,
-                                    child: Text(
-                                      widget.destination.opentime.toString(),
-                                      style: TextStyle(fontSize: 16, height: 2),
-                                    ),
-                                  ),
-                                ],
+                             TableRow(children: [
+                                 TableCell(
+                                  child: ElevatedButton(
+                               onPressed: (){_launchUrl(widget.hotel.bookurl.toString());},
+                                
+                                      
+                               child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.directions, color: Colors.black,),
+                                            SizedBox(width: 8), // Adjust spacing between icon and text
+                                            Text(
+                                              "Booking",
+                                              style: TextStyle(fontSize: 16, color: Colors.black, height: 1),
+                                            ),
+                                          ],
+                                        ),
+                                style: ButtonStyle(
+                                                        backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),),
                               ),
-                            ),
-                            TableCell(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 4,
-                                    child: Text(
-                                      "Close Time: ",
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 2),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 5,
-                                    child: Text(
-                                      widget.destination.closetime.toString(),
-                                      style: TextStyle(fontSize: 16, height: 2),
-                                    ),
-                                  ),
-                                  
-                                ],
+                                ),
+                                
+                                TableCell(
+                                   child: ElevatedButton(
+                               onPressed: (){_launchUrl(widget.hotel.hotelurl.toString());},
+                                
+                                      
+                               child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.directions, color: Colors.black,),
+                                            SizedBox(width: 8), // Adjust spacing between icon and text
+                                            Text(
+                                              "Direction",
+                                              style: TextStyle(fontSize: 16, color: Colors.black, height: 1),
+                                            ),
+                                          ],
+                                        ),
+                                style: ButtonStyle(
+                                                        backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),),
                               ),
-                            ),
-                          ]),
+                                )
+                              ]), 
                           TableRow(children: [
                               const TableCell(
                                 child: Text(
-                                  "Suggest Time: ",
+                                  "Note: ",
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 2),
                                 ),
                               ),
                               TableCell(
                                 child: Text(
-                                  widget.destination.suggesttime.toString(),
+                                  widget.hotel.note.toString(),
                                   style: TextStyle(fontSize: 16, height: 2),
                                 ),
                               )
                             ]),
-                            TableRow(children: [
-                                const TableCell(
-                                  child: Text(
-                                    "Activity: ",
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 2),
-                                  ),
-                                ),
-                                TableCell(
-                                  child: Text(
-                                    widget.destination.activity.toString(),
-                                    style: TextStyle(fontSize: 16, height: 2),
-                                  ),
-                                )
-                              ]),
+                            
                               TableRow(children: [
                                 const TableCell(
                                   child: Text(
@@ -252,7 +238,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                 ),
                                 TableCell(
                                   child: Text(
-                                    widget.destination.desstate.toString(),
+                                    widget.hotel.hotelstate.toString(),
                                     style: TextStyle(fontSize: 16, height: 2),
                                   ),
                                 )
@@ -291,7 +277,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                   Expanded(
                                     flex: 5,
                                     child: Text(
-                                      " ${double.parse(widget.destination.desrate.toString()).toStringAsFixed(0)} /10",
+                                      " ${double.parse(widget.hotel.hotelrate.toString()).toStringAsFixed(0)} /10",
                                       style: TextStyle(fontSize: 16, height: 2),
                                     ),
                                   ),
@@ -303,11 +289,11 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                           TableRow(children: [
                                  TableCell(
                                   child: Text(
-                                     "RM ${double.parse(widget.destination.desbudget.toString()).toStringAsFixed(0)} per person",
+                                     "RM ${double.parse(widget.hotel.hotelbudget.toString()).toStringAsFixed(0)} per person",
                                     style: TextStyle( fontSize: 16, ),
                                   ),
                                 ),
-                                TableCell(
+                                const TableCell(
                                   child: Text(
                                     "",
                                     style: TextStyle(fontSize: 16, height: 2),
@@ -315,25 +301,11 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                 )
                               ]),
                              TableRow(children: [
-                                 TableCell(
-                                  child: ElevatedButton(
-                               onPressed: (){_launchUrl(widget.destination.url.toString());},
-                                
-                                      
-                               child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.directions, color: Colors.black,),
-                                            SizedBox(width: 8), // Adjust spacing between icon and text
-                                            Text(
-                                              "Directions",
-                                              style: TextStyle(fontSize: 16, color: Colors.black, height: 1),
-                                            ),
-                                          ],
-                                        ),
-                                style: ButtonStyle(
-                                                        backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),),
-                              ),
+                                 const TableCell(
+                                  child: Text(
+                                      " ",
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 2),
+                                    ),
                                 ),
                                 
                                 TableCell(
@@ -346,7 +318,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                                                 context,
                                                                 MaterialPageRoute(
                                                                   
-                                                                  builder: (content) => admdestinationlistscreen(user: widget.user)
+                                                                  builder: (content) => admhotellistscreen(user: widget.user)
                                                                 
                                                                 ),
                                                               );
