@@ -209,9 +209,7 @@ class _edithotelscreenState extends State<edithotelscreen> {
                                     borderSide: BorderSide(width: 2.0),
                                   ),border: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),)),),
-                        const SizedBox(width: 20,),
-                        
-                    
+                        const SizedBox(height: 20,),
                TextFormField(
                               textInputAction: TextInputAction.next,
                               
@@ -315,7 +313,7 @@ class _edithotelscreenState extends State<edithotelscreen> {
                       height: 50,
                       child: ElevatedButton(
                           onPressed: () {
-                            insertDialog();
+                            updatehotel();
                           },
                           child: const Text("Submit",style: TextStyle(color: Colors.black), ),
                           style: ButtonStyle(
@@ -329,100 +327,7 @@ class _edithotelscreenState extends State<edithotelscreen> {
             ),]),),);
     
   }
-Future<void> _selectFromCamera(index) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxHeight: 1200,
-      maxWidth: 800,
-    );
 
-    if (pickedFile != null) {
-      _images[index] = File(pickedFile.path);
-      cropImage(index);
-    } else {
-      print('No image selected.');
-    }
-  }
- Future<void> cropImage(index) async {
-    CroppedFile? croppedFile = await ImageCropper().cropImage(
-      sourcePath: _images[index]!.path,
-      aspectRatioPresets: [
-        
-        CropAspectRatioPreset.ratio3x2,
-        
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.ratio3x2,
-            lockAspectRatio: true),
-        IOSUiSettings(
-          title: 'Cropper',
-        ),
-      ],
-    );
-    if (croppedFile != null) {
-      File imageFile = File(croppedFile.path);
-      _images[index] = imageFile;
-      int? sizeInBytes = _images[index]?.lengthSync();
-      double sizeInMb = sizeInBytes! / (1024 * 1024);
-      print(sizeInMb);
-
-      setState(() {});
-    }
-  }
- void insertDialog() {
-    if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Check your input")));
-      return;
-    }
-    if (_images[index] == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Please take picture")));
-      return;
-    }
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: const Text(
-            "Insert this hotel?",
-            style: TextStyle(),
-          ),
-          content: const Text("Are you sure?", style: TextStyle()),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                "Yes",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                updatehotel();
-                //registerUser();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                "No",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-           
-          ],
-        );
-      },
-    );
-  }
 
   //////////////
 void updatehotel() {
@@ -435,6 +340,7 @@ void updatehotel() {
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/update_hotel.php"),
         body: {
           "userid": widget.user.id.toString(),
+          "HotelId": widget.hotel.hotelid,
           "hotelname": HotelName,
           "bookurl": BookUrl,
           "hotelurl": HotelUrl,

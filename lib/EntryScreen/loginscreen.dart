@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/models/user.dart';
@@ -196,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String pass = _passEditingController.text;
     print(pass);
     try {
-     
+    
       http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/login_user.php"),
           body: {
             "email": email,

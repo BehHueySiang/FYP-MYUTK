@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:myutk/AdminScreen/AdminDestination/admdestinationlistscreen.dart';
+import 'package:myutk/AdminScreen/AdminHotel/admhotellistscreen.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
@@ -138,10 +140,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                 await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (content) => destinationdetailscreen(
-                                      user: widget.user,
-                                      
-                                    ),
+                                    builder: (content) => admdestinationlistscreen(user: widget.user)
                                   ),
                                 );
                               },
@@ -175,7 +174,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                     onPressed: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => destinationlistscreen(user: widget.user)),
+                                        MaterialPageRoute(builder: (context) => admdestinationlistscreen(user: widget.user)),
                                       );
                                     },
                                     color: Colors.amber,
@@ -265,10 +264,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                                                       await Navigator.push(
                                                                         context,
                                                                         MaterialPageRoute(
-                                                                          builder: (content) => destinationdetailscreen(
-                                                                            user: widget.user,
-                                                                            
-                                                                          ),
+                                                                          builder: (content) => admhotellistscreen(user: widget.user)
                                                                         ),
                                                                       );
                                                                     },

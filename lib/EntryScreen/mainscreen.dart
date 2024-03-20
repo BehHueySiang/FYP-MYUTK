@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myutk/UserScreen/TabScreen/hometabscreen.dart';
 import 'package:myutk/UserScreen/TabScreen/budgettabscreen.dart';
 import 'package:myutk/UserScreen/TabScreen/itinerarytabscreen.dart';
-import 'package:myutk/UserScreen/TabScreen/uploadinformationscreen.dart';
+import 'package:myutk/UserScreen/TabScreen/uploadreviewscreen.dart';
 import 'package:myutk/UserScreen/TabScreen/profiletabscreen.dart';
 
 
@@ -40,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
       hometabscreen(user: widget.user),
       budgettabscreen(user: widget.user),
       itinerarytabscreen(user: widget.user),
-      uploadinformationscreen(user: widget.user),
+      uploadreviewscreen(user: widget.user),
       ProfileTabScreen(user: widget.user,),
    
     ];
