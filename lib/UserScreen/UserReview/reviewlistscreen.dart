@@ -1,45 +1,42 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:myutk/AdminScreen/AdminHotel/addhotelscreen.dart';
-import 'package:myutk/models/hotel.dart';
+import 'package:myutk/models/review.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
-import 'package:myutk/AdminScreen/AdminHotel/admhoteldetailscreen.dart';
-import 'package:myutk/AdminScreen/AdminHotel/edithotelscreen.dart';
+import 'package:myutk/UserScreen/UserReview/reviewdetailscreen.dart';
 
 
-class HotelListScreen extends StatefulWidget {
+
+
+class ReviewListScreen extends StatefulWidget {
   final User user;
   
-  const HotelListScreen({super.key, required this.user,});
+  const ReviewListScreen({super.key, required this.user,});
 
   @override
-  State<HotelListScreen> createState() => _HotelListScreenState();
+  State<ReviewListScreen> createState() => _ReviewListScreenState();
 }
 
-class _HotelListScreenState extends State<HotelListScreen> {
-  Hotel hotel = Hotel ();
+class _ReviewListScreenState extends State<ReviewListScreen> {
+  Review review = Review ();
   late double screenHeight, screenWidth;
   TextEditingController _searchController = TextEditingController();
   late int axiscount = 2;
   late List<Widget> tabchildren;
-  String maintitle = "Hotel";
-    int numofpage = 1, curpage = 1, numberofresult = 0;
-  List<Hotel> Hotellist = <Hotel>[];
- 
+  String maintitle = "Review List";
+  int numofpage = 1, curpage = 1, numberofresult = 0;
+  List<Review> Reviewlist = <Review>[];
   var color;
   
   @override
   void initState() {
     super.initState();
-    loadhotel(1);
-    print("AddHotelList");
+    loadreview(1);
+    print("Review List");
   }
 
 
@@ -78,7 +75,7 @@ class _HotelListScreenState extends State<HotelListScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Hotel',
+                        'Review',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -121,7 +118,7 @@ class _HotelListScreenState extends State<HotelListScreen> {
               const SizedBox(height: 10,),
            Expanded(
             
-            child: Hotellist.isEmpty
+            child: Reviewlist.isEmpty
               ? Center(
                   child: Text("No Data"),
                 )
@@ -132,7 +129,7 @@ class _HotelListScreenState extends State<HotelListScreen> {
       childAspectRatio: (6/ 2), // Adjust this value according to your images aspect ratio
       // You may need to adjust childAspectRatio according to your item's aspect ratio
     ),
-    itemCount: Hotellist.length,
+    itemCount: Reviewlist.length,
     itemBuilder: (context, index) {
       return Padding(
                  padding: const EdgeInsets.all(8.0),
@@ -154,57 +151,57 @@ class _HotelListScreenState extends State<HotelListScreen> {
                     child: InkWell(
                      onTap: () async {
                                 
-                                Hotel hotel =Hotel.fromJson(Hotellist[index].toJson());
-                                await Navigator.push(context, MaterialPageRoute(builder: (content)=>AdmHotelDetailScreen(user: widget.user, hotel: hotel )));
-                                loadhotel(1);
+                                Review review =Review.fromJson(Reviewlist[index].toJson());
+                                await Navigator.push(context, MaterialPageRoute(builder: (content)=>ReviewDetailScreen(user: widget.user, review: review )));
+                                loadreview(1);
                               },
-                                  // Optional: Adds a slight shadow to the card
-                                  child: Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
-                                        child: CachedNetworkImage(
-                                          fit: BoxFit.cover,
-                                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Hotel/${Hotellist[index].hotelid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
-                                          placeholder: (context, url) => const LinearProgressIndicator(),
-                                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                                        ),
+   // Optional: Adds a slight shadow to the card
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
+                                      child: CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        imageUrl: "${MyConfig().SERVER}/myutk/assets/Review/${Reviewlist[index].reviewid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                        placeholder: (context, url) => const LinearProgressIndicator(),
+                                        errorWidget: (context, url, error) => const Icon(Icons.error),
                                       ),
-                                      Expanded(
-                                  flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add padding around the text and icons
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Expanded( // Wrap the text in an Expanded widget to allow for centering.
-                                          child: FittedBox( // Ensures that the text fits within the available space.
-                                            fit: BoxFit.scaleDown,
-                                            child: Text(
-                                              Hotellist[index].hotelname.toString(),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20,
-                                              ),
-                                              textAlign: TextAlign.center, // Center text horizontally.
+                                    ),
+                                    Expanded(
+                                flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add padding around the text and icons
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded( // Wrap the text in an Expanded widget to allow for centering.
+                                        child: FittedBox( // Ensures that the text fits within the available space.
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            Reviewlist[index].reviewname.toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
                                             ),
+                                            textAlign: TextAlign.center, // Center text horizontally.
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ), 
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                           )
-                          )
+                              ),
+                            ],
+                          ),
                         )
-                      ); 
-                    },
-                  ),
-                ),
-              SizedBox(
+                      )
+                    )
+                  );
+                },
+              ),
+            ),
+            SizedBox(
                 height: 50,
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -221,42 +218,22 @@ class _HotelListScreenState extends State<HotelListScreen> {
                     return TextButton(
                         onPressed: () {
                           curpage = index + 1;
-                          loadhotel(index + 1);
+                          loadreview(index + 1);
                         },
                         child: Text(
                           (index + 1).toString(),
                           style: TextStyle(color: color, fontSize: 18),
-                        ));
-                  },
+                        )
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ]),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-    
-            if (widget.user.id != "na") {
-           
-              
-              await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (content) => addhotelscreen(user: widget.user)
-                          ));
-              loadhotel(1);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Please login/register an account")));
-            }
-          },
-          child: const Text(
-            "+",
-            style: TextStyle(fontSize: 32),
-          ),backgroundColor: Colors.amber,),
-          
+              ]
+            ),
           ); 
   }
 
-  void loadhotel(int pageno) {
+   void loadreview(int pageno) {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -264,14 +241,14 @@ class _HotelListScreenState extends State<HotelListScreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_review.php"),
         body: {
           
           "pageno": pageno.toString()
           }).then((response) {
       print(response.body);
       //log(response.body);
-      Hotellist.clear();
+      Reviewlist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
@@ -279,96 +256,38 @@ class _HotelListScreenState extends State<HotelListScreen> {
           numberofresult = int.parse(jsondata['numberofresult']);
           print(numberofresult);
           var extractdata = jsondata['data'];
-          extractdata['Hotel'].forEach((v) {
-            Hotellist.add(Hotel.fromJson(v));
+          extractdata['Review'].forEach((v) {
+            Reviewlist.add(Review.fromJson(v));
              
-          Hotellist.forEach((element) {
+          Reviewlist.forEach((element) {
            
           });
 
           });
-          print(Hotellist[0].hotelname);
+          print(Reviewlist[0].reviewname);
         }
         setState(() {});
       }
     });
   }
-  void onDeleteDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(
-            "Delete ${Hotellist[index].hotelname}?",
-          ),
-          content: const Text("Are you sure?", style: TextStyle()),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                "Yes",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                deleteHotel(index);
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                "No",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void deleteHotel(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_hotel.php"),
-        body: {
-          "userid": widget.user.id,
-          "HotelId": Hotellist[index].hotelid
-        }).then((response) {
-      print(response.body);
-      //Deslist.clear();
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == "success") {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Delete Success")));
-          loadhotel(index);
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Failed")));
-        }
-      }
-    });
-  }
  void _performSearch(String keyword) {
   
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_review.php"),
         body: {
           "userid":  widget.user.id,
           "search": keyword
         }).then((response) {
       //print(response.body);
       log(response.body);
-      Hotellist.clear();
+      Reviewlist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
           var extractdata = jsondata['data'];
-          extractdata['Hotel'].forEach((v) {
-            Hotellist.add(Hotel.fromJson(v));
+          extractdata['Review'].forEach((v) {
+            Reviewlist.add(Review.fromJson(v));
           });
-          print(Hotellist[0].hotelname);
+          print(Reviewlist[0].reviewname);
         }
         setState(() {});
       }

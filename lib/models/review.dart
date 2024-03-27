@@ -3,9 +3,6 @@ class Review {
   String? userId;
   String? reviewname;
   String? comment;
- 
-  
-  
 
   Review(
       {this.reviewid,

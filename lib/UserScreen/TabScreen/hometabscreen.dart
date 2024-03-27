@@ -1,15 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:myutk/AdminScreen/AdminDestination/admdestinationlistscreen.dart';
-import 'package:myutk/AdminScreen/AdminHotel/admhotellistscreen.dart';
+import 'package:myutk/UserScreen/UserReview/reviewlistscreen.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/UserScreen/UserDestination/destinationlistscreen.dart';
-import 'package:myutk/UserScreen/UserDestination/destinationdetailscreen.dart';
+import 'package:myutk/UserScreen/UserHotel/hotellistscreen.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -62,6 +60,7 @@ class _hometabscreenState extends State<hometabscreen> {
                     "assets/images/Logo.png",
                   ),
          backgroundColor: Colors.amber[200],
+         automaticallyImplyLeading: false,
         actions: [
           IconButton(
               onPressed: () {
@@ -137,12 +136,12 @@ class _hometabscreenState extends State<hometabscreen> {
                           child: Card(
                             child: InkWell(
                               onTap: () async {
-                                await Navigator.push(
+                                /*await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (content) => admdestinationlistscreen(user: widget.user)
                                   ),
-                                );
+                                );*/
                               },
                               child: Column(
                                 children: [
@@ -174,7 +173,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                     onPressed: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => admdestinationlistscreen(user: widget.user)),
+                                        MaterialPageRoute(builder: (context) => DestinationListScreen(user: widget.user)),
                                       );
                                     },
                                     color: Colors.amber,
@@ -212,10 +211,10 @@ class _hometabscreenState extends State<hometabscreen> {
                                                               height: 40,
                                                               elevation: 10,
                                                               onPressed: () {
-                                                                Navigator.push(
+                                                                /*Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(builder: (context) => destinationlistscreen(user: widget.user)),
-                                                                );
+                                                                );*/
                                                               },
                                                               color: Colors.amber,
                                                               textColor: Colors.black,
@@ -254,19 +253,17 @@ class _hometabscreenState extends State<hometabscreen> {
 
                                                               // Assuming your images are named "image1.png", "image2.png", etc.
                                                               String imageName = "hh${index + 1}";
-                                                              
-
                                                               return Container(
                                                                 height: 100,
                                                                 child: Card(
                                                                   child: InkWell(
                                                                     onTap: () async {
-                                                                      await Navigator.push(
+                                                                      /*await Navigator.push(
                                                                         context,
                                                                         MaterialPageRoute(
                                                                           builder: (content) => admhotellistscreen(user: widget.user)
                                                                         ),
-                                                                      );
+                                                                      );*/
                                                                     },
                                                                     child: Column(
                                                                       children: [
@@ -298,7 +295,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                                                           onPressed: () {
                                                                             Navigator.push(
                                                                               context,
-                                                                              MaterialPageRoute(builder: (context) => destinationlistscreen(user: widget.user)),
+                                                                              MaterialPageRoute(builder: (context) => HotelListScreen(user: widget.user)),
                                                                             );
                                                                           },
                                                                           color: Colors.amber,
@@ -335,7 +332,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                                                                     child: Card(
                                                                                       child: InkWell(
                                                                                         onTap: () async {
-                                                                                          await Navigator.push(
+                                                                                          /*await Navigator.push(
                                                                                             context,
                                                                                             MaterialPageRoute(
                                                                                               builder: (content) => destinationlistscreen(
@@ -343,7 +340,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                                                                                 
                                                                                               ),
                                                                                             ),
-                                                                                          );
+                                                                                          );*/
                                                                                         },
                                                                                         child: Column(
                                                                                           children: [
@@ -373,9 +370,9 @@ class _hometabscreenState extends State<hometabscreen> {
                                                                                               height: 40,
                                                                                               elevation: 10,
                                                                                               onPressed: () {
-                                                                                                Navigator.push(
+                                                                                               Navigator.push(
                                                                                                   context,
-                                                                                                  MaterialPageRoute(builder: (context) => destinationlistscreen(user: widget.user)),
+                                                                                                  MaterialPageRoute(builder: (context) => ReviewListScreen(user: widget.user)),
                                                                                                 );
                                                                                               },
                                                                                               color: Colors.amber,
@@ -383,26 +380,9 @@ class _hometabscreenState extends State<hometabscreen> {
                                                                                               child: const Text('More...',style: const TextStyle(fontSize: 20)),
                                                                                             ),
                                                                                         ),
-                                                                                      ),
-   
-         
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
-          ],
-        ),
-      ),
-    );
-}}
+                                                                                      ), 
+                                                                                    ],
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                        }}

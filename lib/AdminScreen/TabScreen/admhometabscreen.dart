@@ -7,7 +7,7 @@ import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/UserScreen/UserDestination/destinationlistscreen.dart';
-import 'package:myutk/UserScreen/UserDestination/destinationdetailscreen.dart';
+
 import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -135,15 +135,12 @@ class _admhometabscreenState extends State<admhometabscreen> {
                           child: Card(
                             child: InkWell(
                               onTap: () async {
-                                await Navigator.push(
+                                /*await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (content) => destinationdetailscreen(
-                                      user: widget.user,
-                                      
-                                    ),
+                                    builder: (content) => 
                                   ),
-                                );
+                                );*/
                               },
                               child: Column(
                                 children: [
@@ -173,10 +170,10 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                     height: 40,
                                     elevation: 10,
                                     onPressed: () {
-                                      Navigator.push(
+                                      /*Navigator.push(
                                         context,
                                         MaterialPageRoute(builder: (context) => destinationlistscreen(user: widget.user)),
-                                      );
+                                      );*/
                                     },
                                     color: Colors.amber,
                                     textColor: Colors.black,
@@ -213,10 +210,10 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                                               height: 40,
                                                               elevation: 10,
                                                               onPressed: () {
-                                                                Navigator.push(
+                                                                /*Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(builder: (context) => destinationlistscreen(user: widget.user)),
-                                                                );
+                                                                );*/
                                                               },
                                                               color: Colors.amber,
                                                               textColor: Colors.black,
@@ -262,7 +259,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                                                 child: Card(
                                                                   child: InkWell(
                                                                     onTap: () async {
-                                                                      await Navigator.push(
+                                                                      /*await Navigator.push(
                                                                         context,
                                                                         MaterialPageRoute(
                                                                           builder: (content) => destinationdetailscreen(
@@ -270,7 +267,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                                                             
                                                                           ),
                                                                         ),
-                                                                      );
+                                                                      );*/
                                                                     },
                                                                     child: Column(
                                                                       children: [
@@ -300,10 +297,10 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                                                           height: 40,
                                                                           elevation: 10,
                                                                           onPressed: () {
-                                                                            Navigator.push(
+                                                                           /* Navigator.push(
                                                                               context,
                                                                               MaterialPageRoute(builder: (context) => destinationlistscreen(user: widget.user)),
-                                                                            );
+                                                                            );*/
                                                                           },
                                                                           color: Colors.amber,
                                                                           textColor: Colors.black,
@@ -339,7 +336,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                                                                     child: Card(
                                                                                       child: InkWell(
                                                                                         onTap: () async {
-                                                                                          await Navigator.push(
+                                                                                          /*await Navigator.push(
                                                                                             context,
                                                                                             MaterialPageRoute(
                                                                                               builder: (content) => destinationlistscreen(
@@ -347,7 +344,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                                                                                 
                                                                                               ),
                                                                                             ),
-                                                                                          );
+                                                                                          );*/
                                                                                         },
                                                                                         child: Column(
                                                                                           children: [
@@ -377,10 +374,10 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                                                                               height: 40,
                                                                                               elevation: 10,
                                                                                               onPressed: () {
-                                                                                                Navigator.push(
+                                                                                                /*Navigator.push(
                                                                                                   context,
                                                                                                   MaterialPageRoute(builder: (context) => destinationlistscreen(user: widget.user)),
-                                                                                                );
+                                                                                                );*/
                                                                                               },
                                                                                               color: Colors.amber,
                                                                                               textColor: Colors.black,

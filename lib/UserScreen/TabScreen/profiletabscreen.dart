@@ -48,8 +48,6 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   @override
   void initState() {
     super.initState();
-    
-    
     print("Profile");
   }
 
@@ -72,6 +70,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
       appBar: AppBar(
         title: Text(maintitle,style: TextStyle(color: Colors.black,),),
         backgroundColor: Colors.amber[200],
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(Icons.logout, color: Colors.black),

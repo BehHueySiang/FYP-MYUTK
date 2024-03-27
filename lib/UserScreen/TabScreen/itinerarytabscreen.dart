@@ -53,38 +53,7 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
     }
     return Scaffold(
        appBar: AppBar(
-         title: Text(maintitle,style: TextStyle(color: Colors.black,),),
-         backgroundColor: Colors.amber[200],
-        actions: [
-          IconButton(
-              onPressed: () {
-                
-              },
-              icon: const Icon(Icons.search)),
-       
-          PopupMenuButton(
-              // add icon, by default "3 dot" icon
-              // icon: Icon(Icons.book)
-              itemBuilder: (context) {
-            return [
-              const PopupMenuItem<int>(
-                value: 0,
-                child: Text("My Order"),
-              ),
-              const PopupMenuItem<int>(
-                value: 1,
-                child: Text("New"),
-              ),
-            ];
-          }, onSelected: (value) async {
-            if (value == 0) {
-              if (widget.user.id.toString() == "na") {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("Please login/register an account")));
-                return;
-              }}})
-              
-              ]
+         
             ),
              backgroundColor: Colors.amber[50],
       body: const Center(

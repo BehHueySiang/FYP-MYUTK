@@ -1,44 +1,48 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:myutk/AdminScreen/AdminDestination/adddestinationscreen.dart';
+import 'package:myutk/models/destination.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
-import 'package:myutk/UserScreen/UserDestination/destinationdetailscreen.dart';
+
+import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.dart';
+import 'package:myutk/AdminScreen/AdminDestination/editdestinationscreen.dart';
 
 
-
-class destinationlistscreen extends StatefulWidget {
+class DestinationListScreen extends StatefulWidget {
   final User user;
-  const destinationlistscreen({super.key, required this.user});
+  
+  const DestinationListScreen({super.key, required this.user,});
 
   @override
-  State<destinationlistscreen> createState() => _destinationlistscreenState();
+  State<DestinationListScreen> createState() => _DestinationListScreenState();
 }
 
-class _destinationlistscreenState extends State<destinationlistscreen> {
-  TextEditingController _searchController = TextEditingController();
-  String maintitle = "Destination List";
- 
+class _DestinationListScreenState extends State<DestinationListScreen> {
+  Des destination = Des ();
   late double screenHeight, screenWidth;
+  TextEditingController _searchController = TextEditingController();
   late int axiscount = 2;
-   int itemsPerPage = 6;
-  late int curPage = 1;
-  late int totalPages = 6;
-  List<String> destinations = ["Gua Kelam", "Penang Komtar", "Alor Setar", "Langkawi", /* add more destinations */];
-
+  late List<Widget> tabchildren;
+  String maintitle = "Destination";
+    int numofpage = 1, curpage = 1, numberofresult = 0;
+  List<Des> Deslist = <Des>[];
+ 
   var color;
-
-  TextEditingController searchController = TextEditingController();
+  
   @override
   void initState() {
     super.initState();
-   
-    print("Destination List");
+    loaddes(1);
+    print("AddDesList");
   }
+
 
   @override
   void dispose() {
@@ -53,193 +57,246 @@ class _destinationlistscreenState extends State<destinationlistscreen> {
     if (screenWidth > 600) {
       axiscount = 3;
     } else {
-      axiscount = 2;
+      axiscount = 1;
     }
-   
     return Scaffold(
-       appBar: AppBar(
-        title: Image.asset(
-                    "assets/images/Logo.png",
-                  ),
+      appBar: AppBar(
+        title: Text(maintitle,style: TextStyle(color: Colors.black,),),
          backgroundColor: Colors.amber[200],
-        actions: [
-             IconButton(
-              onPressed: () {
-                
-              },
-              icon: const Icon(Icons.notifications_active)),
-       
-              
-              ]
-            ),
-             backgroundColor: Colors.amber[50],
-              body: Center(
-                
-                child: Column(children: [
-                  const SizedBox(height: 20,),
-                   Container(
-                              width: screenWidth,
-                              alignment: Alignment.center,
-                              color: Color.fromARGB(255, 243, 194, 35),
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+      ),
+
+      
+      backgroundColor: Colors.amber[50],
+      body: Column(children: [
+        const SizedBox(height: 20,),
+              Container(
+                width: screenWidth,
+                alignment: Alignment.center,
+                color: Color.fromARGB(255, 239, 219, 157),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Destination',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 16.0), // Adjust the right padding as needed
+                  child: Container(
+                    height: 40.0, // Set the height of the search bar
+                    width: screenWidth * 0.5, // Set the width of the search bar
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (keyword) {
+                        // You can perform search on each keystroke or update a debouncer for better performance
+                      },
+                      onSubmitted: (keyword) {
+                        _performSearch(keyword);
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Search',
+                        labelStyle: TextStyle(color: Colors.black),
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 244, 217, 138),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        suffixIcon: Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10,),
+           Expanded(
+            
+            child: Deslist.isEmpty
+              ? Center(
+                  child: Text("No Data"),
+                )
+: GridView.builder(
+
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: axiscount,
+      childAspectRatio: (6/ 2), // Adjust this value according to your images aspect ratio
+      // You may need to adjust childAspectRatio according to your item's aspect ratio
+    ),
+    itemCount: Deslist.length,
+    itemBuilder: (context, index) {
+      return Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10), // Adjust border radius as needed
+                    color: Colors.white, // You can set any color you like for the background
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child:Card(
+                    color: Colors.amber[100],
+                    child: InkWell(
+                     onTap: () async {
+                                
+                                Des destination =Des.fromJson(Deslist[index].toJson());
+                                await Navigator.push(context, MaterialPageRoute(builder: (content)=>AdmDestinationDetailScreen(user: widget.user, destination: destination )));
+                                loaddes(1);
+                              },
+   // Optional: Adds a slight shadow to the card
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Destination',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
+                                      child: CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Deslist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                        placeholder: (context, url) => const LinearProgressIndicator(),
+                                        errorWidget: (context, url, error) => const Icon(Icons.error),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                              const SizedBox(height: 20),
-                              Align(
-                                alignment: Alignment.centerRight,
+                                    Expanded(
+                                flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
                                 child: Padding(
-                                 padding: EdgeInsets.only(right: 16.0), // Adjust the right padding as needed
-                                  child: Container(
-                                    height: 40.0, // Set the height of the search bar
-                                    width: screenWidth * 0.5, // Set the width of the search bar
-                                    child: TextField(
-                                      controller: _searchController,
-                                      onChanged: (keyword) {
-                                        // You can perform search on each keystroke or update a debouncer for better performance
-                                      },
-                                      onSubmitted: (keyword) {
-                                        _performSearch(keyword);
-                                      },
-                                      decoration: InputDecoration(
-                                        labelText: 'Search',
-                                        filled: true,
-                                        fillColor: Colors.amber,
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0),),
-                                        
-                                        suffixIcon: Icon(Icons.search),
-                                      ),
-                                    ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add padding around the text and icons
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded( // Wrap the text in an Expanded widget to allow for centering.
+                                        child: FittedBox( // Ensures that the text fits within the available space.
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            Deslist[index].desname.toString(),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                            textAlign: TextAlign.center, // Center text horizontally.
+                                          ),
+                                        ),
+                                      ), 
+                                    ],
                                   ),
                                 ),
                               ),
-             // Number of items per page
-const SizedBox(height: 20,),
-
-Expanded(
-  child: PageView.builder(
-    controller: PageController(viewportFraction: 0.9), // Adjust the fraction as needed
-    itemCount: (destinations.length / itemsPerPage).ceil(),
-    itemBuilder: (context, pageIndex) {
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // 2 items in a row
-          crossAxisSpacing: 8.0,
-          mainAxisSpacing: 8.0,
-        ),
-        itemCount: itemsPerPage,
-        itemBuilder: (context, index) {
-          int itemIndex = pageIndex * itemsPerPage + index;
-          if (itemIndex >= destinations.length) {
-            return Container(); // Return an empty container for the last page if it's not fully filled
-          }
-
-          String destinationName = destinations[itemIndex];
-
-          // Assuming your images are named "image1.png", "image2.png", etc.
-          String imageName = "hd${itemIndex + 1}";
-
-          return Card(
-            child: InkWell(
-              onTap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (content) => destinationdetailscreen(
-                      user: widget.user,
-                    ),
-                  ),
-                );
-              },
-              child: Column(
-                children: [
-                  Image.asset("assets/images/$imageName.jpg", width: 200, height: 100, fit: BoxFit.cover),
-                  Text(
-                    destinationName,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ],
+                            ],
+                          ),
+                        )
+                      )
+                    )
+                  );
+                },
               ),
             ),
-          );
-        },
-      );
-    },
-  ),
-),
-Container(
-            // Pagination controls
-            padding: EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () {
-                    // Handle going to the previous page
-                    _goToPreviousPage();
-                  },
+            SizedBox(
+                height: 50,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: numofpage,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    //build the list for textbutton with scroll
+                    if ((curpage - 1) == index) {
+                      //set current page number active
+                      color = Colors.amber[800];
+                    } else {
+                      color = Colors.black;
+                    }
+                    return TextButton(
+                        onPressed: () {
+                          curpage = index + 1;
+                          loaddes(index + 1);
+                        },
+                        child: Text(
+                          (index + 1).toString(),
+                          style: TextStyle(color: color, fontSize: 18),
+                        )
+                      );
+                    },
+                  ),
                 ),
-                Text('Page $curPage of $totalPages'),
-                IconButton(
-                  icon: Icon(Icons.arrow_forward),
-                  onPressed: () {
-                    // Handle going to the next page
-                    _goToNextPage();
-                  },
-                ),
-              ],
+              ]
             ),
-          ),
+          ); 
+  }
 
+  void loaddes(int pageno) {
+    if (widget.user.id == "na") {
+      setState(() {
+        // titlecenter = "Unregistered User";
+      });
+      return;
+    }
 
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+        body: {
+          
+          "pageno": pageno.toString()
+          }).then((response) {
+      print(response.body);
+      //log(response.body);
+      Deslist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          numofpage = int.parse(jsondata['numofpage']); //get number of pages
+          numberofresult = int.parse(jsondata['numberofresult']);
+          print(numberofresult);
+          var extractdata = jsondata['data'];
+          extractdata['Des'].forEach((v) {
+            Deslist.add(Des.fromJson(v));
+             
+          Deslist.forEach((element) {
+           
+          });
 
-
-        ]
-      )
-    ),
-
-
-
-
-
-
-
-
-
-
-
-);
-}void _goToNextPage() {
-    setState(() {
-      if (curPage < totalPages) {
-        curPage++;
+          });
+          print(Deslist[0].desname);
+        }
+        setState(() {});
       }
     });
   }
-
-  void _goToPreviousPage() {
-    setState(() {
-      if (curPage > 1) {
-        curPage--;
-      }
-    });
-  }}
-void _performSearch(String keyword) {
-    // Implement your search logic here
-    print('Searching for: $keyword');
-    // Add your logic to handle the search results
-  }
+ void _performSearch(String keyword) {
   
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+        body: {
+          "userid":  widget.user.id,
+          "search": keyword
+        }).then((response) {
+      //print(response.body);
+      log(response.body);
+      Deslist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          var extractdata = jsondata['data'];
+          extractdata['Des'].forEach((v) {
+            Deslist.add(Des.fromJson(v));
+          });
+          print(Deslist[0].desname);
+        }
+        setState(() {});
+      }
+    });
+  
+  }
+   
+}

@@ -10,7 +10,7 @@ import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
-import 'package:myutk/UserScreen/UserDestination/destinationdetailscreen.dart';
+
 import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.dart';
 import 'package:myutk/AdminScreen/AdminDestination/editdestinationscreen.dart';
 

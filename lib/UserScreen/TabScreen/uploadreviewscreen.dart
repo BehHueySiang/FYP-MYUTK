@@ -61,12 +61,49 @@ class _uploadreviewscreenState extends State<uploadreviewscreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text(maintitle,style: TextStyle(color: Colors.black,),),
-         backgroundColor: Colors.amber[200],
+         title: Image.asset("assets/images/Logo.png"),
+        backgroundColor: Colors.amber[200],
+        automaticallyImplyLeading: false,
+        actions: [ Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 16.0), // Adjust the right padding as needed
+                  child: Container(
+                    height: 40.0, // Set the height of the search bar
+                    width: screenWidth * 0.35, // Set the width of the search bar
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (keyword) {
+                        // You can perform search on each keystroke or update a debouncer for better performance
+                      },
+                      onSubmitted: (keyword) {
+                        _performSearch(keyword);
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Search',
+                        labelStyle: TextStyle(color: Colors.black),
+                        filled: true,
+                        fillColor: Color.fromARGB(255, 252, 252, 252),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        suffixIcon: Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications_active),
+          ),
+        ],
+         
       ),
 
       
       backgroundColor: Colors.amber[50],
+      
       body: Column(children: [
         const SizedBox(height: 20,),
               Container(
@@ -90,38 +127,8 @@ class _uploadreviewscreenState extends State<uploadreviewscreen> {
                 ),
               ),
               SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 16.0), // Adjust the right padding as needed
-                  child: Container(
-                    height: 40.0, // Set the height of the search bar
-                    width: screenWidth * 0.5, // Set the width of the search bar
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: (keyword) {
-                        // You can perform search on each keystroke or update a debouncer for better performance
-                      },
-                      onSubmitted: (keyword) {
-                        _performSearch(keyword);
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Search',
-                        labelStyle: TextStyle(color: Colors.black),
-                        filled: true,
-                        fillColor: const Color.fromARGB(255, 244, 217, 138),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        suffixIcon: Icon(Icons.search),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10,),
+             
            Expanded(
-            
             child: Reviewlist.isEmpty
               ? Center(
                   child: Text("No Data"),
@@ -291,18 +298,16 @@ class _uploadreviewscreenState extends State<uploadreviewscreen> {
 
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_review.php"),
         body: {
+          "userid": widget.user.id,
           
-          "pageno": pageno.toString()
           }).then((response) {
+            log(response.body);
       print(response.body);
       //log(response.body);
       Reviewlist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
-          numofpage = int.parse(jsondata['numofpage']); //get number of pages
-          numberofresult = int.parse(jsondata['numberofresult']);
-          print(numberofresult);
           var extractdata = jsondata['data'];
           extractdata['Review'].forEach((v) {
             Reviewlist.add(Review.fromJson(v));

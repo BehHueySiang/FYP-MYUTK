@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
     print("Mainscreen");
     tabchildren = [
       hometabscreen(user: widget.user),
-      budgettabscreen(user: widget.user),
+      BudgetTabScreen(user: widget.user),
       itinerarytabscreen(user: widget.user),
       uploadreviewscreen(user: widget.user),
       ProfileTabScreen(user: widget.user,),
