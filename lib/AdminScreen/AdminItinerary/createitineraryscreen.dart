@@ -209,12 +209,12 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
                       ElevatedButton(
                         onPressed: () {
                             
-                            
+                             String base64Image = base64Encode(_image!.readAsBytesSync());
                              int number = int.tryParse(daynum) ?? 0;
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ItinerarylListDetailScreen(user: widget.user, number: number,  triptype: triptype,  state: state,  tripname: _TripNameEditingController.text ),
+                                    builder: (context) => ItinerarylListDetailScreen(user: widget.user, number: number,  triptype: triptype,  state: state,  tripname: _TripNameEditingController.text, itineraryimage:base64Image ),
                                   ),
                                 );
                         },

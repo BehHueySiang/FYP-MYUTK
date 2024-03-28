@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/AdminScreen/AdminDestination/adddestinationscreen.dart';
 import 'package:myutk/models/destination.dart';
+import 'package:myutk/models/tripday.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
@@ -17,15 +18,15 @@ import 'package:myutk/AdminScreen/AdminDestination/editdestinationscreen.dart';
 
 class AddItineraryDestinationScreen extends StatefulWidget {
   final User user;
-  
-  const AddItineraryDestinationScreen({super.key, required this.user,});
+  final Des destination;
+  const AddItineraryDestinationScreen({super.key, required this.user, required this.destination});
 
   @override
   State<AddItineraryDestinationScreen> createState() => _AddItineraryDestinationScreenState();
 }
 
 class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationScreen> {
-  Des destination = Des ();
+  
   late double screenHeight, screenWidth;
   TextEditingController _searchController = TextEditingController();
   late int axiscount = 2;
@@ -36,6 +37,10 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
    String DesState = "Kedah";
         List<String> Statelist = [
           "Kedah","Pulau Penang","Perlis"
+        ];
+   String Tripday = "1";
+        List<String> Tripdaylist= [
+          "1","2","3"
         ];
  
   var color;
@@ -148,6 +153,9 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
                                                 await Navigator.push(context, MaterialPageRoute(builder: (content)=>AdmDestinationDetailScreen(user: widget.user, destination: destination )));
                                                 loaddes(1);
                                               },
+                                     onLongPress: () {
+                                _showAddToTripDialog(index);
+                              },
                   // Optional: Adds a slight shadow to the card
                   child: Row(
                     children: <Widget>[
@@ -180,33 +188,6 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
                               textAlign: TextAlign.center, // Center text horizontally.
                             ),
                           ),
-                        ),
-                        // The icons row will be aligned at the bottom.
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end, // Aligns the icons to the right
-                          children: <Widget>[
-                            IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () async{
-                                Des desitm =Des.fromJson(Deslist[index].toJson());
-                                      await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              
-                                              builder: (content) => editdestinationscreen(user: widget.user, destination: desitm ,)
-                                            
-                                            ),
-                                          );  loaddes(1);
-                              },
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                onDeleteDialog(index);
-                                
-                              },
-                            ),
-                          ],
                         ),
                       ],
                     ),
@@ -245,28 +226,6 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
                 ),
               ),
             ]),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-    
-            if (widget.user.id != "na") {
-           
-              
-              await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (content) => adddestinationscreen(user: widget.user)
-                          ));
-              loaddes(1);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Please login/register an account")));
-            }
-          },
-          child: const Text(
-            "+",
-            style: TextStyle(fontSize: 32),
-          ),backgroundColor: Colors.amber,),
-          
           ); 
   }
 
@@ -474,6 +433,94 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
       }
     });
   
+  }
+   void _showAddToTripDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Add to Trip"),
+          content: SingleChildScrollView(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Text("Do you want to add ${Deslist[index].desname} to which day of your trip itinerary?"),
+              const SizedBox(height: 15,),
+               SizedBox(
+                              height: 60,
+                              child: DropdownButtonFormField(
+                                decoration: const InputDecoration(
+                                  labelText: 'Days',
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 2.0),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 2.0),
+                                  ),
+                                ),
+                                value: Tripday,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    Tripday = newValue!;
+                                    print(Tripday);
+                                  });
+                                },
+                                items: Tripdaylist.map((Tripday) {
+                                  return DropdownMenuItem(
+                                    value: Tripday,
+                                    child: Text(
+                                      Tripday,
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),])),
+          actions: <Widget>[
+            
+            TextButton(
+              child: Text("Yes"),
+              onPressed: () {
+                addToTripItinerary(index);
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void addToTripItinerary(int index) {
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtotripday.php"),
+        body: {
+          "Des_id": Deslist[index].desid,
+          "Day_Name": Tripday,
+    
+          "userid": widget.user.id,
+          
+        }).then((response) {
+      print(response.body);
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == 'success') {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Success")));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Failed")));
+        }
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Failed")));
+        Navigator.pop(context);
+      }
+    });
   }
    
 }

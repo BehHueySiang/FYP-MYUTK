@@ -9,6 +9,7 @@ import 'package:myutk/AdminScreen/AdminItinerary/additinerarydestination.dart';
 import 'package:myutk/UserScreen/UserReview/addreviewscreen.dart';
 import 'package:myutk/UserScreen/UserReview/editreviewscreen.dart';
 import 'package:myutk/models/review.dart';
+import 'package:myutk/models/tripday.dart';
 import 'package:myutk/models/destination.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -25,8 +26,10 @@ class ItinerarylListDetailScreen extends StatefulWidget {
    final String state;
    final String triptype;
    final String tripname;
+   final String itineraryimage;
   const ItinerarylListDetailScreen({super.key, required this.user,
-  required this.number,required this.state,required this.triptype,required this.tripname});
+  required this.number,required this.state,required this.triptype,
+  required this.tripname,required this.itineraryimage });
 
   @override
   State<ItinerarylListDetailScreen> createState() => _ItinerarylListDetailScreenState();
@@ -35,19 +38,22 @@ class ItinerarylListDetailScreen extends StatefulWidget {
 class _ItinerarylListDetailScreenState extends State<ItinerarylListDetailScreen> {
   Review review = Review ();
   Des des = Des ();
+    Tripday tripday = Tripday ();
   late double screenHeight, screenWidth;
   late int axiscount = 2;
   late List<Widget> tabchildren;
   String maintitle = "Review";
-    int numofpage = 1, curpage = 1, numberofresult = 0;
+  int numofpage = 1, curpage = 1, numberofresult = 0, index = 0;
   List<Review> Reviewlist = <Review>[];
- List<Des> Deslist = <Des>[];
+  List<Tripday> Tripdaylist = <Tripday>[];
+  List<Des> Deslist = <Des>[];
   var color;
   
   @override
   void initState() {
     super.initState();
     loaddes(1);
+    loadtripday();
   }
 
 
@@ -177,8 +183,8 @@ Widget build(BuildContext context) {
                   ),
                   SizedBox(height: 10), // Adjust the spacing between the Row and Container
                 Container(
-  height: Deslist.isEmpty ? screenHeight * 0.6 : null,
-  child: Deslist.isEmpty
+  height: Tripdaylist.isEmpty ? screenHeight * 0.6 : null,
+  child: Tripdaylist.isEmpty
       ? Center(
           child: Text("No Data"),
         )
@@ -190,7 +196,7 @@ Widget build(BuildContext context) {
               crossAxisCount: axiscount,
               childAspectRatio: (6 / 2),
             ),
-            itemCount: Deslist.length,
+            itemCount: Tripdaylist.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -219,13 +225,16 @@ Widget build(BuildContext context) {
                         children: <Widget>[
                           Expanded(
                             flex: 2,
-                            child: CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Deslist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
-                              placeholder: (context, url) => const LinearProgressIndicator(),
-                              errorWidget: (context, url, error) => const Icon(Icons.error),
-                            ),
-                          ),
+                           // Unique tag for each CachedNetworkImage
+                                child: CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Tripdaylist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                  placeholder: (context, url) => const LinearProgressIndicator(),
+                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+
+                                ),
+                              ),
+                          
                           Expanded(
                             flex: 2,
                             child: Padding(
@@ -238,7 +247,7 @@ Widget build(BuildContext context) {
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        Deslist[index].desname.toString(),
+                                        Tripdaylist[index].desname.toString(),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
@@ -262,29 +271,54 @@ Widget build(BuildContext context) {
         ),
 ),
 
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
-          ),)]
+          ),
+          ),
+          ElevatedButton(
+                        onPressed: () {
+                           addItinerary();
+                            Navigator.of(context).pop();  
+                        },
+                        child: const Text(
+                          "Submit",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),
+                        ),
+                      ),
+                       SizedBox(height: 30),
+          
+          ]
         ),
       ),
     ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: ()async {
+   
+floatingActionButton: 
+    FloatingActionButton(
+
+      onPressed: () async {
+        Des destination =Des.fromJson(Deslist[index].toJson());
         await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (content) => AddItineraryDestinationScreen(user: widget.user)
-                          ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddItineraryDestinationScreen(user: widget.user, destination: destination,),
+          ),
+        );loadtripday();
       },
       child: Icon(Icons.add),
       backgroundColor: Colors.amber, // Set your preferred background color
     ),
+  
+
+   
   );
 }
 
-              void loaddes(int pageno) {
+ void loaddes(int pageno) {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -320,4 +354,66 @@ Widget build(BuildContext context) {
       }
     });
   }
+  void loadtripday() {
+    if (widget.user.id == "na") {
+      setState(() {
+        // titlecenter = "Unregistered User";
+      });
+      return;
+    }
+
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripday.php"),
+        body: {
+          "userid": widget.user.id.toString(),
+          }).then((response) {
+      print(response.body);
+      //log(response.body);
+      Deslist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          
+       
+          var extractdata = jsondata['data'];
+          extractdata['Tripday'].forEach((v) {
+            Tripdaylist.add(Tripday.fromJson(v));
+             
+          Tripdaylist.forEach((element) {
+           
+          });
+
+          });
+          print(Tripdaylist[0].desname);
+        }
+        setState(() {});
+      }
+    });
+  }
+
+  void addItinerary() {
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtotripday.php"),
+        body: {
+    
+          "userid": widget.user.id,
+          
+        }).then((response) {
+      print(response.body);
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == 'success') {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Success")));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Failed")));
+        }
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Failed")));
+        Navigator.pop(context);
+      }
+    });
+  }
+
     }
