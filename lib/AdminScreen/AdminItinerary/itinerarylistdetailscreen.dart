@@ -11,6 +11,7 @@ import 'package:myutk/UserScreen/UserReview/editreviewscreen.dart';
 import 'package:myutk/models/review.dart';
 import 'package:myutk/models/tripday.dart';
 import 'package:myutk/models/destination.dart';
+import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
@@ -22,14 +23,11 @@ import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.da
 
 class ItinerarylListDetailScreen extends StatefulWidget {
    final User user;
-   final int number;
-   final String state;
-   final String triptype;
-   final String tripname;
-   final String itineraryimage;
+   final Tripinfo tripinfo;
+
+   
   const ItinerarylListDetailScreen({super.key, required this.user,
-  required this.number,required this.state,required this.triptype,
-  required this.tripname,required this.itineraryimage });
+  required this.tripinfo, });
 
   @override
   State<ItinerarylListDetailScreen> createState() => _ItinerarylListDetailScreenState();
@@ -46,14 +44,17 @@ class _ItinerarylListDetailScreenState extends State<ItinerarylListDetailScreen>
   int numofpage = 1, curpage = 1, numberofresult = 0, index = 0;
   List<Review> Reviewlist = <Review>[];
   List<Tripday> Tripdaylist = <Tripday>[];
+  List<Tripinfo> Tripinfolist = <Tripinfo>[];
   List<Des> Deslist = <Des>[];
   var color;
+  
   
   @override
   void initState() {
     super.initState();
     loaddes(1);
     loadtripday();
+    loadtripinfo();
   }
 
 
@@ -101,7 +102,7 @@ Widget build(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.tripname,
+                  widget.tripinfo.tripname.toString(),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -121,7 +122,7 @@ Widget build(BuildContext context) {
                   ),
                 ),
                 Text(
-                  widget.triptype,
+                  widget.tripinfo.triptype.toString(),
                   style: TextStyle(
                     fontSize: 15,
                     
@@ -136,7 +137,7 @@ Widget build(BuildContext context) {
                   ),
                 ),
                 Text(
-                  widget.number.toString(),
+                  widget.tripinfo.tripday.toString(),
                   style: TextStyle(
                     fontSize: 15,
                     
@@ -153,7 +154,7 @@ Widget build(BuildContext context) {
                   ),
                 ),
                 Text(
-                  widget.state,
+                  widget.tripinfo.tripstate.toString(),
                   style: TextStyle(
                     fontSize: 15,
                     
@@ -164,7 +165,8 @@ Widget build(BuildContext context) {
                const SizedBox(height: 20,), 
           Column(
           children:  List.generate(
-            widget.number,
+  
+           int.tryParse(widget.tripinfo.tripday.toString()) ?? 0,
             (index) => GestureDetector(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,7 +281,7 @@ Widget build(BuildContext context) {
           ),
           ElevatedButton(
                         onPressed: () {
-                           addItinerary();
+                           //addItinerary();
                             Navigator.of(context).pop();  
                         },
                         child: const Text(
@@ -302,23 +304,18 @@ floatingActionButton:
 
       onPressed: () async {
       
-                if (index >= 0 && index < Tripdaylist.length || index == 0 && Tripdaylist.isEmpty) {
-                        Tripday destination;
-                        if (Tripdaylist.isNotEmpty) {
-                          destination = Tripday.fromJson(Tripdaylist[index].toJson());
-                        } else {
-                          // If Tripdaylist is empty or index is 0, create a new Tripday instance
-                          destination = Tripday(); // Or whatever initialization logic you need
-                        }
-                        
+                
+                       Tripinfo tripinfo = Tripinfo.fromJson(Tripinfolist[index].toJson());
+                       Des destination = Des.fromJson(Deslist[index].toJson());
+                       
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AddItineraryDestinationScreen(user: widget.user, destination: destination,),
+                            builder: (context) => AddItineraryDestinationScreen(user: widget.user,destination: destination, tripinfo: tripinfo),
                           ),
                         );
                         loadtripday();
-                      }
+                      
 
               
 
@@ -368,7 +365,7 @@ floatingActionButton:
       }
     });
   }
-  void loadtripday() {
+  void loadtripinfo() {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -376,13 +373,51 @@ floatingActionButton:
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripday.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
+         
           }).then((response) {
       print(response.body);
       //log(response.body);
-      Deslist.clear();
+      Tripinfolist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          
+       
+          var extractdata = jsondata['data'];
+          extractdata['Tripinfo'].forEach((v) {
+            Tripinfolist.add(Tripinfo.fromJson(v));
+             
+          Tripinfolist.forEach((element) {
+           
+          });
+
+          });
+          print(Tripinfolist[0].tripname);
+        }
+        setState(() {});
+      }
+    });
+  }
+  void loadtripday() {
+    if (widget.user.id == "na") {
+      setState(() {
+        // titlecenter = "Unregistered User";
+      });
+      return;
+    }
+ 
+
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripday.php"),
+        body: {
+          "userid": widget.user.id.toString(),
+          "Trip_id": widget.tripinfo.tripid.toString(),
+          }).then((response) {
+      print(response.body);
+      //log(response.body);
+      Tripdaylist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
@@ -404,30 +439,6 @@ floatingActionButton:
     });
   }
 
-  void addItinerary() {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtotripday.php"),
-        body: {
-    
-          "userid": widget.user.id,
-          
-        }).then((response) {
-      print(response.body);
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == 'success') {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Success")));
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Failed")));
-        }
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Failed")));
-        Navigator.pop(context);
-      }
-    });
-  }
+  
 
     }

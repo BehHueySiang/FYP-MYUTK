@@ -3,6 +3,7 @@ class Tripday {
   String? dayname;
   String? desid;
   String? userId;
+  String? tripid;
   String? desname;
   String? url;
   String? opentime;
@@ -12,6 +13,11 @@ class Tripday {
   String? desstate;
   String? desrate;
   String? desbudget;
+  String? tripname;
+  String? triptype;
+  String? tripstate;
+  String? tripday;
+   
   
 
   Tripday(
@@ -19,6 +25,7 @@ class Tripday {
       this.dayname, 
       this.desid,
       this.userId,
+      this.tripid,
       this.desname,
       this.url,
       this.opentime,
@@ -27,13 +34,18 @@ class Tripday {
       this.activity,
       this.desstate,
       this.desrate,
-      this.desbudget});
+      this.desbudget,
+      this.tripname,
+      this.triptype,
+      this.tripstate,
+      this.tripday,});
 
   Tripday.fromJson(Map<String, dynamic> json) {
     dayid = json['Day_id'];
     dayname = json['Day_Name'];
     desid = json['Des_id'];
     userId = json['userid'];
+    tripid = json['Trip_id'];
     desname = json['Des_Name'];
     url = json['Url'];
     opentime = json['Open_Time'];
@@ -43,6 +55,10 @@ class Tripday {
     desstate = json['Des_State'];
     desrate = json['Des_Rate'];
     desbudget = json['Des_Budget'];
+    tripname = json['Trip_Name'];
+    triptype = json['Trip_Type'];
+    tripstate = json['Trip_State'];
+    tripday = json['Trip_Day'];
     
   }
 
@@ -52,6 +68,7 @@ class Tripday {
     data['Day_Name'] = dayname;
     data['Des_id'] = desid;
     data['user_id'] = userId;
+    data['Trip_id'] = tripid;
     data['Des_Name'] = desname;
     data['Url'] = url;
     data['Open_Time'] = opentime;
@@ -61,6 +78,10 @@ class Tripday {
     data['Des_State'] = desstate;
     data['Des_Rate'] = desrate;
     data['Des_Budget'] = desbudget;
+    data['Trip_Name'] = tripname;
+    data['Trip_Type'] = triptype;
+    data['Trip_State'] = tripstate;
+    data['Trip_Day'] = tripday;
     return data;
   }
 }

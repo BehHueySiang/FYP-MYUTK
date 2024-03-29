@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:myutk/AdminScreen/AdminDestination/adddestinationscreen.dart';
 import 'package:myutk/models/destination.dart';
 import 'package:myutk/models/tripday.dart';
+import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
@@ -18,8 +19,10 @@ import 'package:myutk/AdminScreen/AdminDestination/editdestinationscreen.dart';
 
 class AddItineraryDestinationScreen extends StatefulWidget {
   final User user;
-  final Tripday destination;
-  const AddItineraryDestinationScreen({super.key, required this.user, required this.destination});
+  final Des destination;
+  
+  final Tripinfo tripinfo;
+  const AddItineraryDestinationScreen({super.key, required this.user, required this.destination,required this.tripinfo});
 
   @override
   State<AddItineraryDestinationScreen> createState() => _AddItineraryDestinationScreenState();
@@ -34,6 +37,7 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
   String maintitle = "Adm Destination List";
     int numofpage = 1, curpage = 1, numberofresult = 0;
   List<Des> Deslist = <Des>[];
+  List<Tripinfo> Tripinfolist = <Tripinfo>[];
    String DesState = "Kedah";
         List<String> Statelist = [
           "Kedah","Pulau Penang","Perlis"
@@ -499,8 +503,8 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtotripday.php"),
         body: {
           "Des_id": Deslist[index].desid,
+          "Trip_id": widget.tripinfo.tripid,
           "Day_Name": Tripday,
-    
           "userid": widget.user.id,
           
         }).then((response) {
@@ -522,5 +526,6 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
       }
     });
   }
+ 
    
 }

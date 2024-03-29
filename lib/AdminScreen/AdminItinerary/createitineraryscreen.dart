@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myutk/AdminScreen/AdminItinerary/itinerarylistdetailscreen.dart';
+import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
@@ -20,7 +21,7 @@ class CreateItineraryScreen extends StatefulWidget {
 class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
   File? _image;
   var pathAsset = "assets/images/camera1.png";
-  int index = 0;
+  
   late double screenHeight, screenWidth;
   List<String> triptypelist = ["One state Trip", "Two state Trip", "Three state Trip",];
   String triptype = "One state Trip";
@@ -28,11 +29,17 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
   String state = "Kedah";
   List<String> Daylist = ["1", "2", "3"];
   String daynum = "1";
+  List<Tripinfo> Tripinfolist = <Tripinfo>[];
   
   final TextEditingController _TripNameEditingController =
           TextEditingController();
 
-  @override
+ @override
+  void initState() {
+    super.initState();
+    loadtripinfo();
+    print("AddDesList");
+  }
 
 
   @override
@@ -208,18 +215,11 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                            
-                             String base64Image = base64Encode(_image!.readAsBytesSync());
-                             int number = int.tryParse(daynum) ?? 0;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ItinerarylListDetailScreen(user: widget.user, number: number,  triptype: triptype,  state: state,  tripname: _TripNameEditingController.text, itineraryimage:base64Image ),
-                                  ),
-                                );
+                            addtripinfo();
+
                         },
                         child: const Text(
-                          "Next",
+                          "Create",
                           style: TextStyle(color: Colors.black),
                         ),
                         style: ButtonStyle(
@@ -285,4 +285,75 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
       setState(() {});
     }
   }
+
+   void addtripinfo()  {
+  
+    String base64Image = base64Encode(_image!.readAsBytesSync());
+    String tripname = _TripNameEditingController.text;
+     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/additineraryinfo.php"),
+        body: {
+          "userid": widget.user.id,
+          "Trip_Name": tripname,
+          "Trip_State": state,
+          "Trip_Type": triptype,
+          "Trip_Day": daynum,
+          "image": base64Image
+         }).then((response) {
+      print(response.body);
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == 'success') {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Insert Successfully")));
+         
+              
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Insert Failed")));
+        }
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Insert Failed")));
+        Navigator.pop(context);
+      }
+    });
+  }
+void loadtripinfo() {
+    if (widget.user.id == "na") {
+      setState(() {
+        // titlecenter = "Unregistered User";
+      });
+      return;
+    }
+
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+        body: {
+          "userid": widget.user.id.toString(),
+         
+          }).then((response) {
+      print(response.body);
+      //log(response.body);
+      Tripinfolist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          
+       
+          var extractdata = jsondata['data'];
+          extractdata['Tripinfo'].forEach((v) {
+            Tripinfolist.add(Tripinfo.fromJson(v));
+             
+          Tripinfolist.forEach((element) {
+           
+          });
+
+          });
+          print(Tripinfolist[0].tripname);
+        }
+        setState(() {});
+      }
+    });
+  }
+  
 }
