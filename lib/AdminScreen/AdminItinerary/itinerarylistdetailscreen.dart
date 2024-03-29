@@ -301,13 +301,27 @@ floatingActionButton:
     FloatingActionButton(
 
       onPressed: () async {
-        Des destination =Des.fromJson(Deslist[index].toJson());
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AddItineraryDestinationScreen(user: widget.user, destination: destination,),
-          ),
-        );loadtripday();
+      
+                if (index >= 0 && index < Tripdaylist.length || index == 0 && Tripdaylist.isEmpty) {
+                        Tripday destination;
+                        if (Tripdaylist.isNotEmpty) {
+                          destination = Tripday.fromJson(Tripdaylist[index].toJson());
+                        } else {
+                          // If Tripdaylist is empty or index is 0, create a new Tripday instance
+                          destination = Tripday(); // Or whatever initialization logic you need
+                        }
+                        
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddItineraryDestinationScreen(user: widget.user, destination: destination,),
+                          ),
+                        );
+                        loadtripday();
+                      }
+
+              
+
       },
       child: Icon(Icons.add),
       backgroundColor: Colors.amber, // Set your preferred background color

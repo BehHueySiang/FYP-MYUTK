@@ -18,7 +18,7 @@ import 'package:myutk/AdminScreen/AdminDestination/editdestinationscreen.dart';
 
 class AddItineraryDestinationScreen extends StatefulWidget {
   final User user;
-  final Des destination;
+  final Tripday destination;
   const AddItineraryDestinationScreen({super.key, required this.user, required this.destination});
 
   @override
