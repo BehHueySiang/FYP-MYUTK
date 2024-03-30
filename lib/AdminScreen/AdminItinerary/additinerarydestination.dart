@@ -21,7 +21,7 @@ class AddItineraryDestinationScreen extends StatefulWidget {
   final User user;
   final Des destination;
   
-  final Tripinfo tripinfo;
+  final String tripinfo;
   const AddItineraryDestinationScreen({super.key, required this.user, required this.destination,required this.tripinfo});
 
   @override
@@ -270,64 +270,7 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
       }
     });
   }
-  void onDeleteDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(
-            "Delete ${Deslist[index].desname}?",
-          ),
-          content: const Text("Are you sure?", style: TextStyle()),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                "Yes",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                deleteDes(index);
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                "No",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void deleteDes(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_des.php"),
-        body: {
-          "userid": widget.user.id,
-          "DesId": Deslist[index].desid
-        }).then((response) {
-      print(response.body);
-      //Deslist.clear();
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == "success") {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Delete Success")));
-          loaddes(index);
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Failed")));
-        }
-      }
-    });
-  }
+  
   void showsearchDialog() {
     showDialog(
       context: context,
@@ -503,11 +446,12 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtotripday.php"),
         body: {
           "Des_id": Deslist[index].desid,
-          "Trip_id": widget.tripinfo.tripid,
+          "Trip_id": widget.tripinfo,
           "Day_Name": Tripday,
           "userid": widget.user.id,
           
         }).then((response) {
+         
       print(response.body);
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);

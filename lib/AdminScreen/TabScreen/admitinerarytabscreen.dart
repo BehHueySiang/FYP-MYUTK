@@ -8,7 +8,7 @@ import 'package:myutk/AdminScreen/AdminItinerary/createitineraryscreen.dart';
 import 'package:myutk/AdminScreen/AdminItinerary/itinerarylistdetailscreen.dart';
 import 'package:myutk/UserScreen/UserReview/addreviewscreen.dart';
 import 'package:myutk/UserScreen/UserReview/editreviewscreen.dart';
-
+import 'package:myutk/AdminScreen/AdminItinerary/edittripitinerary.dart';
 import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -200,14 +200,29 @@ class _admitinerarytabscreenState extends State<admitinerarytabscreen> {
                   ),
                   IconButton(
                     icon: Icon(Icons.edit),
-                    onPressed: () {
-                      // Handle edit action
+                    onPressed: () async{
+                       if (widget.user.id != "na") {
+           
+              Tripinfo tripinfo =
+                                    Tripinfo.fromJson(Tripinfolist[index].toJson());
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                
+                                  builder: (content) => EditTripItineraryScreen(user: widget.user, tripinfo: tripinfo),
+                                      ));
+                          loadtripinfo();
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Please login/register an account")));
+            }
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      // Handle delete action
+                       onDeleteDialog(index);
+                       loadtripinfo();
                     },
                   ),
                 ],
@@ -284,6 +299,64 @@ class _admitinerarytabscreenState extends State<admitinerarytabscreen> {
       }
     });
   }
+  void onDeleteDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Text(
+            "Delete this destination from this trip?",
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                deletetripitinerary(index);
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deletetripitinerary(int index) {
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletetripitinerary.php"),
+        body: {
+          "userid": widget.user.id,
+          "Trip_id": Tripinfolist[index].tripid,
+        }).then((response) {
+      print(response.body);
+      //Deslist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Delete Success")));
+          loadtripinfo();
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Failed")));
+        }
+      }
+    });
+  } 
   
    
 }

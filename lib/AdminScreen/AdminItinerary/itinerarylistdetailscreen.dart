@@ -114,49 +114,50 @@ Widget build(BuildContext context) {
         ),
         const SizedBox(height: 20,),
           Row( children: [
+                const SizedBox(width: 20,),
                 Text(
-                  '    Trip Type :  ',
+                  'Trip Type :  ',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   widget.tripinfo.triptype.toString(),
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 18,
                     
                   ),
                 ),
-                const SizedBox(width:20,),
+                const SizedBox(width:50,),
                 Text(
                   ' Days :    ',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   widget.tripinfo.tripday.toString(),
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 18,
                     
                   ),
                 ),
               ],),
                const SizedBox(height: 10,),
-               Row( children: [
+               Row( children: [const SizedBox(width: 20,),
                 Text(
-                  '    State :  ',
+                  '     State :  ',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   widget.tripinfo.tripstate.toString(),
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 18,
                     
                   ),
                 ),
@@ -164,120 +165,129 @@ Widget build(BuildContext context) {
               ],),   
                const SizedBox(height: 20,), 
           Column(
-          children:  List.generate(
-  
-           int.tryParse(widget.tripinfo.tripday.toString()) ?? 0,
-            (index) => GestureDetector(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        '     Day  ',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          children: List.generate(
+  int.tryParse(widget.tripinfo.tripday.toString()) ?? 0,
+  (index) {
+    // Filter destinations for the current day
+    List<Tripday> destinationsForDay = Tripdaylist.where((destination) => destination.dayname == (index + 1).toString()).toList();
+    
+    return GestureDetector(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                '     Day  ',
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+              Text(
+                (index + 1).toString(),
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Container(
+            height: destinationsForDay.isEmpty ? screenHeight * 0.6 : null,
+            child: destinationsForDay.isEmpty
+                ? Center(
+                    child: Text("No Data"),
+                  )
+                : SingleChildScrollView(
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: axiscount,
+                        childAspectRatio: (6 / 2),
                       ),
-                      Text(
-                        (index + 1).toString(),
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10), // Adjust the spacing between the Row and Container
-                Container(
-  height: Tripdaylist.isEmpty ? screenHeight * 0.6 : null,
-  child: Tripdaylist.isEmpty
-      ? Center(
-          child: Text("No Data"),
-        )
-      : SingleChildScrollView(
-          child: GridView.builder(
-            shrinkWrap: true, // Ensure GridView takes up only necessary space
-            physics: NeverScrollableScrollPhysics(), // Disable scrolling for GridView
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: axiscount,
-              childAspectRatio: (6 / 2),
-            ),
-            itemCount: Tripdaylist.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Card(
-                    color: Colors.amber[100],
-                    child: InkWell(
-                      onTap: () async {
-                        Des destination = Des.fromJson(Deslist[index].toJson());
-                        await Navigator.push(context, MaterialPageRoute(builder: (content) => AdmDestinationDetailScreen(user: widget.user, destination: destination)));
-                        loaddes(1);
-                      },
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 2,
-                           // Unique tag for each CachedNetworkImage
-                                child: CachedNetworkImage(
-                                  fit: BoxFit.cover,
-                                  imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Tripdaylist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
-                                  placeholder: (context, url) => const LinearProgressIndicator(),
-                                  errorWidget: (context, url, error) => const Icon(Icons.error),
-
+                      itemCount: destinationsForDay.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 5,
+                                  blurRadius: 7,
+                                  offset: Offset(0, 3),
                                 ),
-                              ),
-                          
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        Tripdaylist[index].desname.toString(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
-                                        textAlign: TextAlign.center,
+                              ],
+                            ),
+                            child: Card(
+                              color: Colors.amber[100],
+                              child: InkWell(
+                                onTap: () async {
+                                  Des destination = Des.fromJson(destinationsForDay[index].toJson());
+                                  await Navigator.push(context, MaterialPageRoute(builder: (content) => AdmDestinationDetailScreen(user: widget.user, destination: destination)));
+                                  loaddes(1);
+                                },
+
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 2,
+                                      child: CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${destinationsForDay[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                        placeholder: (context, url) => const LinearProgressIndicator(),
+                                        errorWidget: (context, url, error) => const Icon(Icons.error),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    Expanded(
+                                      flex: 2,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  destinationsForDay[index].desname.toString(),
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                     IconButton(
+                                            icon: Icon(Icons.delete),
+                                            onPressed: () {
+                                              onDeleteDialog(index);
+                                              loadtripday();
+                                            },
+                                          ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                   ),
-                ),
-              );
-            },
           ),
-        ),
+          SizedBox(height: 20),
+        ],
+      ),
+    );
+  },
 ),
 
-                  SizedBox(height: 20),
-                ],
-              ),
-            ),
-          ),
           ),
           ElevatedButton(
                         onPressed: () {
@@ -305,7 +315,7 @@ floatingActionButton:
       onPressed: () async {
       
                 
-                       Tripinfo tripinfo = Tripinfo.fromJson(Tripinfolist[index].toJson());
+                       String tripinfo = widget.tripinfo.tripid.toString();
                        Des destination = Des.fromJson(Deslist[index].toJson());
                        
                         await Navigator.push(
@@ -438,7 +448,65 @@ floatingActionButton:
       }
     });
   }
+  void onDeleteDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Text(
+            "Delete this destination from this trip?",
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                deleteDes(index);
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deleteDes(int index) {
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletedesfromday.php"),
+        body: {
+          "userid": widget.user.id,
+          "DayId": Tripdaylist[index].dayid,
+        }).then((response) {
+      print(response.body);
+      //Deslist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Delete Success")));
+          loadtripday();
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Failed")));
+        }
+      }
+    });
+  } 
 
   
 
-    }
+}
