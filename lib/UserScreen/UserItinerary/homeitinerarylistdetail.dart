@@ -21,19 +21,19 @@ import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.da
 
 
 
-class ItinerarylListDetailScreen extends StatefulWidget {
+class HomeItineraryListDetailScreen extends StatefulWidget {
    final User user;
    final Tripinfo tripinfo;
 
    
-  const ItinerarylListDetailScreen({super.key, required this.user,
+  const HomeItineraryListDetailScreen({super.key, required this.user,
   required this.tripinfo, });
 
   @override
-  State<ItinerarylListDetailScreen> createState() => _ItinerarylListDetailScreenState();
+  State<HomeItineraryListDetailScreen> createState() => _HomeItineraryListDetailScreenState();
 }
 
-class _ItinerarylListDetailScreenState extends State<ItinerarylListDetailScreen> {
+class _HomeItineraryListDetailScreenState extends State<HomeItineraryListDetailScreen> {
   Review review = Review ();
   Des des = Des ();
     Tripday tripday = Tripday ();
@@ -314,6 +314,7 @@ floatingActionButton:
 
       onPressed: () async {
       
+                
                        String tripinfo = widget.tripinfo.tripid.toString();
                        Des destination = Des.fromJson(Deslist[index].toJson());
                        
@@ -421,7 +422,6 @@ floatingActionButton:
 
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripday.php"),
         body: {
-          "userid": widget.user.id.toString(),
           "Trip_id": widget.tripinfo.tripid.toString(),
           }).then((response) {
       print(response.body);

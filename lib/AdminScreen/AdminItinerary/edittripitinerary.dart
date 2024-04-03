@@ -88,7 +88,7 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
               ),
             ),
          SizedBox(
-                          height: screenHeight / 3, 
+           height: screenHeight / 3, 
            child:  GestureDetector(
               onTap: () {
                 _selectFromCamera();
@@ -158,33 +158,26 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
                   const SizedBox(height: 20),
                   SizedBox(
                     height: 60,
-                    child: DropdownButtonFormField(
-                      
-                      decoration: const InputDecoration(
-                        enabled: false,
-                        labelText: 'Days',
-                        labelStyle: TextStyle(color: Colors.amber),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2.0),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2.0),
-                        ),
-                      ),
-                      value: daynum,
-                      onChanged: (newValue) {
-                        setState(() {
-                          daynum = newValue!;
-                          print(daynum);
-                        });
-                      },
-                      items: Daylist.map((daynum) {
-                        return DropdownMenuItem(
+                   child:  DropdownButtonFormField(
+                          decoration: const InputDecoration(
+                            labelText: 'Days',
+                            labelStyle: TextStyle(color: Colors.amber),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 2.0),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(width: 2.0),
+                            ),
+                          ),
                           value: daynum,
-                          child: Text(daynum),
-                        );
-                      }).toList(),
-                    ),
+                          onChanged: null, // Set onChanged to null to disable the dropdown
+                          items: Daylist.map((daynum) {
+                            return DropdownMenuItem(
+                              value: daynum,
+                              child: Text(daynum),
+                            );
+                          }).toList(),
+                        ),
                   ),
                   const SizedBox(height: 20),
                     SizedBox(
