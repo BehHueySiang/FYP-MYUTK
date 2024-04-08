@@ -114,7 +114,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
         maintitle = "AdmBudget";
       }
       if (_currentIndex == 2) {
-        maintitle = "Admitinerary";
+        maintitle = "AdmItinerary";
       }
       if (_currentIndex == 3) {
         maintitle = "Admupload";

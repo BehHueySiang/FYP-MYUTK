@@ -17,6 +17,7 @@ class Tripday {
   String? triptype;
   String? tripstate;
   String? tripday;
+  String? totaltripfee;
    
   
 
@@ -38,7 +39,8 @@ class Tripday {
       this.tripname,
       this.triptype,
       this.tripstate,
-      this.tripday,});
+      this.tripday,
+      this.totaltripfee,});
 
   Tripday.fromJson(Map<String, dynamic> json) {
     dayid = json['Day_id'];
@@ -59,6 +61,7 @@ class Tripday {
     triptype = json['Trip_Type'];
     tripstate = json['Trip_State'];
     tripday = json['Trip_Day'];
+    totaltripfee = json['Total_tripfee'];
     
   }
 
@@ -82,6 +85,7 @@ class Tripday {
     data['Trip_Type'] = triptype;
     data['Trip_State'] = tripstate;
     data['Trip_Day'] = tripday;
+    data['Total_tripfee'] = totaltripfee;
     return data;
   }
 }

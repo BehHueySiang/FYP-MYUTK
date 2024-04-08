@@ -24,7 +24,7 @@ import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.da
 class ItinerarylListDetailScreen extends StatefulWidget {
    final User user;
    final Tripinfo tripinfo;
-
+  
    
   const ItinerarylListDetailScreen({super.key, required this.user,
   required this.tripinfo, });
@@ -46,6 +46,7 @@ class _ItinerarylListDetailScreenState extends State<ItinerarylListDetailScreen>
   List<Tripday> Tripdaylist = <Tripday>[];
   List<Tripinfo> Tripinfolist = <Tripinfo>[];
   List<Des> Deslist = <Des>[];
+
   var color;
   
   
@@ -53,7 +54,7 @@ class _ItinerarylListDetailScreenState extends State<ItinerarylListDetailScreen>
   void initState() {
     super.initState();
     loaddes(1);
-    loadtripday();
+    loadtripday(index);
     loadtripinfo();
   }
 
@@ -192,7 +193,7 @@ Widget build(BuildContext context) {
             height: destinationsForDay.isEmpty ? screenHeight * 0.6 : null,
             child: destinationsForDay.isEmpty
                 ? Center(
-                    child: Text("No Data"),
+                    child: Text("No Destination"),
                   )
                 : SingleChildScrollView(
                     child: GridView.builder(
@@ -227,6 +228,7 @@ Widget build(BuildContext context) {
                                   await Navigator.push(context, MaterialPageRoute(builder: (content) => AdmDestinationDetailScreen(user: widget.user, destination: destination)));
                                   loaddes(1);
                                 },
+                                
 
                                 child: Row(
                                   children: <Widget>[
@@ -264,20 +266,26 @@ Widget build(BuildContext context) {
                                         ),
                                       ),
                                     ),
-                                     IconButton(
+                                      IconButton(
                                             icon: Icon(Icons.delete),
+                                             
                                             onPressed: () {
-                                              onDeleteDialog(index);
-                                              loadtripday();
+                                              int Dayid = int.parse(destinationsForDay[index].dayid.toString());
+                                              int Desbudget = int.parse(destinationsForDay[index].desbudget.toString());
+                                              print(Dayid);
+                                              onDeleteDialog(Dayid,Desbudget);
+                                              loadtripday(index);
                                             },
                                           ),
                                   ],
                                 ),
-                              ),
+                              ), 
+                            
                             ),
                           ),
                         );
                       },
+                        
                     ),
                   ),
           ),
@@ -289,20 +297,8 @@ Widget build(BuildContext context) {
 ),
 
           ),
-          ElevatedButton(
-                        onPressed: () {
-                           //addItinerary();
-                            Navigator.of(context).pop();  
-                        },
-                        child: const Text(
-                          "Submit",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),
-                        ),
-                      ),
-                       SizedBox(height: 30),
+         
+           SizedBox(height: 30),
           
           ]
         ),
@@ -316,14 +312,14 @@ floatingActionButton:
       
                        String tripinfo = widget.tripinfo.tripid.toString();
                        Des destination = Des.fromJson(Deslist[index].toJson());
-                       
+                       double totaltripfee = double.parse(Tripinfolist[index].totaltripfee.toString());
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AddItineraryDestinationScreen(user: widget.user,destination: destination, tripinfo: tripinfo),
+                            builder: (context) => AddItineraryDestinationScreen(user: widget.user,destination: destination, tripinfo: tripinfo, totaltripfee: totaltripfee,),
                           ),
                         );
-                        loadtripday();
+                        loadtripday(index);
                       
 
               
@@ -410,7 +406,7 @@ floatingActionButton:
       }
     });
   }
-  void loadtripday() {
+  void loadtripday(int index) {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -447,64 +443,90 @@ floatingActionButton:
       }
     });
   }
-  void onDeleteDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(
-            "Delete this destination from this trip?",
-          ),
-          content: const Text("Are you sure?", style: TextStyle()),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                "Yes",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                deleteDes(index);
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                "No",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
-  void deleteDes(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletedesfromday.php"),
-        body: {
-          "userid": widget.user.id,
-          "DayId": Tripdaylist[index].dayid,
-        }).then((response) {
+void onDeleteDialog(int Dayid, int Desbudget) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        ),
+        title: Text("Delete this destination from this trip?"),
+        content: Text("Are you sure?"),
+        actions: <Widget>[
+          TextButton(
+            child: Text("Yes"),
+            onPressed: () {
+              
+              deleteDes(Dayid);
+              updatetripinfo(  Dayid,Desbudget);
+             // Close the dialog
+            },
+          ),
+          TextButton(
+            child: Text("No"),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog without deleting
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void deleteDes(int DayId) {
+  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletedesfromday.php"),
+    body: {
+      "userid": widget.user.id,
+      "DayId": DayId.toString(),
+      "action": 'detele',
+    }).then((response) {
       print(response.body);
-      //Deslist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Delete Success")));
-          loadtripday();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Delete Success")));
+          loadtripday(index);
         } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Failed")));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed")));
         }
       }
     });
-  } 
+}
+void updatetripinfo(int Dayid,int Desbudget)  {
+ 
+    
+     
+     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotaltripfee.php"),
+        body: {
+          "Tripid" : widget.tripinfo.tripid,
+          "Total_Tripfee": Desbudget.toString(),
+          "action": 'delete',
+          
+         }).then((response) {
+      print(response.body);
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == 'success') {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Insert Successfully")));
+          loadtripinfo();
+              
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Insert Failed")));
+        }
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Insert Failed")));
+        Navigator.pop(context);
+      }
+    });
+  }
+
 
   
 

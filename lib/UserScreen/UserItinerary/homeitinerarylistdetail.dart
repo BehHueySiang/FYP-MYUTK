@@ -264,13 +264,6 @@ Widget build(BuildContext context) {
                                         ),
                                       ),
                                     ),
-                                     IconButton(
-                                            icon: Icon(Icons.delete),
-                                            onPressed: () {
-                                              onDeleteDialog(index);
-                                              loadtripday();
-                                            },
-                                          ),
                                   ],
                                 ),
                               ),
@@ -289,53 +282,13 @@ Widget build(BuildContext context) {
 ),
 
           ),
-          ElevatedButton(
-                        onPressed: () {
-                           //addItinerary();
-                            Navigator.of(context).pop();  
-                        },
-                        child: const Text(
-                          "Submit",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),
-                        ),
-                      ),
-                       SizedBox(height: 30),
-          
+      SizedBox(height: 30),
           ]
         ),
       ),
     ),
    
-floatingActionButton: 
-    FloatingActionButton(
 
-      onPressed: () async {
-      
-                
-                       String tripinfo = widget.tripinfo.tripid.toString();
-                       Des destination = Des.fromJson(Deslist[index].toJson());
-                       
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddItineraryDestinationScreen(user: widget.user,destination: destination, tripinfo: tripinfo),
-                          ),
-                        );
-                        loadtripday();
-                      
-
-              
-
-      },
-      child: Icon(Icons.add),
-      backgroundColor: Colors.amber, // Set your preferred background color
-    ),
-  
-
-   
   );
 }
 
@@ -412,12 +365,7 @@ floatingActionButton:
     });
   }
   void loadtripday() {
-    if (widget.user.id == "na") {
-      setState(() {
-        // titlecenter = "Unregistered User";
-      });
-      return;
-    }
+
  
 
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripday.php"),
@@ -447,64 +395,7 @@ floatingActionButton:
       }
     });
   }
-  void onDeleteDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(
-            "Delete this destination from this trip?",
-          ),
-          content: const Text("Are you sure?", style: TextStyle()),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                "Yes",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                deleteDes(index);
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                "No",
-                style: TextStyle(),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void deleteDes(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletedesfromday.php"),
-        body: {
-          "userid": widget.user.id,
-          "DayId": Tripdaylist[index].dayid,
-        }).then((response) {
-      print(response.body);
-      //Deslist.clear();
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == "success") {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Delete Success")));
-          loadtripday();
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Failed")));
-        }
-      }
-    });
-  } 
+  
 
   
 

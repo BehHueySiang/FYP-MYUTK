@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/UserScreen/UserReview/addreviewscreen.dart';
@@ -10,7 +9,6 @@ import 'package:myutk/models/review.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:myutk/UserScreen/UserReview/reviewdetailscreen.dart';
 
 

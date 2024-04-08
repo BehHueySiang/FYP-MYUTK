@@ -16,6 +16,7 @@ import 'package:myutk/models/HomeScreen/homereview.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/UserScreen/UserDestination/destinationlistscreen.dart';
+import 'package:myutk/UserScreen/UserItinerary/AddUserTripscreen.dart';
 import 'package:myutk/UserScreen/UserItinerary/homeitineraryscreen.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -226,7 +227,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                       onPressed: () {
                                           Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => HomeItineraryScreen(user: widget.user)),);
+                                          MaterialPageRoute(builder: (context) => DestinationListScreen(user: widget.user)),);
                                           },
                                           color: Colors.amber,textColor: Colors.black,child: Text('More...', style: TextStyle(fontSize: 20)), ),
                                         ],
@@ -356,9 +357,10 @@ class _hometabscreenState extends State<hometabscreen> {
                                       height: 40,
                                       elevation: 10,
                                       onPressed: () {
+                                         Tripinfo tripinfo = Tripinfo.fromJson(Tripinfolist[index].toJson());
                                           Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => HomeItineraryScreen(user: widget.user)),);
+                                          MaterialPageRoute(builder: (context) => AddUserTripScreen(user: widget.user, tripinfo: tripinfo,)),);
                                           },
                                           color: Colors.amber,textColor: Colors.black,child: Text('More...', style: TextStyle(fontSize: 20)), ),
                                         ],
@@ -594,12 +596,7 @@ class _hometabscreenState extends State<hometabscreen> {
 
  
   void loadhdes() {
-    if (widget.user.id == "na") {
-      setState(() {
-        // titlecenter = "Unregistered User";
-      });
-      return;
-    }
+   
  
 
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadhomedes.php"),
@@ -635,16 +632,11 @@ class _hometabscreenState extends State<hometabscreen> {
 
  //HomeTrip backend
  void loadtripinfo(index) {
-    if (widget.user.id == "na") {
-      setState(() {
-        // titlecenter = "Unregistered User";
-      });
-      return;
-    }
+    
 
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
         body: {
-          "userid": widget.user.id.toString(),
+         
          
           }).then((response) {
       print(response.body);
@@ -671,12 +663,8 @@ class _hometabscreenState extends State<hometabscreen> {
     });
   }
   void loadhtrip() {
-    if (widget.user.id == "na") {
-      setState(() {
-        // titlecenter = "Unregistered User";
-      });
-      return;
-    }
+   
+    
  
 
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadhometrip.php"),
@@ -741,12 +729,7 @@ class _hometabscreenState extends State<hometabscreen> {
     });
   }
  void loadhhotel() {
-  if (widget.user.id == "na") {
-    setState(() {
-      // titlecenter = "Unregistered User";
-    });
-    return;
-  }
+ 
 
   if (Hhotellist == null) {
     // Initialize Hhotellist if it's null
@@ -810,12 +793,7 @@ class _hometabscreenState extends State<hometabscreen> {
     });
   }
  void loadhreview() {
-  if (widget.user.id == "na") {
-    setState(() {
-      // titlecenter = "Unregistered User";
-    });
-    return;
-  }
+  
 
   if (Hreviewlist == null) {
     // Initialize Hhotellist if it's null

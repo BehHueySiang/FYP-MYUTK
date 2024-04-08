@@ -20,9 +20,10 @@ import 'package:myutk/AdminScreen/AdminDestination/editdestinationscreen.dart';
 class AddItineraryDestinationScreen extends StatefulWidget {
   final User user;
   final Des destination;
-  
   final String tripinfo;
-  const AddItineraryDestinationScreen({super.key, required this.user, required this.destination,required this.tripinfo});
+  final double totaltripfee;
+  
+  const AddItineraryDestinationScreen({super.key, required this.user, required this.destination,required this.tripinfo,required this.totaltripfee});
 
   @override
   State<AddItineraryDestinationScreen> createState() => _AddItineraryDestinationScreenState();
@@ -35,7 +36,7 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
   late int axiscount = 2;
   late List<Widget> tabchildren;
   String maintitle = "Adm Destination List";
-    int numofpage = 1, curpage = 1, numberofresult = 0;
+    int numofpage = 1, curpage = 1, numberofresult = 0, index = 0;
   List<Des> Deslist = <Des>[];
   List<Tripinfo> Tripinfolist = <Tripinfo>[];
    String DesState = "Kedah";
@@ -46,13 +47,15 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
         List<String> Tripdaylist= [
           "1","2","3"
         ];
+  double desbudget = 0.0; 
  
   var color;
   
   @override
   void initState() {
     super.initState();
-    loaddes(1);
+    loaddes(index);
+    loadtripinfo(index);
     print("Add Itinerary Destination");
   }
 
@@ -426,8 +429,12 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
             TextButton(
               child: Text("Yes"),
               onPressed: () {
+                
                 addToTripItinerary(index);
-                Navigator.of(context).pop();
+                updatetripinfo(index);
+                loadtripinfo(index);
+                
+                
               },
             ),
             TextButton(
@@ -442,6 +449,42 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
     );
   }
 
+void loadtripinfo(int index) {
+    if (widget.user.id == "na") {
+      setState(() {
+        // titlecenter = "Unregistered User";
+      });
+      return;
+    }
+
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+        body: {
+          "userid": widget.user.id.toString(),
+         
+          }).then((response) {
+      print(response.body);
+      //log(response.body);
+      Tripinfolist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          
+       
+          var extractdata = jsondata['data'];
+          extractdata['Tripinfo'].forEach((v) {
+            Tripinfolist.add(Tripinfo.fromJson(v));
+             
+          Tripinfolist.forEach((element) {
+           
+          });
+
+          });
+          print(Tripinfolist[0].tripname);
+        }
+        setState(() {});
+      }
+    });
+  }
   void addToTripItinerary(int index) {
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtotripday.php"),
         body: {
@@ -458,6 +501,7 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
         if (jsondata['status'] == 'success') {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Success")));
+              
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Failed")));
@@ -466,6 +510,38 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Failed")));
+        Navigator.pop(context);
+      }
+    });
+  }
+
+ void updatetripinfo(int index)  {
+ 
+    
+     
+     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotaltripfee.php"),
+        body: {
+          "Tripid" : widget.tripinfo,
+          "Total_Tripfee": Deslist[index].desbudget.toString(),
+          "action": 'add',
+          
+         }).then((response) {
+      print(response.body);
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == 'success') {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Insert Successfully")));
+          loadtripinfo(index);
+              
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Insert Failed")));
+        }
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Insert Failed")));
         Navigator.pop(context);
       }
     });

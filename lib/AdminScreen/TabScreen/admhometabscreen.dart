@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/UserScreen/UserHotel/hotellistscreen.dart';
 import 'package:myutk/UserScreen/UserReview/reviewlistscreen.dart';
+import 'package:myutk/models/tripday.dart';
 import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/user.dart';
 import 'package:myutk/models/destination.dart';
@@ -23,6 +24,7 @@ import 'package:myutk/AdminScreen/AdminManagementScreen/HomeManage/addhomedesscr
 import 'package:myutk/AdminScreen/AdminManagementScreen/HomeManage/addhometripscreen.dart';
 import 'package:myutk/AdminScreen/AdminManagementScreen/HomeManage/addhomehotelscreen.dart';
 import 'package:myutk/AdminScreen/AdminManagementScreen/HomeManage/addhomereviewscreen.dart';
+import 'package:myutk/AdminScreen/AdminItinerary/itinerarylistdetailscreen.dart';
 
 
 
@@ -37,7 +39,7 @@ class admhometabscreen extends StatefulWidget {
 }
 
 class _admhometabscreenState extends State<admhometabscreen> {
-  String maintitle = "Home";
+  String maintitle = "AdmItinerary";
   Des des = Des ();
   Tripinfo tripinfo =Tripinfo();
   Hotel hotel =Hotel();
@@ -52,6 +54,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
   int numberofresult = 0;
   List<Des> Deslist = <Des>[];
   List<Tripinfo> Tripinfolist = <Tripinfo>[];
+  List<Tripday> Tripdaylist = <Tripday>[];
   List<Hotel> Hotellist = <Hotel>[];
   List<Review> Reviewlist = <Review>[]; 
   List<Homedes> Hdeslist = <Homedes>[];
@@ -331,6 +334,13 @@ class _admhometabscreenState extends State<admhometabscreen> {
                             color: Color.fromARGB(255, 238, 216, 150),
                             child: InkWell(
                               onTap: () async {
+                        Tripinfo tripinfo = Tripinfo.fromJson(Tripinfolist[index].toJson());
+                                                Tripday tripday = Tripday.fromJson(Tripdaylist[index].toJson());
+
+                        await Navigator.push(context, MaterialPageRoute(builder: (content) => ItinerarylListDetailScreen(user: widget.user, tripinfo: tripinfo  ),));
+                     
+                      },
+                              onLongPress: () async {
                                onDeleteHTripDialog(index);
                                loadhtrip();
                               },

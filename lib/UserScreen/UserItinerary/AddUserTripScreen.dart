@@ -1,51 +1,48 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:myutk/AdminScreen/AdminItinerary/createitineraryscreen.dart';
 import 'package:myutk/UserScreen/UserItinerary/homeitinerarylistdetail.dart';
+import 'package:myutk/UserScreen/UserReview/addreviewscreen.dart';
+import 'package:myutk/UserScreen/UserReview/editreviewscreen.dart';
+import 'package:myutk/AdminScreen/AdminItinerary/edittripitinerary.dart';
 import 'package:myutk/models/tripinfo.dart';
-import 'package:myutk/models/useritinerary.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/UserScreen/UserItinerary/addusertripscreen.dart';
+import 'package:myutk/EntryScreen/loginscreen.dart';
+import 'package:myutk/UserScreen/UserReview/reviewdetailscreen.dart';
 
 
 
-
-
-
-class itinerarytabscreen extends StatefulWidget {
+class AddUserTripScreen extends StatefulWidget {
   final User user;
-  
-  const itinerarytabscreen({super.key, required this.user,});
+  final Tripinfo tripinfo;
+  const AddUserTripScreen({super.key, required this.user,required this.tripinfo,});
 
   @override
-  State<itinerarytabscreen> createState() => _itinerarytabscreenState();
+  State<AddUserTripScreen> createState() => _AddUserTripScreenState();
 }
 
-class _itinerarytabscreenState extends State<itinerarytabscreen> {
-  Tripinfo tripinfo =Tripinfo();
-  Usertrip usertrip =Usertrip();
+class _AddUserTripScreenState extends State<AddUserTripScreen> {
+  Tripinfo tripinfo = Tripinfo();
   late double screenHeight, screenWidth;
   TextEditingController _searchController = TextEditingController();
   late int axiscount = 2;
   late List<Widget> tabchildren;
-  String maintitle = "Itinerary";
-  int numofpage = 1, curpage = 1, numberofresult = 0, index = 0;
+  String maintitle = "Budget";
+    int numofpage = 1, curpage = 1, numberofresult = 0;
   List<Tripinfo> Tripinfolist = <Tripinfo>[];
-  List<Usertrip> Utriplist = <Usertrip>[];
  
   var color;
   
   @override
   void initState() {
     super.initState();
-    loadtripinfo(1);
-    loadusertrip();
-    
+    loadtripinfo();
+    print("addreviewlist");
   }
 
 
@@ -68,7 +65,7 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
       appBar: AppBar(
          title: Image.asset("assets/images/Logo.png"),
         backgroundColor: Colors.amber[200],
-        automaticallyImplyLeading: false,
+        
         actions: [ Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
@@ -145,7 +142,7 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
       childAspectRatio: (6/ 2), // Adjust this value according to your images aspect ratio
       // You may need to adjust childAspectRatio according to your item's aspect ratio
     ),
-    itemCount: Utriplist.length,
+    itemCount: Tripinfolist.length,
     itemBuilder: (context, index) {
       return Padding( // Padding highlighted
       padding: const EdgeInsets.all(8.0),
@@ -160,90 +157,68 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
                         await Navigator.push(context, MaterialPageRoute(builder: (content) => HomeItineraryListDetailScreen(user: widget.user, tripinfo: tripinfo  ),));
                      
                       },
+                      onLongPress: () async {
+                        _showAddDialog(index);
+                     
+                      },
           child: Container(
             width: 550, // Set the width of the Card
-            height: 600, //
-                  child: Row(
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          ColorFiltered(
-                            colorFilter: ColorFilter.mode(
-                              Colors.white.withOpacity(0.8), // Adjust the opacity level here (0.0 - 1.0)
-                              BlendMode.srcOver,
+    height: 600, //
+          child: Row(
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                      Colors.white.withOpacity(0.8), // Adjust the opacity level here (0.0 - 1.0)
+                      BlendMode.srcOver,
+                    ),
+                    child:  CachedNetworkImage(
+                              width: 400, // Adjust image width as needed
+                              height: 200,
+                              fit: BoxFit.cover,
+                              imageUrl: "${MyConfig().SERVER}/myutk/assets/Itinerary/${Tripinfolist[index].tripid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",////////
+                            
                             ),
-                            child:  CachedNetworkImage(
-                                      width: 400, // Adjust image width as needed
-                                      height: 200,
-                                      fit: BoxFit.cover,
-                                      imageUrl: "${MyConfig().SERVER}/myutk/assets/Itinerary/${Utriplist[index].tripid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",////////
-                                    
-                                    ),
                             
                   ),
                   Positioned(
                     child: Text(
-                      Utriplist[index].tripname.toString(),
+                      Tripinfolist[index].tripname.toString(),
                       style: const TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
-              ),Stack(children:[Row(
+              ),
+              Stack(children:[Row(
                 mainAxisAlignment: MainAxisAlignment.end,
+             
                 children:  [
                   IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: Icon(Icons.visibility),
                     onPressed: () {
-                       if (widget.user.id != "na") {
-                        onDeleteDialog(index); }else{
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Please login/register an account")));
-                        loadusertrip();
-                      }
+                      // Handle view action
                     },
                   ),
-                ],
-              ),
-            ]
-          ),
+                 
+                ],),]),
               // Add spacing between image and icons
               
-              ],
-            ),
+            ],
           ),
-         )
-        ) 
-      ),
-    ); 
-   },
+        ),)
+         ) ),
+   ); },
   ),
 ),
             ]),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-    
-            if (widget.user.id != "na") {
-             Tripinfo tripinfo = Tripinfo.fromJson(Tripinfolist[index].toJson());
-                                          await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => AddUserTripScreen(user: widget.user, tripinfo: tripinfo)),); 
-                                          loadusertrip();
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Please login/register an account")));
-            }
-          },
-          child: const Text(
-            "+",
-            style: TextStyle(fontSize: 32),
-          ),backgroundColor: Colors.amber,),
+     
           
-   ); 
+          ); 
   }
 
-  //HomeTrip backend
- void loadtripinfo(int index) {
+  void loadtripinfo() {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -254,7 +229,6 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
         body: {
           
-         
           }).then((response) {
       print(response.body);
       //log(response.body);
@@ -273,71 +247,34 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
           });
 
           });
-         
+          print(Tripinfolist[0].tripname);
         }
         setState(() {});
       }
     });
   }
-  void loadusertrip() {
-    if (widget.user.id == "na") {
-      setState(() {
-        // titlecenter = "Unregistered User";
-      });
-      return;
-    }
- 
-
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loaduseritinerary.php"),
-        body: {
-          "userid": widget.user.id.toString(),
-          }).then((response) {
-      print(response.body);
-      //log(response.body);
-      Utriplist.clear();
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == "success") {
-          var extractdata = jsondata['data'];
-          extractdata['Usertrip'].forEach((v) {
-            Utriplist.add(Usertrip.fromJson(v));
-            Utriplist.forEach((element) {
-           }); });
-         
-        }
-        setState(() {});
-      }
-    });
-  }
-
-  void onDeleteDialog(index) {
+  void _showAddDialog(int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(
-            "Delete ${Utriplist[index].tripname}?",
-          ),
-          content: const Text("Are you sure?", style: TextStyle()),
+          title: Text("Add to Trip"),
+          content: SingleChildScrollView(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Text("Do you want to add ${Tripinfolist[index].tripname} to homescreen?"),
+              const SizedBox(height: 15,),
+             ])),
           actions: <Widget>[
+            
             TextButton(
-              child: const Text(
-                "Yes",
-                style: TextStyle(),
-              ),
-              onPressed: () async{
-                deleteusertrip(index);
-                 Navigator.of(context).pop();
-                 
+              child: Text("Yes"),
+              onPressed: () {
+                addToHomeTrip(index);
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text(
-                "No",
-                style: TextStyle(),
-              ),
+              child: Text("No"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -348,26 +285,32 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
     );
   }
 
-  void deleteusertrip(index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deleteuseritinerary.php"),
+  void addToHomeTrip(int index) {
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/adduseritinerary.php"),
         body: {
+          "Trip_id": Tripinfolist[index].tripid,
           "userid": widget.user.id,
-          "UtripId": Utriplist[index].tripid,
+          
         }).then((response) {
+         
       print(response.body);
-      //Deslist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == "success") {
+        if (jsondata['status'] == 'success') {
           ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Delete Success")));
-          loadusertrip();
+              .showSnackBar(const SnackBar(content: Text("Success")));
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Failed")));
         }
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Failed")));
+        Navigator.pop(context);
       }
     });
-  } 
+  }
+  
    
 }

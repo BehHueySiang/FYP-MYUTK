@@ -30,6 +30,7 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
   List<String> Daylist = ["1", "2", "3"];
   String daynum = "1";
   List<Tripinfo> Tripinfolist = <Tripinfo>[];
+  double totaltripfee = 0.0;
   
   final TextEditingController _TripNameEditingController =
           TextEditingController();
@@ -297,7 +298,9 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
           "Trip_State": state,
           "Trip_Type": triptype,
           "Trip_Day": daynum,
+          "Total_Tripfee": totaltripfee.toString(),
           "image": base64Image
+
          }).then((response) {
       print(response.body);
       if (response.statusCode == 200) {

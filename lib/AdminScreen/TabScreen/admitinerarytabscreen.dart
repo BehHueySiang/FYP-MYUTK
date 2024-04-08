@@ -35,7 +35,7 @@ class _admitinerarytabscreenState extends State<admitinerarytabscreen> {
   late int axiscount = 2;
   late List<Widget> tabchildren;
   String maintitle = "Budget";
-    int numofpage = 1, curpage = 1, numberofresult = 0;
+    int numofpage = 1, curpage = 1, numberofresult = 0, index = 0;
   List<Tripinfo> Tripinfolist = <Tripinfo>[];
  
   var color;
@@ -203,8 +203,7 @@ class _admitinerarytabscreenState extends State<admitinerarytabscreen> {
                     onPressed: () async{
                        if (widget.user.id != "na") {
            
-              Tripinfo tripinfo =
-                                    Tripinfo.fromJson(Tripinfolist[index].toJson());
+              Tripinfo tripinfo =Tripinfo.fromJson(Tripinfolist[index].toJson());
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -250,6 +249,8 @@ class _admitinerarytabscreenState extends State<admitinerarytabscreen> {
                       builder: (content) => CreateItineraryScreen(user: widget.user, ),
                           ));
               loadtripinfo();
+
+              
             } else {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("Please login/register an account")));
@@ -273,7 +274,6 @@ class _admitinerarytabscreenState extends State<admitinerarytabscreen> {
 
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
         body: {
-          "userid": widget.user.id.toString(),
          
           }).then((response) {
       print(response.body);
