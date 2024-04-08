@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myutk/models/user.dart';
+import 'package:myutk/models/budget.dart';
+import 'package:myutk/models/tripinfo.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/UserScreen/UserBudget/budgetdaylistscreen.dart';
@@ -17,38 +19,58 @@ class CreateBudgetScreen extends StatefulWidget {
 }
 
 class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
-   File? _image;
- var pathAsset = "assets/images/camera1.png";
-  int index = 0;
+  File? _image;
+  var pathAsset = "assets/images/camera1.png";
+  late double screenHeight, screenWidth;
   List<String> Daylist = ["1", "2", "3"];
   String daynum = "1";
-  late double screenHeight, screenWidth;
-  List<String> hotelNames = []; // List to hold hotel names fetched from the database
-  String? selectedHotel;
-  final TextEditingController _TotalBudgetEditingController =
-          TextEditingController();
+  int index = 0;
+  List<Tripinfo> tripInfoList = [];
+  List<String> tripNames = [];
+  Map<String, String> tripIdMap = {};
+  String? selectedTripName;
+  String? selectedTripId;
+  final TextEditingController _totalBudgetEditingController =
+      TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    fetchHotelNames(); // Fetch hotel names when the page initializes
+    fetchTripNames();
   }
 
-  void fetchHotelNames() async {
+  Future<void> fetchTripNames() async {
     try {
-      final response = await http.get(Uri.parse('${MyConfig().SERVER}/myutk/php/load_review.php'));
+      final response =
+          await http.get(Uri.parse('${MyConfig().SERVER}/myutk/php/loadtripinfo.php'));
 
       if (response.statusCode == 200) {
-        // Parse the response and update the hotelNames list
-        final List<dynamic> data = json.decode(response.body)['data']['Review'];
+        final List<dynamic> data = json.decode(response.body)['data']['Tripinfo'];
+
+        List<String> names = [];
+        Map<String, String> idMap = {};
+
+        data.forEach((item) {
+          String tripName = item['Trip_Name'].toString();
+          String tripId = item['Trip_id'].toString();
+          names.add(tripName);
+          idMap[tripName] = tripId;
+        });
+
         setState(() {
-          hotelNames = data.map<String>((item) => item['Review_Name'].toString()).toList();
+          tripNames = names;
+          tripIdMap = idMap;
+          if (tripNames.isNotEmpty) {
+            selectedTripName = tripNames[0]; // Initialize selected trip name
+            selectedTripId = tripIdMap[selectedTripName!]; // Initialize selected trip ID
+            loadTripInfo(); // Load trip info for the initial selected trip
+          }
         });
       } else {
-        throw Exception('Failed to fetch hotel names');
+        throw Exception('Failed to fetch trip names');
       }
     } catch (e) {
-      print('Error fetching hotel names: $e');
+      print('Error fetching trip names: $e');
     }
   }
 
@@ -71,7 +93,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
             Container(
               width: MediaQuery.of(context).size.width,
               alignment: Alignment.center,
@@ -92,16 +114,16 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                 ),
               ),
             ),
-         SizedBox(
-                          height: screenHeight / 3, 
-           child:  GestureDetector(
-              onTap: () {
-                _selectFromCamera();
-              },
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-                child: Card(
-                  child: Container(
+            SizedBox(
+              height: screenHeight / 3,
+              child: GestureDetector(
+                onTap: () {
+                  _selectFromCamera();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                  child: Card(
+                    child: Container(
                       width: screenWidth,
                       decoration: BoxDecoration(
                         image: DecorationImage(
@@ -110,10 +132,12 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                               : FileImage(_image!) as ImageProvider,
                           fit: BoxFit.contain,
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),),
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
               child: Column(
@@ -121,7 +145,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                   const SizedBox(height: 20),
                   SizedBox(
                     height: 60,
-                    child: DropdownButtonFormField(
+                    child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         labelText: 'Budget Title',
                         labelStyle: TextStyle(color: Colors.amber),
@@ -132,16 +156,18 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                           borderSide: BorderSide(width: 2.0),
                         ),
                       ),
-                      value: selectedHotel,
+                      value: selectedTripName,
                       onChanged: (newValue) {
                         setState(() {
-                          selectedHotel = newValue as String?;
+                          selectedTripName = newValue;
+                          selectedTripId = tripIdMap[newValue!];
+                          loadTripInfo(); // Reload trip information
                         });
                       },
-                      items: hotelNames.map((hotelName) {
-                        return DropdownMenuItem(
-                          value: hotelName,
-                          child: Text(hotelName),
+                      items: tripNames.map((tripName) {
+                        return DropdownMenuItem<String>(
+                          value: tripName,
+                          child: Text(tripName),
                         );
                       }).toList(),
                     ),
@@ -149,7 +175,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                   const SizedBox(height: 20),
                   SizedBox(
                     height: 60,
-                    child: DropdownButtonFormField(
+                    child: DropdownButtonFormField<String>(
                       decoration: const InputDecoration(
                         labelText: 'Days',
                         labelStyle: TextStyle(color: Colors.amber),
@@ -164,11 +190,10 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                       onChanged: (newValue) {
                         setState(() {
                           daynum = newValue!;
-                          print(daynum);
                         });
                       },
                       items: Daylist.map((daynum) {
-                        return DropdownMenuItem(
+                        return DropdownMenuItem<String>(
                           value: daynum,
                           child: Text(daynum),
                         );
@@ -176,46 +201,45 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                   TextFormField(
-                              textInputAction: TextInputAction.next,
-                              
-                              onFieldSubmitted: (v) {},
-                              controller: _TotalBudgetEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Total Budget',
-                                  labelStyle: TextStyle(color: Colors.amber),
-                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),)),),
-                                    const SizedBox(height: 20,),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end, // Aligns children to the start (left) of the row
+                  TextFormField(
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (v) {},
+                    controller: _totalBudgetEditingController,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                      labelText: 'Total Budget',
+                      labelStyle: TextStyle(color: Colors.amber),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 2.0),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(width: 2.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  MinimumTotalBudgetWidget(
+                    tripInfoList: tripInfoList,
+                    selectedTripId: selectedTripId,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                            
-                             int totalbudget=int.tryParse(_TotalBudgetEditingController.text) ?? 0;
-                             int number = int.tryParse(daynum) ?? 0;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BudgetDayListScreen(user: widget.user, number: number, totalbudget: totalbudget,  selectedHotel: selectedHotel!, ),
-                                  ),
-                                );
+                          addBudgetInfo(); // Handle submission here
                         },
                         child: const Text(
-                          "Next",
+                          "Submit",
                           style: TextStyle(color: Colors.black),
                         ),
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.amber),
                         ),
                       ),
-                      // Add other widgets here if needed
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -224,7 +248,8 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
       ),
     );
   }
- Future<void> _selectFromCamera() async {
+
+  Future<void> _selectFromCamera() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
@@ -244,19 +269,16 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: _image!.path,
       aspectRatioPresets: [
-        // CropAspectRatioPreset.square,
         CropAspectRatioPreset.ratio3x2,
-        // CropAspectRatioPreset.original,
-        //CropAspectRatioPreset.ratio4x3,
-        // CropAspectRatioPreset.ratio16x9
       ],
       uiSettings: [
         AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.ratio3x2,
-            lockAspectRatio: true),
+          toolbarTitle: 'Cropper',
+          toolbarColor: Colors.deepOrange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.ratio3x2,
+          lockAspectRatio: true,
+        ),
         IOSUiSettings(
           title: 'Cropper',
         ),
@@ -272,6 +294,104 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
       setState(() {});
     }
   }
+
+  void addBudgetInfo() {
+    String base64Image = base64Encode(_image!.readAsBytesSync());
+    String totalBudget = _totalBudgetEditingController.text;
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addbudget.php"),
+        body: {
+          "userid": widget.user.id,
+          "Budget_Name": selectedTripName!,
+          "Budget_Day": daynum,
+          "Total_Budget": totalBudget,
+          "image": base64Image,
+        }).then((response) {
+      print(response.body);
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        if (jsonData['status'] == 'success') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Insert Successfully")),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Insert Failed")),
+          );
+        }
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Insert Failed")),
+        );
+        Navigator.pop(context);
+      }
+    });
+  }
+
+  void loadTripInfo() {
+    if (selectedTripId == null) return;
+
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+        body: {
+          "tripid": selectedTripId!,
+        }).then((response) {
+      print(response.body);
+      tripInfoList.clear();
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        if (jsonData['status'] == "success") {
+          var extractData = jsonData['data']['Tripinfo'];
+          extractData.forEach((v) {
+            tripInfoList.add(Tripinfo.fromJson(v));
+          });
+          setState(() {
+            // Trigger rebuild to update MinimumTotalBudgetWidget
+          });
+        }
+      }
+    });
+  }
 }
+
+class MinimumTotalBudgetWidget extends StatelessWidget {
+  final List<Tripinfo> tripInfoList;
+  final String? selectedTripId;
+
+  const MinimumTotalBudgetWidget({
+    Key? key,
+    required this.tripInfoList,
+    required this.selectedTripId,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (selectedTripId == null) return const SizedBox();
+
+    final tripInfo = tripInfoList.firstWhere(
+      (info) => info.tripid == selectedTripId,
+      orElse: () => Tripinfo(),
+    );
+
+    return Row(
+      children: [
+        const SizedBox(width: 20),
+        Text(
+          'Minimum Total Budget: ',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          tripInfo.totaltripfee.toString(),
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 
 

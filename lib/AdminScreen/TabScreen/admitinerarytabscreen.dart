@@ -44,7 +44,7 @@ class _admitinerarytabscreenState extends State<admitinerarytabscreen> {
   void initState() {
     super.initState();
     loadtripinfo();
-    print("addreviewlist");
+    print("Admitinerarytabscreen");
   }
 
 

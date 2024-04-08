@@ -1,25 +1,25 @@
-class Budget {
+class Budgetinfo {
   String? budgetid;
   String? userId;
-  String? budgettitle;
-  String? day;
+  String? budgetname;
+  String? budgetday;
   String? totalbudget;
  
   
 
-  Budget(
+  Budgetinfo(
       {this.budgetid,
       this.userId,
-      this.budgettitle,
-      this.day,
+      this.budgetname,
+      this.budgetday,
       this.totalbudget,
       });
 
-  Budget.fromJson(Map<String, dynamic> json) {
+  Budgetinfo.fromJson(Map<String, dynamic> json) {
     budgetid = json['Budget_id'];
     userId = json['userid'];
-    budgettitle = json['Budgte_Title'];
-    day = json['Day'];
+    budgetname = json['Budget_Name'];
+    budgetday = json['Budget_Day'];
     totalbudget = json['Total_Budget']; 
   }
 
@@ -27,8 +27,8 @@ class Budget {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Budget_id'] = budgetid;
     data['user_id'] = userId;
-    data['Budget_Title'] = budgettitle;
-    data['Day'] = day;
+    data['Budget_Name'] = budgetname;
+    data['Budget_Day'] = budgetday;
     data['Total_Budget'] = totalbudget;
   
     return data;
