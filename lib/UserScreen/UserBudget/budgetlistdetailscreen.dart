@@ -88,279 +88,161 @@ Widget build(BuildContext context) {
       ],
     ),
     backgroundColor: Colors.amber[50],
-    body: SingleChildScrollView(
-      
-      child: Center( 
-          
-        child: Column(
-         children: [
-        const SizedBox(height: 20,),
-        Container(
-          width: screenWidth,
-          alignment: Alignment.center,
-          color: Color.fromARGB(255, 239, 219, 157),
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  widget.budgetinfo.budgetname.toString(),
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 50,),
-  Column(
- children: List.generate(
-  int.tryParse(widget.budgetinfo.budgetday.toString()) ?? 0,
-  (index) {
-    // Filter destinations for the current day
-    List<Budgetday> budgetForDay = Budgetdaylist.where((expenditureday) =>expenditureday.bdayname == (index + 1).toString()).toList();
-    return GestureDetector(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-                    Card(
-                         margin: EdgeInsets.all(10),
-                                elevation: 3, // Adjust elevation for shadow effect
-                                child: Container(
-                                  width: screenWidth,
-                                  height: 80,
-                                   decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(10), // Adjust border radius as needed
-                                              color: const Color.fromARGB(255, 237, 211, 134), // You can set any color you like for the background
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey.withOpacity(0.5),
-                                                  spreadRadius: 5,
-                                                  blurRadius: 7,
-                                                  offset: Offset(0, 3), // changes position of shadow
-                                                ),
-                                              ],
-                                            ),
-         child: Row(
+      body: SingleChildScrollView(
+        
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                '     Day  ',
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-              Text(
-                (index + 1).toString(),
-                style: TextStyle(color: Colors.black),
-              ),
-            ],
-          ),)),
-          SizedBox(height: 10),
-          Container(
-            height: budgetForDay.isEmpty ? screenHeight * 0.6 : null,
-            child: budgetForDay.isEmpty
-                ? Center(
-                    child: Text("No expenditure"),
-                  )
-                : SingleChildScrollView(
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: axiscount,
-                        childAspectRatio: (6 / 2),
-                      ),
-                      itemCount: budgetForDay.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Container(
-                             // Set desired width
-                              height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Card(
-                              color: Colors.amber[100],
-                              child: InkWell(
-                                onTap: () async {
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 2,
-                                      child: CachedNetworkImage(
-                                        fit: BoxFit.cover,
-                                        imageUrl: "${MyConfig().SERVER}/myutk/assets/BudgetDay/${budgetForDay[index].bdayid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
-                                        placeholder: (context, url) => const LinearProgressIndicator(),
-                                        errorWidget: (context, url, error) => const Icon(Icons.error),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    budgetForDay[index].expendname.toString(),
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 15,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  SizedBox(height: 2), 
-                                                  Row(children: [
-                                                    Text(
-                                                      "RM : ",
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 15,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),// Add spacing between the two Text widgets
-                                                  Text(
-                                                    budgetForDay[index].expendamount.toString(),
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 15,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),])
-                                                ],
-                                              ),
-                                            ),
-                                      
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                      IconButton(
-                                            icon: Icon(Icons.delete),
-                                             
-                                            onPressed: () {
-                                              /*int Dayid = int.parse(budgetForDay[index].dayid.toString());
-                                              int Desbudget = int.parse(budgetForDay[index].desbudget.toString());
-                                              print(Dayid);
-                                              onDeleteDialog(Dayid,Desbudget);
-                                              loadbudgetday(index);*/
-                                            },
-                                          ),
-                                  ],
-                                ),
-                              ), 
-                            
-                            ),
-                          ),
-                        );
-                      },
-                        
+              const SizedBox(height: 20),
+              Container(
+                width: screenWidth,
+                alignment: Alignment.center,
+                color: Color.fromARGB(255, 239, 219, 157),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    widget.budgetinfo.budgetname.toString(),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-          ),
-          
-          const SizedBox(height: 200,),
-                         Container(
-                                width: screenWidth,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 177, 177, 177),
-                                    borderRadius: BorderRadius.circular(10), // Adjust border radius as needed
-                                  ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Total Budget:",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(width:140),
-                                      Text(
-                                        "RM ",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                       Text(
-                                        widget.budgetinfo.totalbudget.toString(),
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-        ],
-      ),
-    );
-  },
-  
-),
+                ),
+              ),
+              const SizedBox(height: 50),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: int.tryParse(widget.budgetinfo.budgetday.toString()) ?? 0,
+                itemBuilder: (context, index) {
+                  List<Budgetday> budgetForDay = Budgetdaylist.where((expenditureday) => expenditureday.bdayname == (index + 1).toString()).toList();
 
+                  return Card(
+                    margin: EdgeInsets.all(10),
+                    elevation: 3,
+                    child: ExpansionTile(
+                      title: Text(
+                        'Day ${index + 1}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      children: [
+                        if (budgetForDay.isEmpty)
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Center(
+                              child: Text('No expenditures'),
+                            ),
+                          )
+                        else
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: budgetForDay.length,
+                            itemBuilder: (context, expIndex) {
+                              Budgetday expenditure = budgetForDay[expIndex];
+                              return ListTile(
+                                leading: CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  imageUrl: "${MyConfig().SERVER}/myutk/assets/BudgetDay/${expenditure.bdayid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                  placeholder: (context, url) => CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                ),
+                                title: Text(
+                                  expenditure.expendname.toString(),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(
+                                  'RM ${expenditure.expendamount.toString()}',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {
+                                        // Handle edit action
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () {
+                                        // Handle delete action
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                onTap: () {
+                                  // Handle tap on expenditure item
+                                },
+                              );
+                            },
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 500),
+              Container(
+                width: screenWidth,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 177, 177, 177),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Total Budget:",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "RM ${widget.budgetinfo.totalbudget.toString()}",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 30),
+            ],
           ),
-          
-         
-           SizedBox(height: 30),
-          
-          ]
         ),
       ),
-    ),
-   
-floatingActionButton: 
-    FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          String budgetinfo = widget.budgetinfo.budgetid.toString();
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddExpenditureScreen(user: widget.user, budgetinfo: budgetinfo),
+            ),
+          );
+          loadbudgetday(index);
 
-      onPressed: () async {
-      
-                       String budgetinfo = widget.budgetinfo.budgetid.toString();
-                      
-                       //double totaltripfee = double.parse(Tripinfolist[index].totaltripfee.toString());
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddExpenditureScreen(user: widget.user, budgetinfo: budgetinfo),
-                          ),
-                        );
-                        loadbudgetday(index);
-                      
-
-              
-
-      },
-      child: Icon(Icons.add),
-      backgroundColor: Colors.amber, // Set your preferred background color
-    ),
-  
+         
+        
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.amber,
+      ),
+    );
+  }
 
    
-  );
-}
+ 
 
  void loadbudgetinfo() {
     if (widget.user.id == "na") {
