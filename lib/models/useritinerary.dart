@@ -6,6 +6,8 @@ class Usertrip {
   String? tripstate;
   String? tripday;
   String? userId;
+  String? totaltripfee;
+  
 
  
 
@@ -20,6 +22,8 @@ class Usertrip {
       this.tripstate,
       this.tripday,
       this.userId,
+      this.totaltripfee,
+
      });
 
   Usertrip.fromJson(Map<String, dynamic> json) {
@@ -30,6 +34,8 @@ class Usertrip {
     tripstate = json['Trip_State'];
     tripday = json['Trip_Day'];
     userId = json['userid']; 
+    totaltripfee = json['Total_Tripfee'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +47,8 @@ class Usertrip {
     data['Trip_State'] = tripstate;
     data['Trip_Day'] = tripday;
     data['user_id'] = userId;
+    data['Total_Tripfee'] = totaltripfee;
+
     return data;
   }
 }

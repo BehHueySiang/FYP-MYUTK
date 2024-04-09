@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/UserScreen/UserBudget/createbudgetscreen.dart';
-import 'package:myutk/AdminScreen/AdminItinerary/itinerarylistdetailscreen.dart';
 import 'package:myutk/AdminScreen/AdminItinerary/edittripitinerary.dart';
 import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/budget.dart';
@@ -14,6 +13,8 @@ import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:myutk/UserScreen/UserReview/reviewdetailscreen.dart';
+import 'package:myutk/UserScreen/UserBudget/budgetlistdetailscreen.dart';
+
 
 
 
@@ -154,11 +155,11 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
         scrollDirection: Axis.horizontal,
         child: Card(
           child: InkWell(
-                     /* onTap: () async {
-                        Tripinfo tripinfo = Tripinfo.fromJson(Tripinfolist[index].toJson());
+                     onTap: () async {
+                        Budgetinfo budgetinfo = Budgetinfo.fromJson(Budgetinfolist[index].toJson());
                         await Navigator.push(context, MaterialPageRoute(builder: (content) => 
-                        ItinerarylListDetailScreen(user: widget.user, tripinfo: tripinfo  ),));
-                      },*/
+                        BudgetListDetailScreen(user: widget.user, budgetinfo: budgetinfo  ),));
+                      },
           child: Container(
             width: 550, // Set the width of the Card
     height: 600, //
@@ -273,7 +274,6 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
 
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetinfo.php"),
         body: {
-    
          
           }).then((response) {
       print(response.body);

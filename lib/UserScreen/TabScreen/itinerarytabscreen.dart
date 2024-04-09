@@ -310,7 +310,7 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
     });
   }
 
-  void onDeleteDialog(index) {
+  void onDeleteDialog(int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -348,11 +348,11 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
     );
   }
 
-  void deleteusertrip(index) {
+  void deleteusertrip(int index) {
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deleteuseritinerary.php"),
         body: {
           "userid": widget.user.id,
-          "UtripId": Utriplist[index].tripid,
+          "UtripId": Utriplist[index].utripid,
         }).then((response) {
       print(response.body);
       //Deslist.clear();

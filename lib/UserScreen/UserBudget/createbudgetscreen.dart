@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:myutk/models/user.dart';
 import 'package:myutk/models/budget.dart';
 import 'package:myutk/models/tripinfo.dart';
+import 'package:myutk/models/useritinerary.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/UserScreen/UserBudget/budgetdaylistscreen.dart';
@@ -25,7 +26,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
   List<String> Daylist = ["1", "2", "3"];
   String daynum = "1";
   int index = 0;
-  List<Tripinfo> tripInfoList = [];
+  List<Usertrip> usertripList = [];
   List<String> tripNames = [];
   Map<String, String> tripIdMap = {};
   String? selectedTripName;
@@ -42,17 +43,17 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
   Future<void> fetchTripNames() async {
     try {
       final response =
-          await http.get(Uri.parse('${MyConfig().SERVER}/myutk/php/loadtripinfo.php'));
+          await http.get(Uri.parse('${MyConfig().SERVER}/myutk/php/loaduseritinerary.php'));
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body)['data']['Tripinfo'];
+        final List<dynamic> data = json.decode(response.body)['data']['Usertrip'];
 
         List<String> names = [];
         Map<String, String> idMap = {};
 
         data.forEach((item) {
           String tripName = item['Trip_Name'].toString();
-          String tripId = item['Trip_id'].toString();
+          String tripId = item['Utrip_id'].toString();
           names.add(tripName);
           idMap[tripName] = tripId;
         });
@@ -63,7 +64,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
           if (tripNames.isNotEmpty) {
             selectedTripName = tripNames[0]; // Initialize selected trip name
             selectedTripId = tripIdMap[selectedTripName!]; // Initialize selected trip ID
-            loadTripInfo(); // Load trip info for the initial selected trip
+            loadusertrip(); // Load trip info for the initial selected trip
           }
         });
       } else {
@@ -161,7 +162,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                         setState(() {
                           selectedTripName = newValue;
                           selectedTripId = tripIdMap[newValue!];
-                          loadTripInfo(); // Reload trip information
+                          loadusertrip(); // Reload trip information
                         });
                       },
                       items: tripNames.map((tripName) {
@@ -219,7 +220,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
                   ),
                   const SizedBox(height: 20),
                   MinimumTotalBudgetWidget(
-                    tripInfoList: tripInfoList,
+                    usertripList: usertripList,
                     selectedTripId: selectedTripId,
                   ),
                   Row(
@@ -328,21 +329,21 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
     });
   }
 
-  void loadTripInfo() {
+  void loadusertrip() {
     if (selectedTripId == null) return;
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loaduseritinerary.php"),
         body: {
           "tripid": selectedTripId!,
         }).then((response) {
       print(response.body);
-      tripInfoList.clear();
+      usertripList.clear();
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         if (jsonData['status'] == "success") {
-          var extractData = jsonData['data']['Tripinfo'];
+          var extractData = jsonData['data']['Usertrip'];
           extractData.forEach((v) {
-            tripInfoList.add(Tripinfo.fromJson(v));
+            usertripList.add(Usertrip.fromJson(v));
           });
           setState(() {
             // Trigger rebuild to update MinimumTotalBudgetWidget
@@ -354,12 +355,12 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
 }
 
 class MinimumTotalBudgetWidget extends StatelessWidget {
-  final List<Tripinfo> tripInfoList;
+  final List<Usertrip> usertripList;
   final String? selectedTripId;
 
   const MinimumTotalBudgetWidget({
     Key? key,
-    required this.tripInfoList,
+    required this.usertripList,
     required this.selectedTripId,
   }) : super(key: key);
 
@@ -367,9 +368,9 @@ class MinimumTotalBudgetWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (selectedTripId == null) return const SizedBox();
 
-    final tripInfo = tripInfoList.firstWhere(
-      (info) => info.tripid == selectedTripId,
-      orElse: () => Tripinfo(),
+    final usertrip = usertripList.firstWhere(
+      (info) => info.utripid == selectedTripId,
+      orElse: () => Usertrip(),
     );
 
     return Row(
@@ -383,7 +384,7 @@ class MinimumTotalBudgetWidget extends StatelessWidget {
           ),
         ),
         Text(
-          tripInfo.totaltripfee.toString(),
+          usertrip.totaltripfee.toString(),
           style: TextStyle(
             fontSize: 18,
           ),
