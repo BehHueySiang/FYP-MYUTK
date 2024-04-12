@@ -26,10 +26,10 @@ import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.da
 class BudgetListDetailScreen extends StatefulWidget {
    final User user;
    final Budgetinfo budgetinfo;
-  
+   final int Budgetid;
    
   const BudgetListDetailScreen({super.key, required this.user,
-  required this.budgetinfo, });
+  required this.budgetinfo,required this.Budgetid });
 
   @override
   State<BudgetListDetailScreen> createState() => _BudgetListDetailScreenState();
@@ -43,10 +43,11 @@ class _BudgetListDetailScreenState extends State<BudgetListDetailScreen> {
   late List<Widget> tabchildren;
   String maintitle = "Budget List Detail";
   int numofpage = 1, curpage = 1, numberofresult = 0, index = 0;
-  
+  late Map<String, double> dayTotalExpenditure = {};
   List<Budgetinfo> Budgetinfolist = <Budgetinfo>[];
   List<Budgetday> Budgetdaylist = <Budgetday>[];
     final df = DateFormat('dd-MM-yyyy hh:mm a');
+
 
 
   var color;
@@ -58,6 +59,11 @@ class _BudgetListDetailScreenState extends State<BudgetListDetailScreen> {
     loadbudgetinfo();
     loadbudgetday(index);
     
+  }
+   void reloadPage() {
+    loadbudgetinfo(); // Reload budget information
+    loadbudgetday(index); // Reload budget days
+    setState(() {}); // Trigger a rebuild of the widget
   }
 
 
@@ -88,7 +94,10 @@ Widget build(BuildContext context) {
       ],
     ),
     backgroundColor: Colors.amber[50],
-      body: SingleChildScrollView(
+      body: Column(
+      children: [
+        Expanded(
+          child:SingleChildScrollView(
         
         child: Center(
           child: Column(
@@ -111,20 +120,22 @@ Widget build(BuildContext context) {
                   ),
                 ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 10),
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: int.tryParse(widget.budgetinfo.budgetday.toString()) ?? 0,
                 itemBuilder: (context, index) {
-                  List<Budgetday> budgetForDay = Budgetdaylist.where((expenditureday) => expenditureday.bdayname == (index + 1).toString()).toList();
+                  String dayName = (index + 1).toString();
+                  List<Budgetday> budgetForDay = Budgetdaylist.where((expenditureday) => expenditureday.bdayname == dayName).toList();
+                   double totalExpenditure = dayTotalExpenditure[dayName] ?? 0;
 
                   return Card(
                     margin: EdgeInsets.all(10),
                     elevation: 3,
                     child: ExpansionTile(
                       title: Text(
-                        'Day ${index + 1}',
+                        'Day ${index + 1} - Total RM $totalExpenditure',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       children: [
@@ -185,42 +196,151 @@ Widget build(BuildContext context) {
                   );
                 },
               ),
-              SizedBox(height: 500),
-              Container(
-                width: screenWidth,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 177, 177, 177),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Total Budget:",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        "RM ${widget.budgetinfo.totalbudget.toString()}",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 30),
+              SizedBox(height: 200),
+             
             ],
           ),
         ),
       ),
+       ),
+       SizedBox(
+              height: 48,
+              width: 400,
+              child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: axiscount, 
+                childAspectRatio: (9/1), // Adjust this value according to your images aspect ratio
+                // You may need to adjust childAspectRatio according to your item's aspect ratio
+              ),
+              itemCount: Budgetinfolist.length,
+              itemBuilder: (context, index) {
+                return
+                  Container(
+                width: 300,
+                alignment: Alignment.bottomLeft, // Align to bottom-left
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 177, 177, 177),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align row items to the start (left)
+                  children: [
+                     Text(
+                        "Total budget:",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      
+                    Text(
+                      "RM ${Budgetinfolist[index].totalbudget.toString()}",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              );})),
+
+               SizedBox(
+              height: 48,
+              width: 400,
+              child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: axiscount, 
+                childAspectRatio: (9/1), // Adjust this value according to your images aspect ratio
+                // You may need to adjust childAspectRatio according to your item's aspect ratio
+              ),
+              itemCount: Budgetinfolist.length,
+              itemBuilder: (context, index) {
+                return
+                Container(
+                width: 300,
+                alignment: Alignment.bottomLeft, // Align to bottom-left
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 177, 177, 177),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align row items to the start (left)
+                  children: [
+                     Text(
+                        "Total budget:",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      
+                    Text(
+                      "RM ${Budgetinfolist[index].totalexpenditure.toString()}",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ); 
+              })),
+
+            const SizedBox(height: 20,),
+          SizedBox(
+              height: 68,
+              width: 250,
+              
+              child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: axiscount, 
+                childAspectRatio: (5/1), // Adjust this value according to your images aspect ratio
+                // You may need to adjust childAspectRatio according to your item's aspect ratio
+              ),
+              itemCount: Budgetinfolist.length,
+              itemBuilder: (context, index) {
+                double result = double.parse(Budgetinfolist[index].totalbudget.toString()) - double.parse(Budgetinfolist[index].totalexpenditure.toString());
+                return
+                  Container(
+                   
+                // Align to bottom-left
+             decoration: BoxDecoration(
+                        color: (int.parse(Budgetinfolist[index].totalexpenditure.toString()) > int.parse(Budgetinfolist[index].totalbudget.toString()))
+                          ? Color.fromARGB(255, 246, 3, 3) // Use this color if expenditure is greater than budget
+                          : Color.fromARGB(255, 152, 253, 142), // Use transparent color if expenditure is not greater than budget
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, // Align row items to the start (left)
+                  children: [
+                     Text(
+                        "RM ",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        result.toString(),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    
+                  ],
+                ),
+              );})),
+              
+            
+              ] 
+              ),
+          
+     
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           String budgetinfo = widget.budgetinfo.budgetid.toString();
@@ -230,7 +350,8 @@ Widget build(BuildContext context) {
               builder: (context) => AddExpenditureScreen(user: widget.user, budgetinfo: budgetinfo),
             ),
           );
-          loadbudgetday(index);
+
+          reloadPage();
 
          
         
@@ -238,6 +359,10 @@ Widget build(BuildContext context) {
         child: Icon(Icons.add),
         backgroundColor: Colors.amber,
       ),
+
+    
+  
+       
     );
   }
 
@@ -280,43 +405,50 @@ Widget build(BuildContext context) {
       }
     });
   }
-  void loadbudgetday(int index) {
-    if (widget.user.id == "na") {
-      setState(() {
-        // titlecenter = "Unregistered User";
-      });
-      return;
-    }
- 
+void loadbudgetday(int index) {
+  if (widget.user.id == "na") {
+    setState(() {
+      // Handle unregistered user state
+    });
+    return;
+  }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetday.php"),
-        body: {
-          "userid": widget.user.id.toString(),
-          "Budget_id": widget.budgetinfo.budgetid.toString(),
-          }).then((response) {
-      print(response.body);
-      //log(response.body);
-      Budgetdaylist.clear();
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == "success") {
+  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetday.php"), body: {
+    "userid": widget.user.id.toString(),
+    "Budget_id": widget.budgetinfo.budgetid.toString(),
+  }).then((response) {
+    print(response.body);
+    Budgetdaylist.clear();
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      if (jsonData['status'] == 'success') {
+        var extractData = jsonData['data']['Budgetday'] as List<dynamic>;
+        Budgetdaylist = extractData.map((v) => Budgetday.fromJson(v)).toList();
+
+        // Clear existing day totals before recalculating
+        dayTotalExpenditure.clear();
+
+        // Calculate total expenditure for each day
+        for (var budgetDay in Budgetdaylist) {
+          String dayName = budgetDay.bdayname.toString();
+          double expenditureAmount = double.parse(budgetDay.expendamount.toString());
           
-       
-          var extractdata = jsondata['data'];
-          extractdata['Budgetday'].forEach((v) {
-            Budgetdaylist.add(Budgetday.fromJson(v));
-             
-          Budgetdaylist.forEach((element) {
-           
-          });
-
-          });
-          print(Budgetdaylist[0].expendname);
+          if (!dayTotalExpenditure.containsKey(dayName)) {
+            dayTotalExpenditure[dayName] = 0;
+          }
+          
+dayTotalExpenditure[dayName] = (dayTotalExpenditure[dayName] ?? 0.0) + expenditureAmount;
         }
+
+        // Trigger a rebuild of the widget
         setState(() {});
       }
-    });
-  }
+    }
+  }).catchError((error) {
+    print('Error loading budget day: $error');
+  });
+}
+  
 
 /*void onDeleteDialog(int Dayid, int Desbudget) {
   showDialog(

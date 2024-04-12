@@ -157,8 +157,9 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
           child: InkWell(
                      onTap: () async {
                         Budgetinfo budgetinfo = Budgetinfo.fromJson(Budgetinfolist[index].toJson());
+                        int budgetid = int.parse(Budgetinfolist[index].budgetid.toString());
                         await Navigator.push(context, MaterialPageRoute(builder: (content) => 
-                        BudgetListDetailScreen(user: widget.user, budgetinfo: budgetinfo  ),));
+                        BudgetListDetailScreen(user: widget.user, budgetinfo: budgetinfo , Budgetid: budgetid, ),));
                       },
           child: Container(
             width: 550, // Set the width of the Card

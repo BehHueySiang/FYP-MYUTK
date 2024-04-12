@@ -263,8 +263,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
               onPressed: () {
                 
                 addToBudget(index);
-                //updatetripinfo(index);
-              Navigator.pop(context);
+                updatetripinfo();
+              
                 
                 
               },
@@ -403,14 +403,14 @@ void loadbudgetinfo(int index) {
     });
   }
 
- /*void updatetripinfo(int index)  {
+void updatetripinfo()  {
  
     
-     
-     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotaltripfee.php"),
+     String expendamount = _ExpendAmountEditingController.text;
+     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotalexpenditure.php"),
         body: {
-          "Tripid" : widget.tripinfo,
-          "Total_Tripfee": Deslist[index].desbudget.toString(),
+          "Budgetid" : widget.budgetinfo,
+          "Total_Expenditure": expendamount,
           "action": 'add',
           
          }).then((response) {
@@ -420,7 +420,7 @@ void loadbudgetinfo(int index) {
         if (jsondata['status'] == 'success') {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Insert Successfully")));
-          loadtripinfo(index);
+          loadbudgetinfo(index);
               
         } else {
           ScaffoldMessenger.of(context)
@@ -433,7 +433,7 @@ void loadbudgetinfo(int index) {
         Navigator.pop(context);
       }
     });
-  }*/
+  }
  
    
 }

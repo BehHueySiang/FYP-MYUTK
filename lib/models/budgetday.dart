@@ -10,6 +10,7 @@ class Budgetday {
   String? budgetname;
   String? budgetday;
   String? totalbudget;
+  String? totalexpenditure;
  
   
 
@@ -26,6 +27,8 @@ class Budgetday {
       this.budgetname,
       this.budgetday,
       this.totalbudget,
+      this.totalexpenditure
+
       });
 
   Budgetday.fromJson(Map<String, dynamic> json) {
@@ -41,6 +44,8 @@ class Budgetday {
     budgetname = json['Budget_Name'];
     budgetday = json['Budget_Day'];
     totalbudget = json['Total_Budget']; 
+    totalexpenditure = json['Total_Expenditure'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -56,7 +61,8 @@ class Budgetday {
     data['Budget_Name'] = budgetname;
     data['Budget_Day'] = budgetday;
     data['Total_Budget'] = totalbudget;
-  
+    data['Total_Expenditure'] = totalexpenditure;
+
     return data;
   }
 }

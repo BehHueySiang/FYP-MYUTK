@@ -33,6 +33,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
   String? selectedTripId;
   final TextEditingController _totalBudgetEditingController =
       TextEditingController();
+  String totalexpenditure = "0";
 
   @override
   void initState() {
@@ -305,6 +306,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
           "Budget_Name": selectedTripName!,
           "Budget_Day": daynum,
           "Total_Budget": totalBudget,
+          "Total_Expenditure": totalexpenditure,
           "image": base64Image,
         }).then((response) {
       print(response.body);
