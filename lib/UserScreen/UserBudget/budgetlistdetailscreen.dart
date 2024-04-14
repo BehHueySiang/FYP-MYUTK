@@ -46,7 +46,8 @@ class _BudgetListDetailScreenState extends State<BudgetListDetailScreen> {
   late Map<String, double> dayTotalExpenditure = {};
   List<Budgetinfo> Budgetinfolist = <Budgetinfo>[];
   List<Budgetday> Budgetdaylist = <Budgetday>[];
-    final df = DateFormat('dd-MM-yyyy hh:mm a');
+  final df = DateFormat('dd-MM-yyyy hh:mm a');
+ 
 
 
 
@@ -180,7 +181,11 @@ Widget build(BuildContext context) {
                                     IconButton(
                                       icon: Icon(Icons.delete),
                                       onPressed: () {
-                                        // Handle delete action
+                                         int Dayid = int.parse(expenditure.bdayid.toString());
+                                              int Desbudget = int.parse(expenditure.expendamount.toString());
+                                              print(Dayid);
+                                              onDeleteDialog(Dayid,Desbudget);
+                                              reloadPage();
                                       },
                                     ),
                                   ],
@@ -203,7 +208,7 @@ Widget build(BuildContext context) {
         ),
       ),
        ),
-       SizedBox(
+      SizedBox(
               height: 48,
               width: 400,
               child: GridView.builder(
@@ -214,8 +219,7 @@ Widget build(BuildContext context) {
               ),
               itemCount: Budgetinfolist.length,
               itemBuilder: (context, index) {
-                return
-                  Container(
+              return Container(
                 width: 300,
                 alignment: Alignment.bottomLeft, // Align to bottom-left
                 decoration: BoxDecoration(
@@ -235,7 +239,7 @@ Widget build(BuildContext context) {
                       ),
                       
                     Text(
-                      "RM ${Budgetinfolist[index].totalbudget.toString()}",
+                      "RM ${widget.budgetinfo.totalbudget.toString()}",
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -245,7 +249,7 @@ Widget build(BuildContext context) {
                 ),
               );})),
 
-               SizedBox(
+            SizedBox(
               height: 48,
               width: 400,
               child: GridView.builder(
@@ -256,8 +260,7 @@ Widget build(BuildContext context) {
               ),
               itemCount: Budgetinfolist.length,
               itemBuilder: (context, index) {
-                return
-                Container(
+               return Container(
                 width: 300,
                 alignment: Alignment.bottomLeft, // Align to bottom-left
                 decoration: BoxDecoration(
@@ -269,7 +272,7 @@ Widget build(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align row items to the start (left)
                   children: [
                      Text(
-                        "Total budget:",
+                        "Total expenditure:",
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -285,11 +288,11 @@ Widget build(BuildContext context) {
                     ),
                   ],
                 ),
-              ); 
-              })),
+              ); })),
+            
 
             const SizedBox(height: 20,),
-          SizedBox(
+            SizedBox(
               height: 68,
               width: 250,
               
@@ -301,9 +304,7 @@ Widget build(BuildContext context) {
               ),
               itemCount: Budgetinfolist.length,
               itemBuilder: (context, index) {
-                double result = double.parse(Budgetinfolist[index].totalbudget.toString()) - double.parse(Budgetinfolist[index].totalexpenditure.toString());
-                return
-                  Container(
+              return    Container(
                    
                 // Align to bottom-left
              decoration: BoxDecoration(
@@ -325,7 +326,8 @@ Widget build(BuildContext context) {
                         ),
                       ),
                       Text(
-                        result.toString(),
+                         calculateTotalDifference(widget.budgetinfo.budgetid.toString()).toStringAsFixed(2),
+
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -380,7 +382,8 @@ Widget build(BuildContext context) {
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
-         
+           "Budget_id": widget.budgetinfo.budgetid.toString(),
+
           }).then((response) {
       print(response.body);
       //log(response.body);
@@ -450,7 +453,7 @@ dayTotalExpenditure[dayName] = (dayTotalExpenditure[dayName] ?? 0.0) + expenditu
 }
   
 
-/*void onDeleteDialog(int Dayid, int Desbudget) {
+void onDeleteDialog(int Dayid, int ExpendAmount) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -458,15 +461,15 @@ dayTotalExpenditure[dayName] = (dayTotalExpenditure[dayName] ?? 0.0) + expenditu
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
         ),
-        title: Text("Delete this destination from this trip?"),
+        title: Text("Delete this expenditure from this budget plan?"),
         content: Text("Are you sure?"),
         actions: <Widget>[
           TextButton(
             child: Text("Yes"),
             onPressed: () {
               
-              deleteDes(Dayid);
-              updatetripinfo(  Dayid,Desbudget);
+              deleteExpenditure(Dayid);
+              updatebudgetinfo(  Dayid, ExpendAmount);
              // Close the dialog
             },
           ),
@@ -482,8 +485,8 @@ dayTotalExpenditure[dayName] = (dayTotalExpenditure[dayName] ?? 0.0) + expenditu
   );
 }
 
-void deleteDes(int DayId) {
-  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletedesfromday.php"),
+void deleteExpenditure(int DayId) {
+  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deleteExpendFromDay.php"),
     body: {
       "userid": widget.user.id,
       "DayId": DayId.toString(),
@@ -500,15 +503,15 @@ void deleteDes(int DayId) {
         }
       }
     });
-}*/
-/*void updatetripinfo(int Dayid,int Desbudget)  {
+}
+void updatebudgetinfo(int Dayid,int ExpendAmount)  {
  
     
      
-     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotaltripfee.php"),
+     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotalexpenditure.php"),
         body: {
-          "Tripid" : widget.tripinfo.tripid,
-          "Total_Tripfee": Desbudget.toString(),
+          "Budgetid" : widget.budgetinfo.budgetid,
+          "Total_Expenditure": ExpendAmount.toString(),
           "action": 'delete',
           
          }).then((response) {
@@ -531,7 +534,25 @@ void deleteDes(int DayId) {
         Navigator.pop(context);
       }
     });
-  }*/
+  }
+ 
+ double calculateTotalDifference(String budgetId) {
+  double totalBudget = 0;
+  double totalExpenditure = 0;
+
+  // Find the budget info matching the provided budgetId
+  Budgetinfo budgetInfo = Budgetinfolist.firstWhere(
+    (info) => info.budgetid == budgetId,
+    orElse: () => Budgetinfo(totalbudget: "0", totalexpenditure: "0"), // Default values if not found
+  );
+
+  // Parse total budget and total expenditure from the found budget info
+  totalBudget = double.parse(budgetInfo.totalbudget.toString());
+  totalExpenditure = double.parse(budgetInfo.totalexpenditure.toString());
+
+  // Compute the total difference
+  return totalBudget - totalExpenditure;
+}
 
 
   

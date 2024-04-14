@@ -14,7 +14,7 @@ import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:myutk/UserScreen/UserReview/reviewdetailscreen.dart';
 import 'package:myutk/UserScreen/UserBudget/budgetlistdetailscreen.dart';
-
+import 'package:myutk/UserScreen/UserBudget/editbudgetscreen.dart';
 
 
 
@@ -203,27 +203,24 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () async{
-                     /*  if (widget.user.id != "na") {
+                    
            
-              Tripinfo tripinfo =Tripinfo.fromJson(Tripinfolist[index].toJson());
+              Budgetinfo budgetinfo =Budgetinfo.fromJson(Budgetinfolist[index].toJson());
                           await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 
-                                  builder: (content) => EditTripItineraryScreen(user: widget.user, tripinfo: tripinfo),
+                                  builder: (content) => EditBudgetScreen(user: widget.user, budgetinfo: budgetinfo),
                                       ));
-                          loadtripinfo();
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Please login/register an account")));
-            }*/
+                          
+           
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      // onDeleteDialog(index);
-                       //loadtripinfo();
+                      onDeleteDialog(index);
+                       loadbudgetinfo();
                                         },
                                       ),
                                     ],
@@ -300,6 +297,64 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
       }
     });
   }
+  void onDeleteDialog(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Text(
+            "Delete this budget plan?",
+          ),
+          content: const Text("Are you sure?", style: TextStyle()),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Yes",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                deletebudgetplan(index);
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                "No",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deletebudgetplan(int index) {
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_budget.php"),
+        body: {
+          "userid": widget.user.id,
+          "Budget_id": Budgetinfolist[index].budgetid,
+        }).then((response) {
+      print(response.body);
+      //Deslist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Delete Success")));
+         loadbudgetinfo();
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Failed")));
+        }
+      }
+    });
+  } 
   
    
 }

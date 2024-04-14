@@ -4,48 +4,42 @@ import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myutk/AdminScreen/AdminItinerary/itinerarylistdetailscreen.dart';
-import 'package:myutk/models/tripinfo.dart';
+import 'package:myutk/models/budget.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 
-class EditTripItineraryScreen extends StatefulWidget {
+class EditBudgetScreen extends StatefulWidget {
   final User user;
-  final Tripinfo tripinfo;
-  EditTripItineraryScreen({super.key, required this.user,required this.tripinfo});
+  final Budgetinfo budgetinfo;
+  EditBudgetScreen({super.key, required this.user,required this.budgetinfo});
 
   @override
-  State<EditTripItineraryScreen> createState() => _EditTripItineraryScreenState();
+  State<EditBudgetScreen> createState() => _EditBudgetScreenState();
 }
 
-class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
+class _EditBudgetScreenState extends State<EditBudgetScreen> {
   File? _image;
   var pathAsset = "assets/images/camera1.png";
   late double screenHeight, screenWidth ;
   int index = 0;
-  List<String> triptypelist = ["One state Trip", "Two state Trip", "Three state Trip",];
-  String triptype = "One state Trip";
-  List<String> statelist = ["Kedah", "Pulau Penang", "Perlis","Kedah + Perlis","Kedah + Pulau Penang","Pulau Penang + Perlis","Kedah + Pulau Penang + Perlis",];
-  String state = "Kedah";
-  List<String> Daylist = ["1", "2", "3"];
-  String daynum = "1";
-  List<Tripinfo> Tripinfolist = <Tripinfo>[];
-  
-  final TextEditingController _TripNameEditingController =
-          TextEditingController();
+  List<Budgetinfo> Budgetinfolist = <Budgetinfo>[];
+  String budgetname = "", daynum = "";
+   final TextEditingController _totalBudgetEditingController =
+      TextEditingController();
 
 
  @override
   void initState() {
     super.initState();
-      loadtripinfo();
+      loadbudgetinfo();
     
-    _TripNameEditingController.text = widget.tripinfo.tripname.toString();
-    daynum = widget.tripinfo.tripday.toString();
-    triptype = widget.tripinfo.triptype.toString();
-    state = widget.tripinfo.tripstate.toString();
+    budgetname = widget.budgetinfo.budgetname.toString();
+    daynum = widget.budgetinfo.budgetday.toString();
+    _totalBudgetEditingController.text = widget.budgetinfo.totalbudget.toString();
+
   }
 
 
@@ -79,7 +73,7 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Edit Trip Itinerary",
+                      "Edit Budget Plan ",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -103,7 +97,7 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                         image: _image == null
-                        ? NetworkImage(MyConfig().SERVER+"/myutk/assets/Itinerary/"+widget.tripinfo.tripid.toString() +"_image.png")
+                        ? NetworkImage(MyConfig().SERVER+"/myutk/assets/Budget/"+widget.budgetinfo.budgetid.toString() +"_image.png")
                         : FileImage(_image!) as ImageProvider,
                         fit: BoxFit.fill,
                         ),
@@ -120,105 +114,23 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
                   TextFormField(
                               textInputAction: TextInputAction.next,
                               onFieldSubmitted: (v) {},
-                              controller: _TripNameEditingController,
+                              controller: _totalBudgetEditingController,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
-                                  labelText: 'Trip Name',
+                                  labelText: 'Total Budget',
                                   labelStyle: TextStyle(color: Colors.amber),
                                    focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),
                                   ),border: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),)),),
-                                    const SizedBox(height: 20,),
-                  SizedBox(
-                    height: 60,
-                    child: DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Trip Type',
-                        labelStyle: TextStyle(color: Colors.amber),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2.0),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2.0),
-                        ),
-                      ),
-                      value: triptype,
-                      onChanged: (newValue) {
-                        setState(() {
-                          triptype = newValue!;
-                          print(triptype);
-                        });
-                      },
-                      items: triptypelist.map((triptype) {
-                        return DropdownMenuItem(
-                          value: triptype,
-                          child: Text(triptype),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 60,
-                   child:  DropdownButtonFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Days',
-                            labelStyle: TextStyle(color: Colors.amber),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(width: 2.0),
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(width: 2.0),
-                            ),
-                          ),
-                          value: daynum,
-                          onChanged: null, // Set onChanged to null to disable the dropdown
-                          items: Daylist.map((daynum) {
-                            return DropdownMenuItem(
-                              value: daynum,
-                              child: Text(daynum),
-                            );
-                          }).toList(),
-                        ),
-                  ),
-                  const SizedBox(height: 20),
-                    SizedBox(
-                    height: 60,
-                    child: DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'State',
-                        labelStyle: TextStyle(color: Colors.amber),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2.0),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2.0),
-                        ),
-                      ),
-                      value: state,
-                      onChanged: (newValue) {
-                        setState(() {
-                          state = newValue!;
-                          print(state);
-                        });
-                      },
-                      items: statelist.map((state) {
-                        return DropdownMenuItem(
-                          value: state,
-                          child: Text(state),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+                 
                    
                 Row(
                     mainAxisAlignment: MainAxisAlignment.end, // Aligns children to the start (left) of the row
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                            updatetripinfo();
+                            updatebudget();
 
                         },
                         child: const Text(
@@ -288,7 +200,7 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
       setState(() {});
     }
   }
-  void loadtripinfo() {
+  void loadbudgetinfo() {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -296,47 +208,46 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetinfo.php"),
         body: {
-          "userid": widget.user.id,
-         
+          "userid": widget.user.id.toString(),
+           "Budget_id": widget.budgetinfo.budgetid.toString(),
+
           }).then((response) {
       print(response.body);
       //log(response.body);
-      Tripinfolist.clear();
+      Budgetinfolist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
           
        
           var extractdata = jsondata['data'];
-          extractdata['Tripinfo'].forEach((v) {
-            Tripinfolist.add(Tripinfo.fromJson(v));
+          extractdata['Budgetinfo'].forEach((v) {
+            Budgetinfolist.add(Budgetinfo.fromJson(v));
              
-          Tripinfolist.forEach((element) {
+          Budgetinfolist.forEach((element) {
            
           });
 
           });
-          print(Tripinfolist[0].tripname);
+          print(Budgetinfolist[0].budgetname);
         }
         setState(() {});
       }
     });
   }
-  void updatetripinfo() {
-    String tripname = _TripNameEditingController.text;
+  void updatebudget() {
+   
     String base64Image = base64Encode(_image!.readAsBytesSync());
 
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatebudget.php"),
         body: {
           "userid": widget.user.id.toString(),
-          "Tripid": widget.tripinfo.tripid.toString(),
-          "Trip_Name": tripname,
-          "Trip_State": state,
-          "Trip_Type": triptype,
-          "Trip_Day": daynum,
+          "Budgetid": widget.budgetinfo.budgetid.toString(),
+        
+         
           "image": base64Image
           
           

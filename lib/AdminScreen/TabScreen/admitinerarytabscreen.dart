@@ -201,7 +201,7 @@ class _admitinerarytabscreenState extends State<admitinerarytabscreen> {
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () async{
-                       if (widget.user.id != "na") {
+                       
            
               Tripinfo tripinfo =Tripinfo.fromJson(Tripinfolist[index].toJson());
                           await Navigator.push(
@@ -211,10 +211,7 @@ class _admitinerarytabscreenState extends State<admitinerarytabscreen> {
                                   builder: (content) => EditTripItineraryScreen(user: widget.user, tripinfo: tripinfo),
                                       ));
                           loadtripinfo();
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("Please login/register an account")));
-            }
+           
                     },
                   ),
                   IconButton(
@@ -274,6 +271,7 @@ class _admitinerarytabscreenState extends State<admitinerarytabscreen> {
 
     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
         body: {
+          "userid": widget.user.id,
          
           }).then((response) {
       print(response.body);
