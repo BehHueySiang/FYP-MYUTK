@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:myutk/models/useritinerary.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:myutk/AdminScreen/AdminItinerary/edittripitinerary.dart';
 import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/budget.dart';
 import 'package:myutk/models/user.dart';
+import 'package:myutk/models/useritinerary.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
@@ -38,6 +40,7 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
   int numofpage = 1, curpage = 1, numberofresult = 0, index = 0;
   List<Tripinfo> Tripinfolist = <Tripinfo>[];
   List<Budgetinfo> Budgetinfolist = <Budgetinfo>[];
+  List<Usertrip> usertripList =<Usertrip> [];
  
   var color;
   
@@ -45,6 +48,7 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
   void initState() {
     super.initState();
     loadbudgetinfo();
+    loadusertrip();
     print("Budgettabscreen");
   }
 
@@ -204,7 +208,7 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
                     icon: Icon(Icons.edit),
                     onPressed: () async{
                     
-           
+              
               Budgetinfo budgetinfo =Budgetinfo.fromJson(Budgetinfolist[index].toJson());
                           await Navigator.push(
                               context,
@@ -212,8 +216,7 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
                                 
                                   builder: (content) => EditBudgetScreen(user: widget.user, budgetinfo: budgetinfo),
                                       ));
-                          
-           
+                                      loadbudgetinfo();           
                     },
                   ),
                   IconButton(
@@ -355,6 +358,30 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
       }
     });
   } 
-  
+  void loadusertrip() {
+    
+
+    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loaduseritinerary.php"),
+        body: {
+          
+        }).then((response) {
+      print(response.body);
+      usertripList.clear();
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(response.body);
+        if (jsonData['status'] == "success") {
+          var extractData = jsonData['data']['Usertrip'];
+          extractData.forEach((v) {
+            usertripList.add(Usertrip.fromJson(v));
+          });
+          setState(() {
+            // Trigger rebuild to update MinimumTotalBudgetWidget
+          });
+        }
+      }
+    });
+  }
+
+
    
 }
