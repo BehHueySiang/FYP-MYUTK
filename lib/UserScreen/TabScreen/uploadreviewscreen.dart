@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/UserScreen/UserReview/addreviewscreen.dart';
@@ -171,7 +170,7 @@ class _uploadreviewscreenState extends State<uploadreviewscreen> {
         flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
         child: CachedNetworkImage(
           fit: BoxFit.cover,
-          imageUrl: "${MyConfig().SERVER}/myutk/assets/Review/${Reviewlist[index].reviewid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Review/${Reviewlist[index].reviewid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
           placeholder: (context, url) => const LinearProgressIndicator(),
           errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
@@ -294,7 +293,7 @@ class _uploadreviewscreenState extends State<uploadreviewscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_review.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_review.php"),
         body: {
           "userid": widget.user.id,
           
@@ -359,7 +358,7 @@ class _uploadreviewscreenState extends State<uploadreviewscreen> {
   }
 
   void deleteReview(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_review.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/delete_review.php"),
         body: {
           "userid": widget.user.id,
           "ReviewId": Reviewlist[index].reviewid
@@ -381,7 +380,7 @@ class _uploadreviewscreenState extends State<uploadreviewscreen> {
   }
  void _performSearch(String keyword) {
   
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_review.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_review.php"),
         body: {
           "userid":  widget.user.id,
           "search": keyword

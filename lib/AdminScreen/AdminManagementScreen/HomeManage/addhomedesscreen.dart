@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/models/destination.dart';
-import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
@@ -157,7 +155,7 @@ class _AddHomeDesScreenState extends State<AddHomeDesScreen> {
                         flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Deslist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${Deslist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -231,7 +229,7 @@ class _AddHomeDesScreenState extends State<AddHomeDesScreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -348,7 +346,7 @@ class _AddHomeDesScreenState extends State<AddHomeDesScreen> {
   }
  void _performSearch(String search,String searchstate) {
   
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
         body: {
           "userid":  widget.user.id,
           "search": search,
@@ -404,7 +402,7 @@ class _AddHomeDesScreenState extends State<AddHomeDesScreen> {
   }
 
   void addToHomeDes(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtohomedes.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/addtohomedes.php"),
         body: {
           "Des_id": Deslist[index].desid,
           "userid": widget.user.id,

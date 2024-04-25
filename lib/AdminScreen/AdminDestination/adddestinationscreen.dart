@@ -7,6 +7,8 @@ import 'package:myutk/models/user.dart';
 import 'package:myutk/models/destination.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
+import 'package:intl/intl.dart'; // Import DateFormat for time parsing
+
 
 
 class adddestinationscreen extends StatefulWidget {
@@ -17,6 +19,7 @@ class adddestinationscreen extends StatefulWidget {
   @override
   State<adddestinationscreen> createState() => _adddestinationscreenState();
 }
+
 
 class _adddestinationscreenState extends State<adddestinationscreen> {
      List<File?> _images = List.generate(3, (_) => null);
@@ -140,55 +143,58 @@ class _adddestinationscreenState extends State<adddestinationscreen> {
                                   ),border: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),)),),
                                     const SizedBox(height: 20,),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 5,
-                          child: TextFormField(
-                              textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? ""
-                                      : null,
-                              onFieldSubmitted: (v) {},
-                              controller: _OpenTimeEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Open Time',
-                                  labelStyle: TextStyle(color: Colors.amber),
-                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),)),),
-                        ),const SizedBox(width: 20,),
-                        Flexible(
-                          flex: 5,
-                          child:TextFormField(
-                              textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? ""
-                                      : null,
-                              onFieldSubmitted: (v) {},
-                              controller: _CloseTimeEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Close Time',
-                                  labelStyle: TextStyle(color: Colors.amber),
-                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),)),),
-                        ),
-                      ],
-                    ),
+                      Row(
+                            children: [
+                              Flexible(
+                                flex: 5,
+                                child: TextFormField(
+                                  controller: _OpenTimeEditingController,
+                                  onTap: () => _selectTime(_OpenTimeEditingController),
+                                  validator: (value) => _validateTimeOrder(
+                                    value,
+                                    _CloseTimeEditingController.text,
+                                  ),
+                                  decoration: InputDecoration(
+                                    labelText: 'Open Time',
+                                     labelStyle: TextStyle(color: Colors.amber),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(width: 2.0),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(width: 2.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 20.0),
+                              Flexible(
+                                flex: 5,
+                                child: TextFormField(
+                                  controller: _CloseTimeEditingController,
+                                  onTap: () => _selectTime(_CloseTimeEditingController),
+                                  validator: (value) => _validateTimeOrder(
+                                    _OpenTimeEditingController.text,
+                                    value,
+                                  ),
+                                  decoration: InputDecoration(
+                                    labelText: 'Close Time',
+                                     labelStyle: TextStyle(color: Colors.amber),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(width: 2.0),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(width: 2.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                     const SizedBox(height: 20,),
                   TextFormField(
                               textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? ""
-                                      : null,
+                           
+                                  
                               onFieldSubmitted: (v) {},
                               controller: _SuggestTimeEditingController,
                               keyboardType: TextInputType.text,
@@ -425,7 +431,7 @@ void insertDestination() {
     String base64Image = base64Encode(_images[0]!.readAsBytesSync());
     String base64Image1 = base64Encode(_images[1]!.readAsBytesSync());
     String base64Image2 = base64Encode(_images[2]!.readAsBytesSync());
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/insert_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/insert_des.php"),
         body: {
           "userid": widget.user.id.toString(),
           "desname": DesName,
@@ -460,5 +466,34 @@ void insertDestination() {
         Navigator.pop(context);
       }
     });
+  }
+   Future<void> _selectTime(TextEditingController controller) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        controller.text = pickedTime.format(context);
+      });
+    }
+  }
+
+  String? _validateTimeOrder(String? openTime, String? closeTime) {
+    if (openTime == null || closeTime == null) {
+      return null; // Skip validation if times are not selected
+    }
+
+    // Parse times into DateTime objects for comparison
+    final DateFormat formatter = DateFormat('hh:mm a');
+    final DateTime openDateTime = formatter.parse(openTime);
+    final DateTime closeDateTime = formatter.parse(closeTime);
+
+    if (closeDateTime.isBefore(openDateTime)) {
+      return 'Close time cannot be earlier than open time';
+    }
+
+    return null; // Validation passed
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/UserScreen/UserHotel/hotellistscreen.dart';
@@ -16,9 +15,7 @@ import 'package:myutk/models/HomeScreen/homehotel.dart';
 import 'package:myutk/models/HomeScreen/homereview.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/UserScreen/UserDestination/destinationlistscreen.dart';
 import 'package:myutk/UserScreen/UserItinerary/homeitineraryscreen.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:myutk/AdminScreen/AdminManagementScreen/HomeManage/addhomedesscreen.dart';
 import 'package:myutk/AdminScreen/AdminManagementScreen/HomeManage/addhometripscreen.dart';
@@ -197,7 +194,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                       width: 200, // Specify the desired width
                                       height: 200,
                                        // Specify the desired height
-                                      imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Hdeslist[index].desid.toString()}_image.png",
+                                      imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${Hdeslist[index].desid.toString()}_image.png",
                                       placeholder: (context, url) => const LinearProgressIndicator(),
                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                     ),
@@ -351,7 +348,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                       width: 200, // Specify the desired width
                                       height: 200,
                                        // Specify the desired height
-                                      imageUrl: "${MyConfig().SERVER}/myutk/assets/Itinerary/${Htriplist[index].tripid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                      imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Itinerary/${Htriplist[index].tripid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                       placeholder: (context, url) => const LinearProgressIndicator(),
                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                     ),
@@ -453,7 +450,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                       width: 200, // Specify the desired width
                                       height: 200,
                                        // Specify the desired height
-                                      imageUrl: "${MyConfig().SERVER}/myutk/assets/Hotel/${Hhotellist[index].hotelid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                      imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Hotel/${Hhotellist[index].hotelid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                       placeholder: (context, url) => const LinearProgressIndicator(),
                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                     ),
@@ -554,7 +551,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
                                       width: 200, // Specify the desired width
                                       height: 200,
                                        // Specify the desired height
-                                      imageUrl: "${MyConfig().SERVER}/myutk/assets/Review/${Hreviewlist[index].reviewid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                      imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Review/${Hreviewlist[index].reviewid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                       placeholder: (context, url) => const LinearProgressIndicator(),
                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                     ),
@@ -631,7 +628,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -671,7 +668,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
     }
  
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadhomedes.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadhomedes.php"),
         body: {
           "userid": widget.user.id.toString(),
           }).then((response) {
@@ -740,7 +737,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
   }
 
   void deleteDes(index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletehomedes.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/deletehomedes.php"),
         body: {
           "userid": widget.user.id,
           "HdesId": Hdeslist[index].hdesid
@@ -770,7 +767,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
          
@@ -807,7 +804,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
     }
  
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadhometrip.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadhometrip.php"),
         body: {
           "userid": widget.user.id.toString(),
           }).then((response) {
@@ -874,7 +871,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
   }
 
   void deleteHTrip(index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletehomeitinerary.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/deletehomeitinerary.php"),
         body: {
           "userid": widget.user.id,
           "HtripId": Htriplist[index].htripid
@@ -904,7 +901,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_hotel.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -942,7 +939,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
     Hhotellist = [];
   }
 
-  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadhomehotel.php"),
+  http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadhomehotel.php"),
     body: {
       "userid": widget.user.id.toString(),
     }).then((response) {
@@ -1001,7 +998,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
   }
 
   void deleteHHotel(index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletehomehotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/deletehomehotel.php"),
         body: {
           "userid": widget.user.id,
           "HhotelId": Hhotellist[index].hhotelid
@@ -1031,7 +1028,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_review.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_review.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -1072,7 +1069,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
     Hreviewlist = [];
   }
 
-  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadhomereview.php"),
+  http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadhomereview.php"),
     body: {
       "userid": widget.user.id.toString(),
     }).then((response) {
@@ -1131,7 +1128,7 @@ class _admhometabscreenState extends State<admhometabscreen> {
   }
 
   void deleteHReview(index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletehomereview.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/deletehomereview.php"),
         body: {
           "userid": widget.user.id,
           "HreviewId": Hreviewlist[index].hreviewid

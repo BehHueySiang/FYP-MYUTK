@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/AdminScreen/AdminDestination/adddestinationscreen.dart';
@@ -9,8 +7,6 @@ import 'package:myutk/models/destination.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
-
 import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.dart';
 import 'package:myutk/AdminScreen/AdminDestination/editdestinationscreen.dart';
 
@@ -33,6 +29,8 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
   String maintitle = "Adm Destination List";
     int numofpage = 1, curpage = 1, numberofresult = 0;
   List<Des> Deslist = <Des>[];
+  
+
  
   var color;
   
@@ -49,6 +47,8 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
     super.dispose();
     print("dispose");
   }
+   
+
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +166,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
         flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
         child: CachedNetworkImage(
           fit: BoxFit.cover,
-          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Deslist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${Deslist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
           placeholder: (context, url) => const LinearProgressIndicator(),
           errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
@@ -208,6 +208,13 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
                             
                             ),
                           );  loaddes(1);
+              },
+            ),
+             IconButton(
+              icon: Icon(Icons.mail),
+              onPressed: () {
+                sendAdvertiseEmail();
+                
               },
             ),
             IconButton(
@@ -289,7 +296,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -356,7 +363,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
   }
 
   void deleteDes(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/delete_des.php"),
         body: {
           "userid": widget.user.id,
           "DesId": Deslist[index].desid
@@ -378,7 +385,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
   }
  void _performSearch(String keyword) {
   
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
         body: {
           "userid":  widget.user.id,
           "search": keyword
@@ -400,5 +407,22 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
     });
   
   }
-   
+ void sendAdvertiseEmail() async {
+   try {
+    // Make an HTTP POST request to send advertisement emails
+    final response = await http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/send_advertisement.php"));
+
+    if (response.statusCode == 200) {
+      print('Advertisement emails sent successfully.');
+      // Handle success scenario (e.g., show a message to the user)
+    } else {
+      print('Failed to send advertisement emails. HTTP Status Code: ${response.statusCode}');
+      // Handle failure scenario (e.g., show an error message)
+    }
+  } catch (e) {
+    print('Error sending advertisement emails: $e');
+    // Handle error scenario (e.g., show an error message)
+  }
+}
+
 }

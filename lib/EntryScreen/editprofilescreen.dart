@@ -1,11 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/EntryScreen/mainscreen.dart';
-import 'package:myutk/UserScreen/tabscreen/hometabscreen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final User user;
@@ -222,7 +219,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     String useraddress = _useraddressEditingController.text;
    
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updateprofile.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updateprofile.php"),
         body: {
           "userid": widget.user.id,
           "name": name,

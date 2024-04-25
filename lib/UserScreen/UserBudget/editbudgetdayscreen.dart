@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -123,7 +122,7 @@ class _EditBudgetDayScreenState extends State<EditBudgetDayScreen> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                         image: _image == null
-                        ? NetworkImage(MyConfig().SERVER+"/myutk/assets/BudgetDay/"+widget.budgetday.bdayid.toString() +"_image.png")
+                        ? NetworkImage(MyConfig().SERVER+"/MyUTK/assets/BudgetDay/"+widget.budgetday.bdayid.toString() +"_image.png")
                         : FileImage(_image!) as ImageProvider,
                         fit: BoxFit.fill,
                         ),
@@ -338,7 +337,7 @@ void loadbudgetinfo(int index) {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
          
@@ -372,7 +371,7 @@ void loadbudgetinfo(int index) {
     String expendname = _ExpendNameEditingController.text;
     String expendamount = _ExpendAmountEditingController.text;
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatetripinfo.php"),
         body: {
            "userid": widget.user.id,
           "Budget_id": widget.budgetinfo,
@@ -410,7 +409,7 @@ void updatetripinfo()  {
  
     
      String expendamount = _ExpendAmountEditingController.text;
-     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotalexpenditure.php"),
+     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatetotalexpenditure.php"),
         body: {
           "Budgetid" : widget.budgetinfo,
           "Total_Expenditure": expendamount,

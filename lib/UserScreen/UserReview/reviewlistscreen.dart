@@ -272,7 +272,7 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
   }
  void _performSearch(String keyword) {
   
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_review.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_review.php"),
         body: {
           "userid":  widget.user.id,
           "search": keyword

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/AdminScreen/AdminDestination/adddestinationscreen.dart';
@@ -170,7 +169,7 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
                         flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
                         child: CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Deslist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${Deslist[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -244,7 +243,7 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -361,7 +360,7 @@ class _AddItineraryDestinationScreenState extends State<AddItineraryDestinationS
   }
  void _performSearch(String search,String searchstate) {
   
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
         body: {
           "userid":  widget.user.id,
           "search": search,
@@ -457,7 +456,7 @@ void loadtripinfo(int index) {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
          
@@ -486,7 +485,7 @@ void loadtripinfo(int index) {
     });
   }
   void addToTripItinerary(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtotripday.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/addtotripday.php"),
         body: {
           "Des_id": Deslist[index].desid,
           "Trip_id": widget.tripinfo,
@@ -519,7 +518,7 @@ void loadtripinfo(int index) {
  
     
      
-     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotaltripfee.php"),
+     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatetotaltripfee.php"),
         body: {
           "Tripid" : widget.tripinfo,
           "Total_Tripfee": Deslist[index].desbudget.toString(),

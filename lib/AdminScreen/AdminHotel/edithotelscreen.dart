@@ -105,7 +105,7 @@ class _edithotelscreenState extends State<edithotelscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl:  "${MyConfig().SERVER}/myutk/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl:  "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -120,7 +120,7 @@ class _edithotelscreenState extends State<edithotelscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -135,7 +135,7 @@ class _edithotelscreenState extends State<edithotelscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -337,7 +337,7 @@ void updatehotel() {
     String Note = _NoteEditingController.text;
     String HotelBudget = _HotelBudgetEditingController.text;
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/update_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/update_hotel.php"),
         body: {
           "userid": widget.user.id.toString(),
           "HotelId": widget.hotel.hotelid,

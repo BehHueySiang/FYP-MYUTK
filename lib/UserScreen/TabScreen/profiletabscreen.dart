@@ -66,6 +66,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+     bool isLoggedIn = widget.user.id != "na";
     return Scaffold(
       appBar: AppBar(
         title: Text(maintitle,style: TextStyle(color: Colors.black,),),
@@ -204,7 +205,7 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
             ),
           ),
                   
-
+if (!isLoggedIn)
           Expanded(
               child: ListView(
             children: [
@@ -235,9 +236,5 @@ class _ProfileTabScreenState extends State<ProfileTabScreen> {
   }
   
   //////
-  
-  
  
-  
-  
 }

@@ -167,7 +167,7 @@ class _AddHomeReviewScreenState extends State<AddHomeReviewScreen> {
                                       flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
                                       child: CachedNetworkImage(
                                         fit: BoxFit.cover,
-                                        imageUrl: "${MyConfig().SERVER}/myutk/assets/Review/${Reviewlist[index].reviewid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                        imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Review/${Reviewlist[index].reviewid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                         placeholder: (context, url) => const LinearProgressIndicator(),
                                         errorWidget: (context, url, error) => const Icon(Icons.error),
                                       ),
@@ -246,7 +246,7 @@ class _AddHomeReviewScreenState extends State<AddHomeReviewScreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_review.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_review.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -277,7 +277,7 @@ class _AddHomeReviewScreenState extends State<AddHomeReviewScreen> {
   }
  void _performSearch(String keyword) {
   
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_review.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_review.php"),
         body: {
           "userid":  widget.user.id,
           "search": keyword
@@ -331,7 +331,7 @@ class _AddHomeReviewScreenState extends State<AddHomeReviewScreen> {
   }
 
   void addToHomeReview(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtohomereview.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/addtohomereview.php"),
         body: {
           "Review_id": Reviewlist[index].reviewid,
           "userid": widget.user.id,

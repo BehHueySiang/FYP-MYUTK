@@ -9,7 +9,7 @@ import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/useritinerary.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/UserScreen/UserBudget/budgetdaylistscreen.dart';
+
 
 class EditBudgetScreen extends StatefulWidget {
   final User user;
@@ -50,7 +50,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
   }
   Future<void> fetchTripData() async {
     try {
-      final response = await http.get(Uri.parse('${MyConfig().SERVER}/myutk/php/loaduseritinerary.php'));
+      final response = await http.get(Uri.parse('${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php'));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body)['data']['Usertrip'];
         List<String> names = [];
@@ -81,7 +81,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
  Future<void> loadTripInfo(String tripId) async {
     try {
       final response = await http.post(
-        Uri.parse("${MyConfig().SERVER}/myutk/php/loaduseritinerary.php"),
+        Uri.parse("${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php"),
         body: {"tripid": tripId},
       );
 
@@ -156,7 +156,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                         image: _image == null
-                        ? NetworkImage(MyConfig().SERVER+"/myutk/assets/Budget/"+widget.budgetinfo.budgetid.toString() +"_image.png")
+                        ? NetworkImage(MyConfig().SERVER+"/MyUTK/assets/Budget/"+widget.budgetinfo.budgetid.toString() +"_image.png")
                         : FileImage(_image!) as ImageProvider,
                         fit: BoxFit.fill,
                         ),
@@ -321,7 +321,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
 
   void loadusertrip() {
     if (selectedTripId == null) return;
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loaduseritinerary.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php"),
         body: {
           "tripid": selectedTripId!,
         }).then((response) {
@@ -349,7 +349,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
       });
       return;
     }
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetinfo.php"),
         body: {
        "userid": widget.user.id,
 
@@ -379,7 +379,7 @@ void UpdateBudgetInfo() async {
   // Create a multipart request
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse("${MyConfig().SERVER}/myutk/php/updatebudgetplan.php"),
+    Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatebudgetplan.php"),
   );
 
   // Attach form fields

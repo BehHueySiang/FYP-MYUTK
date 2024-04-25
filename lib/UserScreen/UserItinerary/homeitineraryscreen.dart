@@ -1,21 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:myutk/AdminScreen/AdminItinerary/createitineraryscreen.dart';
 import 'package:myutk/UserScreen/UserItinerary/homeitinerarylistdetail.dart';
-import 'package:myutk/UserScreen/UserReview/addreviewscreen.dart';
-import 'package:myutk/UserScreen/UserReview/editreviewscreen.dart';
-import 'package:myutk/AdminScreen/AdminItinerary/edittripitinerary.dart';
 import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
-import 'package:myutk/UserScreen/UserReview/reviewdetailscreen.dart';
-
 
 
 class HomeItineraryScreen extends StatefulWidget {
@@ -176,7 +166,7 @@ class _HomeItineraryScreenState extends State<HomeItineraryScreen> {
                               width: 400, // Adjust image width as needed
                               height: 200,
                               fit: BoxFit.cover,
-                              imageUrl: "${MyConfig().SERVER}/myutk/assets/Itinerary/${Tripinfolist[index].tripid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",////////
+                              imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Itinerary/${Tripinfolist[index].tripid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",////////
                             
                             ),
                             
@@ -224,7 +214,7 @@ class _HomeItineraryScreenState extends State<HomeItineraryScreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripinfo.php"),
         body: {
           
           }).then((response) {

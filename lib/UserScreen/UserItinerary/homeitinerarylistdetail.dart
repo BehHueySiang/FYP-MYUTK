@@ -1,13 +1,8 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:myutk/AdminScreen/AdminItinerary/additinerarydestination.dart';
-import 'package:myutk/UserScreen/UserReview/addreviewscreen.dart';
-import 'package:myutk/UserScreen/UserReview/editreviewscreen.dart';
 import 'package:myutk/models/review.dart';
 import 'package:myutk/models/tripday.dart';
 import 'package:myutk/models/destination.dart';
@@ -15,8 +10,6 @@ import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
-import 'package:myutk/UserScreen/UserReview/reviewdetailscreen.dart';
 import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.dart';
 
 
@@ -234,7 +227,7 @@ Widget build(BuildContext context) {
                                       flex: 2,
                                       child: CachedNetworkImage(
                                         fit: BoxFit.cover,
-                                        imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${destinationsForDay[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                        imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${destinationsForDay[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                         placeholder: (context, url) => const LinearProgressIndicator(),
                                         errorWidget: (context, url, error) => const Icon(Icons.error),
                                       ),
@@ -300,7 +293,7 @@ Widget build(BuildContext context) {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
         body: {
           "pageno": pageno.toString()
           }).then((response) {
@@ -336,7 +329,7 @@ Widget build(BuildContext context) {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
          
@@ -368,7 +361,7 @@ Widget build(BuildContext context) {
 
  
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripday.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripday.php"),
         body: {
           "Trip_id": widget.tripinfo.tripid.toString(),
           }).then((response) {

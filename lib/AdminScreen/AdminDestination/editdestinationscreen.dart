@@ -112,7 +112,7 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl:  "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl:  "${MyConfig().SERVER}/MyUTK/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -127,7 +127,7 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -142,7 +142,7 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -396,7 +396,7 @@ void updateDestination() {
     String Activity = _ActivityEditingController.text;
     String DesBudget = _DesBudgetEditingController.text;
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/update_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/update_des.php"),
         body: {
           "userid": widget.user.id.toString(),
           "DesId": widget.destination.desid,

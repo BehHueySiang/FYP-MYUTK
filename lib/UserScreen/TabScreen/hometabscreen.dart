@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/UserScreen/UserHotel/hotellistscreen.dart';
@@ -17,17 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/UserScreen/UserDestination/destinationlistscreen.dart';
 import 'package:myutk/UserScreen/UserItinerary/AddUserTripscreen.dart';
-import 'package:myutk/UserScreen/UserItinerary/homeitineraryscreen.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:myutk/AdminScreen/AdminManagementScreen/HomeManage/addhomedesscreen.dart';
-import 'package:myutk/AdminScreen/AdminManagementScreen/HomeManage/addhometripscreen.dart';
-import 'package:myutk/AdminScreen/AdminManagementScreen/HomeManage/addhomehotelscreen.dart';
-import 'package:myutk/AdminScreen/AdminManagementScreen/HomeManage/addhomereviewscreen.dart';
-
-
-
-
 
 class hometabscreen extends StatefulWidget {
   final User user;
@@ -141,7 +130,6 @@ class _hometabscreenState extends State<hometabscreen> {
                 Image.asset("assets/images/ss2.png", fit: BoxFit.cover),
                 Image.asset("assets/images/ss3.png", fit: BoxFit.cover),
                 Image.asset("assets/images/ss4.png", fit: BoxFit.cover),
-                Image.network("https://travellemming.com/wp-content/uploads/Best-Things-to-Do-in-Penang-Featured-Image.jpg", fit: BoxFit.cover),
                 
                 // Add more images as needed
               ],
@@ -194,7 +182,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                       width: 200, // Specify the desired width
                                       height: 200,
                                        // Specify the desired height
-                                      imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${Hdeslist[index].desid.toString()}_image.png",
+                                      imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${Hdeslist[index].desid.toString()}_image.png",
                                       placeholder: (context, url) => const LinearProgressIndicator(),
                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                     ),
@@ -326,7 +314,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                       width: 200, // Specify the desired width
                                       height: 200,
                                        // Specify the desired height
-                                      imageUrl: "${MyConfig().SERVER}/myutk/assets/Itinerary/${Htriplist[index].tripid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                      imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Itinerary/${Htriplist[index].tripid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                       placeholder: (context, url) => const LinearProgressIndicator(),
                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                     ),
@@ -414,7 +402,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                       width: 200, // Specify the desired width
                                       height: 200,
                                        // Specify the desired height
-                                      imageUrl: "${MyConfig().SERVER}/myutk/assets/Hotel/${Hhotellist[index].hotelid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                      imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Hotel/${Hhotellist[index].hotelid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                       placeholder: (context, url) => const LinearProgressIndicator(),
                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                     ),
@@ -500,7 +488,7 @@ class _hometabscreenState extends State<hometabscreen> {
                                       width: 200, // Specify the desired width
                                       height: 200,
                                        // Specify the desired height
-                                      imageUrl: "${MyConfig().SERVER}/myutk/assets/Review/${Hreviewlist[index].reviewid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                      imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Review/${Hreviewlist[index].reviewid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                       placeholder: (context, url) => const LinearProgressIndicator(),
                                       errorWidget: (context, url, error) => const Icon(Icons.error),
                                     ),
@@ -564,7 +552,7 @@ class _hometabscreenState extends State<hometabscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -599,7 +587,7 @@ class _hometabscreenState extends State<hometabscreen> {
    
  
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadhomedes.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadhomedes.php"),
         body: {
           }).then((response) {
       print(response.body);
@@ -634,9 +622,8 @@ class _hometabscreenState extends State<hometabscreen> {
  void loadtripinfo(index) {
     
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripinfo.php"),
         body: {
-         
          
           }).then((response) {
       print(response.body);
@@ -667,7 +654,7 @@ class _hometabscreenState extends State<hometabscreen> {
     
  
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadhometrip.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadhometrip.php"),
         body: {
           }).then((response) {
       print(response.body);
@@ -703,7 +690,7 @@ class _hometabscreenState extends State<hometabscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_hotel.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -736,7 +723,7 @@ class _hometabscreenState extends State<hometabscreen> {
     Hhotellist = [];
   }
 
-  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadhomehotel.php"),
+  http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadhomehotel.php"),
     body: {
     }).then((response) {
       print(response.body);
@@ -764,7 +751,7 @@ class _hometabscreenState extends State<hometabscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_review.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_review.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -800,7 +787,7 @@ class _hometabscreenState extends State<hometabscreen> {
     Hreviewlist = [];
   }
 
-  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadhomereview.php"),
+  http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadhomereview.php"),
     body: {
     }).then((response) {
       print(response.body);

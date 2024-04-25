@@ -373,7 +373,7 @@ void inserthotel() {
     String base64Image = base64Encode(_images[0]!.readAsBytesSync());
     String base64Image1 = base64Encode(_images[1]!.readAsBytesSync());
     String base64Image2 = base64Encode(_images[2]!.readAsBytesSync());
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/insert_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/insert_hotel.php"),
         body: {
           "userid": widget.user.id.toString(),
           "hotelname": HotelName,

@@ -1,16 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:myutk/AdminScreen/AdminHotel/addhotelscreen.dart';
 import 'package:myutk/models/hotel.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
-
 import 'package:myutk/AdminScreen/AdminHotel/admhoteldetailscreen.dart';
 import 'package:myutk/AdminScreen/AdminHotel/edithotelscreen.dart';
 
@@ -169,7 +164,7 @@ class _AddHomeHotelScreenState extends State<AddHomeHotelScreen> {
         flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
         child: CachedNetworkImage(
           fit: BoxFit.cover,
-          imageUrl: "${MyConfig().SERVER}/myutk/assets/Hotel/${Hotellist[index].hotelid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Hotel/${Hotellist[index].hotelid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
           placeholder: (context, url) => const LinearProgressIndicator(),
           errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
@@ -272,7 +267,7 @@ class _AddHomeHotelScreenState extends State<AddHomeHotelScreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_hotel.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -339,7 +334,7 @@ class _AddHomeHotelScreenState extends State<AddHomeHotelScreen> {
   }
 
   void deleteHotel(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/delete_hotel.php"),
         body: {
           "userid": widget.user.id,
           "HotelId": Hotellist[index].hotelid
@@ -361,7 +356,7 @@ class _AddHomeHotelScreenState extends State<AddHomeHotelScreen> {
   }
  void _performSearch(String keyword) {
   
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_hotel.php"),
         body: {
           "userid":  widget.user.id,
           "search": keyword
@@ -416,7 +411,7 @@ class _AddHomeHotelScreenState extends State<AddHomeHotelScreen> {
   }
 
   void addToHomeHotel(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtohomehotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/addtohomehotel.php"),
         body: {
           "Hotel_id": Hotellist[index].hotelid,
           "userid": widget.user.id,

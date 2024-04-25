@@ -157,7 +157,7 @@ Widget build(BuildContext context) {
                               return ListTile(
                                 leading: CachedNetworkImage(
                                   fit: BoxFit.cover,
-                                  imageUrl: "${MyConfig().SERVER}/myutk/assets/BudgetDay/${expenditure.bdayid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                  imageUrl: "${MyConfig().SERVER}/MyUTK/assets/BudgetDay/${expenditure.bdayid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                   placeholder: (context, url) => CircularProgressIndicator(),
                                   errorWidget: (context, url, error) => Icon(Icons.error),
                                 ),
@@ -379,7 +379,7 @@ Widget build(BuildContext context) {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
            "Budget_id": widget.budgetinfo.budgetid.toString(),
@@ -416,7 +416,7 @@ void loadbudgetday(int index) {
     return;
   }
 
-  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetday.php"), body: {
+  http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetday.php"), body: {
     "userid": widget.user.id.toString(),
     "Budget_id": widget.budgetinfo.budgetid.toString(),
   }).then((response) {
@@ -486,7 +486,7 @@ void onDeleteDialog(int Dayid, int ExpendAmount) {
 }
 
 void deleteExpenditure(int DayId) {
-  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deleteExpendFromDay.php"),
+  http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/deleteExpendFromDay.php"),
     body: {
       "userid": widget.user.id,
       "DayId": DayId.toString(),
@@ -508,7 +508,7 @@ void updatebudgetinfo(int Dayid,int ExpendAmount)  {
  
     
      
-     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotalexpenditure.php"),
+     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatetotalexpenditure.php"),
         body: {
           "Budgetid" : widget.budgetinfo.budgetid,
           "Total_Expenditure": ExpendAmount.toString(),

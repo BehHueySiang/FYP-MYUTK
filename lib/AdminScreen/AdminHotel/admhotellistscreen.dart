@@ -166,7 +166,7 @@ class _admhotellistscreenState extends State<admhotellistscreen> {
         flex: 2, // Adjust the flex to control the size ratio between the image and the text/icons
         child: CachedNetworkImage(
           fit: BoxFit.cover,
-          imageUrl: "${MyConfig().SERVER}/myutk/assets/Hotel/${Hotellist[index].hotelid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Hotel/${Hotellist[index].hotelid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
           placeholder: (context, url) => const LinearProgressIndicator(),
           errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
@@ -289,7 +289,7 @@ class _admhotellistscreenState extends State<admhotellistscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_hotel.php"),
         body: {
           
           "pageno": pageno.toString()
@@ -356,7 +356,7 @@ class _admhotellistscreenState extends State<admhotellistscreen> {
   }
 
   void deleteHotel(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/delete_hotel.php"),
         body: {
           "userid": widget.user.id,
           "HotelId": Hotellist[index].hotelid
@@ -378,7 +378,7 @@ class _admhotellistscreenState extends State<admhotellistscreen> {
   }
  void _performSearch(String keyword) {
   
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_hotel.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_hotel.php"),
         body: {
           "userid":  widget.user.id,
           "search": keyword

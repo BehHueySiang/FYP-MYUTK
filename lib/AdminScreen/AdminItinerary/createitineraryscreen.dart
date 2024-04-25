@@ -291,7 +291,7 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
   
     String base64Image = base64Encode(_image!.readAsBytesSync());
     String tripname = _TripNameEditingController.text;
-     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/additineraryinfo.php"),
+     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/additineraryinfo.php"),
         body: {
           "userid": widget.user.id,
           "Trip_Name": tripname,
@@ -330,7 +330,7 @@ void loadtripinfo() {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
          

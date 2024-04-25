@@ -236,7 +236,7 @@ Widget build(BuildContext context) {
                                       flex: 2,
                                       child: CachedNetworkImage(
                                         fit: BoxFit.cover,
-                                        imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${destinationsForDay[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                        imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${destinationsForDay[index].desid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                         placeholder: (context, url) => const LinearProgressIndicator(),
                                         errorWidget: (context, url, error) => const Icon(Icons.error),
                                       ),
@@ -342,7 +342,7 @@ floatingActionButton:
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/load_des.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
         body: {
           "pageno": pageno.toString()
           }).then((response) {
@@ -378,7 +378,7 @@ floatingActionButton:
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
          
@@ -415,7 +415,7 @@ floatingActionButton:
     }
  
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripday.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripday.php"),
         body: {
           "userid": widget.user.id.toString(),
           "Trip_id": widget.tripinfo.tripid.toString(),
@@ -477,7 +477,7 @@ void onDeleteDialog(int Dayid, int Desbudget) {
 }
 
 void deleteDes(int DayId) {
-  http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deletedesfromday.php"),
+  http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/deletedesfromday.php"),
     body: {
       "userid": widget.user.id,
       "DayId": DayId.toString(),
@@ -499,7 +499,7 @@ void updatetripinfo(int Dayid,int Desbudget)  {
  
     
      
-     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotaltripfee.php"),
+     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatetotaltripfee.php"),
         body: {
           "Tripid" : widget.tripinfo.tripid,
           "Total_Tripfee": Desbudget.toString(),

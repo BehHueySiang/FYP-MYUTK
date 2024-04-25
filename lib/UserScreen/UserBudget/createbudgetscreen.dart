@@ -4,12 +4,9 @@ import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myutk/models/user.dart';
-import 'package:myutk/models/budget.dart';
-import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/useritinerary.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/UserScreen/UserBudget/budgetdaylistscreen.dart';
 
 class CreateBudgetScreen extends StatefulWidget {
   final User user;
@@ -44,7 +41,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
   Future<void> fetchTripNames() async {
     try {
       final response =
-          await http.get(Uri.parse('${MyConfig().SERVER}/myutk/php/loaduseritinerary.php'));
+          await http.get(Uri.parse('${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php'));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body)['data']['Usertrip'];
@@ -300,7 +297,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
   void addBudgetInfo() {
     String base64Image = base64Encode(_image!.readAsBytesSync());
     String totalBudget = _totalBudgetEditingController.text;
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addbudget.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/addbudget.php"),
         body: {
           "userid": widget.user.id,
           "Budget_Name": selectedTripName!,
@@ -334,7 +331,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
   void loadusertrip() {
     if (selectedTripId == null) return;
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loaduseritinerary.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php"),
         body: {
           "tripid": selectedTripId!,
         }).then((response) {

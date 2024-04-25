@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/mainscreen.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'models/user.dart';
@@ -62,7 +62,7 @@ class SplashScreenState extends State<SplashScreen> {
     if (ischeck) {
       try {
         http.Response response = await http.post(
-          Uri.parse("${MyConfig().SERVER}/myutkdraf/php/login_user.php"),
+          Uri.parse("${MyConfig().SERVER}/MyUTK/php/login_user.php"),
           body: {"email": email, "password": password},
         );
 

@@ -177,7 +177,7 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
                                       width: 400, // Adjust image width as needed
                                       height: 200,
                                       fit: BoxFit.cover,
-                                      imageUrl: "${MyConfig().SERVER}/myutk/assets/Itinerary/${Utriplist[index].tripid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",////////
+                                      imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Itinerary/${Utriplist[index].tripid}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",////////
                                     
                                     ),
                             
@@ -251,7 +251,7 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripinfo.php"),
         body: {
           
          
@@ -288,7 +288,7 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
     }
  
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loaduseritinerary.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php"),
         body: {
           "userid": widget.user.id.toString(),
           }).then((response) {
@@ -349,7 +349,7 @@ class _itinerarytabscreenState extends State<itinerarytabscreen> {
   }
 
   void deleteusertrip(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/deleteuseritinerary.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/deleteuseritinerary.php"),
         body: {
           "userid": widget.user.id,
           "UtripId": Utriplist[index].utripid,

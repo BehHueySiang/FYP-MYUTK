@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/src/legacy_api.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,7 +7,6 @@ import 'package:myutk/models/user.dart';
 import 'package:myutk/models/destination.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 
 
@@ -106,7 +103,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl:  "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl:  "${MyConfig().SERVER}/MyUTK/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
@@ -121,7 +118,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
@@ -136,7 +133,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Destination/${widget.destination.desid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
@@ -155,6 +152,8 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                           0: FlexColumnWidth(4),
                           1: FlexColumnWidth(5),
                         },
+                          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+
                         children: [
                           TableRow(children: [
                             const TableCell(
@@ -229,7 +228,7 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                 ),
                               )
                             ]),
-                            TableRow(children: [
+                         TableRow(children: [
                                 const TableCell(
                                   child: Text(
                                     "Activity: ",
@@ -243,6 +242,8 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
                                   ),
                                 )
                               ]),
+
+                                     
                               TableRow(children: [
                                 const TableCell(
                                   child: Text(
@@ -371,12 +372,22 @@ class _AdmDestinationDetailScreenState extends State<AdmDestinationDetailScreen>
       ),
     );
   }
-  Future<void> _launchUrl( urlString) async {
+Future<void> _launchUrl(String urlString) async {
+  try {
     if (await canLaunch(urlString)) {
       await launch(urlString);
     } else {
-      throw 'Could not launch $urlString';
+      // Handle case where URL cannot be launched
+      print('Could not launch URL: $urlString');
+      // Display a message to the user or log the error
+      // Example: ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not launch URL')));
     }
+  } catch (e) {
+    // Handle any other exceptions that occur during URL launching
+    print('Error launching URL: $e');
+    // Display a message to the user or log the error
+    // Example: ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error launching URL')));
   }
+}
 }
 

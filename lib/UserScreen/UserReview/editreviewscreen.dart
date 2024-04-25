@@ -76,7 +76,7 @@ class _editreviewscreenState extends State<editreviewscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl:  "${MyConfig().SERVER}/myutk/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl:  "${MyConfig().SERVER}/MyUTK/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -91,7 +91,7 @@ class _editreviewscreenState extends State<editreviewscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -106,7 +106,7 @@ class _editreviewscreenState extends State<editreviewscreen> {
                         child: CachedNetworkImage(
                           width: screenWidth,
                           fit: BoxFit.cover,
-                          imageUrl: "${MyConfig().SERVER}/myutk/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                          imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
                           placeholder: (context, url) => const LinearProgressIndicator(),
                           errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
@@ -181,7 +181,7 @@ void updatereview() {
     String ReviewName = _ReviewnameEditingController.text;
     String Comment = _CommentEditingController.text;
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/update_review.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/update_review.php"),
         body: {
           "userid": widget.user.id.toString(),
           "Reviewid": widget.review.reviewid,

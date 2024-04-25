@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/src/legacy_api.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -106,7 +104,7 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl:  "${MyConfig().SERVER}/myutk/assets/Destination/${widget.hotel.hotelid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl:  "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
@@ -121,7 +119,7 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.hotel.hotelid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
@@ -136,7 +134,7 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl: "${MyConfig().SERVER}/myutk/assets/Destination/${widget.hotel.hotelid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),

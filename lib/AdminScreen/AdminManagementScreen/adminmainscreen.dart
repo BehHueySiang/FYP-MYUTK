@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:myutk/AdminScreen/TabScreen/admhometabscreen.dart';
-import 'package:myutk/AdminScreen/TabScreen/admbudgettabscreen.dart';
 import 'package:myutk/AdminScreen/TabScreen/admitinerarytabscreen.dart';
 import 'package:myutk/AdminScreen/TabScreen/admuploadinformationscreen.dart';
 import 'package:myutk/AdminScreen/TabScreen/admprofiletabscreen.dart';
-
-
-
 import '../../../models/user.dart';
 import '../../../models/destination.dart';
 
@@ -40,7 +35,6 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
     print("AdminMainScreen");
     tabchildren = [
       admhometabscreen(user: widget.user),
-      admbudgettabscreen(user: widget.user),
       admitinerarytabscreen(user: widget.user),
       admuploadinformationscreen(user: widget.user,),
       admProfileTabScreen(user: widget.user,),
@@ -71,12 +65,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                 ),
                 label: "AdmHome"),
                 
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.attach_money_rounded,
-                  color: Colors.amber,
-                ),
-                label: "AdmBudget"),
+        
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.text_snippet,
@@ -110,16 +99,14 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       if (_currentIndex == 0) {
         maintitle = "AdmHome";
       }
+     
       if (_currentIndex == 1) {
-        maintitle = "AdmBudget";
-      }
-      if (_currentIndex == 2) {
         maintitle = "AdmItinerary";
       }
-      if (_currentIndex == 3) {
+      if (_currentIndex == 2) {
         maintitle = "Admupload";
       }
-      if (_currentIndex == 4) {
+      if (_currentIndex == 3) {
         maintitle = "AdmProfile";
       }
     

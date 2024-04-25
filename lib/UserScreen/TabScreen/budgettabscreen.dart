@@ -1,20 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 import 'package:myutk/models/useritinerary.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/UserScreen/UserBudget/createbudgetscreen.dart';
-import 'package:myutk/AdminScreen/AdminItinerary/edittripitinerary.dart';
 import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/budget.dart';
 import 'package:myutk/models/user.dart';
-import 'package:myutk/models/useritinerary.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
-import 'package:myutk/UserScreen/UserReview/reviewdetailscreen.dart';
 import 'package:myutk/UserScreen/UserBudget/budgetlistdetailscreen.dart';
 import 'package:myutk/UserScreen/UserBudget/editbudgetscreen.dart';
 
@@ -182,7 +175,7 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
                               width: 400, // Adjust image width as needed
                               height: 200,
                               fit: BoxFit.cover,
-                              imageUrl: "${MyConfig().SERVER}/myutk/assets/Budget/${Budgetinfolist[index].budgetid.toString()}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",////////
+                              imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Budget/${Budgetinfolist[index].budgetid.toString()}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",////////
                             
                             ),
                             
@@ -273,9 +266,9 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetinfo.php"),
         body: {
-         
+         "userid": widget.user.id.toString(),
           }).then((response) {
       print(response.body);
       //log(response.body);
@@ -338,7 +331,7 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
   }
 
   void deletebudgetplan(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/delete_budget.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/delete_budget.php"),
         body: {
           "userid": widget.user.id,
           "Budget_id": Budgetinfolist[index].budgetid,
@@ -361,7 +354,7 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
   void loadusertrip() {
     
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loaduseritinerary.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php"),
         body: {
           
         }).then((response) {

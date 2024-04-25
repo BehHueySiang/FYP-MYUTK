@@ -104,7 +104,7 @@ class _ReviewDetailScreenState extends State<ReviewDetailScreen> {
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl:  "${MyConfig().SERVER}/myutk/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl:  "${MyConfig().SERVER}/MyUTK/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
@@ -119,7 +119,7 @@ class _ReviewDetailScreenState extends State<ReviewDetailScreen> {
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl: "${MyConfig().SERVER}/myutk/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
@@ -134,7 +134,7 @@ class _ReviewDetailScreenState extends State<ReviewDetailScreen> {
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl: "${MyConfig().SERVER}/myutk/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Review/${widget.review.reviewid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
                                     placeholder: (context, url) => const LinearProgressIndicator(),
                                     errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),

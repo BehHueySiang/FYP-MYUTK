@@ -103,7 +103,7 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                         image: _image == null
-                        ? NetworkImage(MyConfig().SERVER+"/myutk/assets/Itinerary/"+widget.tripinfo.tripid.toString() +"_image.png")
+                        ? NetworkImage(MyConfig().SERVER+"/MyUTK/assets/Itinerary/"+widget.tripinfo.tripid.toString() +"_image.png")
                         : FileImage(_image!) as ImageProvider,
                         fit: BoxFit.fill,
                         ),
@@ -296,7 +296,7 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadtripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadtripinfo.php"),
         body: {
           "userid": widget.user.id,
          
@@ -329,7 +329,7 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
     String base64Image = base64Encode(_image!.readAsBytesSync());
 
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatetripinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
           "Tripid": widget.tripinfo.tripid.toString(),

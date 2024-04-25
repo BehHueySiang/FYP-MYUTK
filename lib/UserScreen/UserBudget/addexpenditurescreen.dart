@@ -1,18 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:myutk/AdminScreen/AdminDestination/adddestinationscreen.dart';
 import 'package:myutk/models/budget.dart';
 import 'package:myutk/models/destination.dart';
-import 'package:myutk/models/tripday.dart';
-import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
-import 'package:myutk/EntryScreen/loginscreen.dart';
 
 
 
@@ -338,7 +333,7 @@ void loadbudgetinfo(int index) {
       return;
     }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/loadbudgetinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
          
@@ -371,7 +366,7 @@ void loadbudgetinfo(int index) {
     String expendname = _ExpendNameEditingController.text;
     String expendamount = _ExpendAmountEditingController.text;
 
-    http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/addtobudgetday.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/addtobudgetday.php"),
         body: {
           "userid": widget.user.id,
           "Budget_id": widget.budgetinfo,
@@ -407,7 +402,7 @@ void updatetripinfo()  {
  
     
      String expendamount = _ExpendAmountEditingController.text;
-     http.post(Uri.parse("${MyConfig().SERVER}/myutk/php/updatetotalexpenditure.php"),
+     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatetotalexpenditure.php"),
         body: {
           "Budgetid" : widget.budgetinfo,
           "Total_Expenditure": expendamount,
