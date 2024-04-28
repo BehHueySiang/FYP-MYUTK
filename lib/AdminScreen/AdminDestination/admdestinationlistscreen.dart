@@ -213,7 +213,7 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
              IconButton(
               icon: Icon(Icons.mail),
               onPressed: () {
-                sendAdvertiseEmail();
+                sendAdvertiseEmail(index);
                 
               },
             ),
@@ -407,18 +407,24 @@ class _admdestinationlistscreenState extends State<admdestinationlistscreen> {
     });
   
   }
- void sendAdvertiseEmail() async {
+ void sendAdvertiseEmail(int index) {
    try {
     // Make an HTTP POST request to send advertisement emails
-    final response = await http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/send_advertisement.php"));
-
+  http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/send_advertisement.php"),
+    body: {
+          "Des_id": Deslist[index].desid,
+          "Des_Name": Deslist[index].desname,
+          
+    }).then((response) {
     if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("E-mail send successfully")));
       print('Advertisement emails sent successfully.');
       // Handle success scenario (e.g., show a message to the user)
     } else {
       print('Failed to send advertisement emails. HTTP Status Code: ${response.statusCode}');
       // Handle failure scenario (e.g., show an error message)
-    }
+    }});
   } catch (e) {
     print('Error sending advertisement emails: $e');
     // Handle error scenario (e.g., show an error message)

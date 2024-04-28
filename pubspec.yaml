@@ -49,6 +49,9 @@ dependencies:
   url_launcher: ^6.2.5
   firebase_database: ^10.2.4
   carousel_slider: ^4.0.0
+  flutter_local_notifications: ^17.1.0
+  firebase_core: ^2.30.1
+  firebase_messaging: ^14.9.1
    
 dev_dependencies:
   flutter_test:
