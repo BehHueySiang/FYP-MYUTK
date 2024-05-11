@@ -8,6 +8,7 @@ import 'package:myutk/models/destination.dart';
 import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 
@@ -26,6 +27,8 @@ class AddExpenditureScreen extends StatefulWidget {
 class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
   File? _image;
   var pathAsset = "assets/images/camera1.png";
+    
+
   late double screenHeight, screenWidth;
   TextEditingController _searchController = TextEditingController();
   late int axiscount = 2;
@@ -207,24 +210,23 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
             ),),
           ); 
   }
-
+void _showAddToTripDialog(int index) {
   
-  
-                          
-   void _showAddToTripDialog(int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Add to Budget"),
           content: SingleChildScrollView(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Text("Please select day you want to add this expense to? "),
-              const SizedBox(height: 15,),
-               SizedBox(
-                              height: 60,
-                              child: DropdownButtonFormField(
-                                decoration: const InputDecoration(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Please select day you want to add this expense to? "),
+                const SizedBox(height: 15,),
+                SizedBox(
+                  height: 60,
+                  child: DropdownButtonFormField(
+                     decoration: const InputDecoration(
                                   labelText: 'Days',
                                   labelStyle: TextStyle(color: Colors.black),
                                   focusedBorder: OutlineInputBorder(
@@ -249,24 +251,33 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
                                     ),
                                   );
                                 }).toList(),
-                              ),
-                            ),])),
+                  ),
+                ),
+              ],
+            ),
+          ),
           actions: <Widget>[
-            
             TextButton(
               child: Text("Yes"),
               onPressed: () {
-                
-                addToBudget(index);
-                updatetripinfo();
-              
-                
+                if (_image == null) {
+                 _downloadDefaultImage().then((file) {
+                  _image = file;
+                  addToBudget(index,_image);
+                   updatetripinfo();
+                  
+                });}else{
+                     _image;
+                     addToBudget(index,_image);
+                     updatetripinfo();
+                }
                 
               },
             ),
             TextButton(
               child: Text("No"),
               onPressed: () {
+               
                 Navigator.of(context).pop();
               },
             ),
@@ -274,7 +285,8 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
         );
       },
     );
-  }
+  
+}
   Future<void> _selectFromCamera() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
@@ -286,9 +298,7 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
     if (pickedFile != null) {
       _image = File(pickedFile.path);
       cropImage();
-    } else {
-      print('No image selected.');
-    }
+    } 
   }
 
   Future<void> cropImage() async {
@@ -326,43 +336,49 @@ class _AddExpenditureScreenState extends State<AddExpenditureScreen> {
 
 
 void loadbudgetinfo(int index) {
-    if (widget.user.id == "na") {
-      setState(() {
-        // titlecenter = "Unregistered User";
-      });
-      return;
-    }
+ 
+  
+  if (widget.user.id == "na") {
+    setState(() {
+      // titlecenter = "Unregistered User";
+    });
+    return;
+  }
 
-    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetinfo.php"),
-        body: {
-          "userid": widget.user.id.toString(),
-         
-          }).then((response) {
-      print(response.body);
-      //log(response.body);
-      Budgetinfolist.clear();
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == "success") {
-          
+  http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetinfo.php"),
+      body: {
+        "userid": widget.user.id.toString(),
        
-          var extractdata = jsondata['data'];
-          extractdata['Budgetinfo'].forEach((v) {
-            Budgetinfolist.add(Budgetinfo.fromJson(v));
-             
-          Budgetinfolist.forEach((element) {
+        }).then((response) {
+    print(response.body);
+    //log(response.body);
+    Budgetinfolist.clear();
+    if (response.statusCode == 200) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        
+     
+        var extractdata = jsondata['data'];
+        extractdata['Budgetinfo'].forEach((v) {
+          Budgetinfolist.add(Budgetinfo.fromJson(v));
            
-          });
+        Budgetinfolist.forEach((element) {
+         
+        });
 
-          });
-          print(Budgetinfolist[0].budgetname);
-        }
+        });
+        print(Budgetinfolist[0].budgetname);
+      }
+      if (mounted) { // Check if the widget is still mounted before calling setState()
         setState(() {});
       }
-    });
-  }
-  void addToBudget(int index) {
-    String base64Image = base64Encode(_image!.readAsBytesSync());
+    }
+  });
+}
+  void addToBudget(int index,File? _image) {
+   
+    
+     String base64Image = base64Encode(_image!.readAsBytesSync());  
     String expendname = _ExpendNameEditingController.text;
     String expendamount = _ExpendAmountEditingController.text;
 
@@ -429,6 +445,14 @@ void updatetripinfo()  {
       }
     });
   }
- 
+ Future<File> _downloadDefaultImage() async {
+  final url = 'https://www.hsbehopper.com/MyUTK/assets/Default_Image.png';
+  final response = await http.get(Uri.parse(url));
+  final bytes = response.bodyBytes;
+  final tempDir = await getTemporaryDirectory();
+  final file = File('${tempDir.path}/Default_Image.png');
+  await file.writeAsBytes(bytes);
+  return file;
+}
    
 }

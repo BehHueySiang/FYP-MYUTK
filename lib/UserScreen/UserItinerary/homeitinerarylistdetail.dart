@@ -111,14 +111,14 @@ Widget build(BuildContext context) {
                 Text(
                   'Trip Type :  ',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   widget.tripinfo.triptype.toString(),
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     
                   ),
                 ),
@@ -126,14 +126,14 @@ Widget build(BuildContext context) {
                 Text(
                   ' Days :    ',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   widget.tripinfo.tripday.toString(),
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     
                   ),
                 ),
@@ -143,14 +143,14 @@ Widget build(BuildContext context) {
                 Text(
                   '     State :  ',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   widget.tripinfo.tripstate.toString(),
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     
                   ),
                 ),
@@ -216,7 +216,7 @@ Widget build(BuildContext context) {
                               color: Colors.amber[100],
                               child: InkWell(
                                 onTap: () async {
-                                  Des destination = Des.fromJson(destinationsForDay[index].toJson());
+                                  Des destination =Des.fromJson(Deslist[index].toJson());
                                   await Navigator.push(context, MaterialPageRoute(builder: (content) => AdmDestinationDetailScreen(user: widget.user, destination: destination)));
                                   loaddes(1);
                                 },

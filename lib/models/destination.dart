@@ -10,6 +10,8 @@ class Des {
   String? desstate;
   String? desrate;
   String? desbudget;
+  String? latitude;
+  String? longtitude;
   
 
   Des(
@@ -23,7 +25,10 @@ class Des {
       this.activity,
       this.desstate,
       this.desrate,
-      this.desbudget});
+      this.desbudget,
+      this.latitude,
+      this.longtitude
+      });
 
   Des.fromJson(Map<String, dynamic> json) {
     desid = json['Des_id'];
@@ -37,6 +42,8 @@ class Des {
     desstate = json['Des_State'];
     desrate = json['Des_Rate'];
     desbudget = json['Des_Budget'];
+    latitude = json['Latitude'];
+    longtitude = json['Longtitude'];
     
   }
 
@@ -53,6 +60,8 @@ class Des {
     data['Des_State'] = desstate;
     data['Des_Rate'] = desrate;
     data['Des_Budget'] = desbudget;
+    data['Latitude'] = latitude;
+    data['Longtitude'] = longtitude;
     return data;
   }
 }

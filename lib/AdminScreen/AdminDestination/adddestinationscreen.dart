@@ -31,8 +31,7 @@ class _adddestinationscreenState extends State<adddestinationscreen> {
       late double screenHeight, screenWidth, cardwitdh;
       final TextEditingController _DesnameEditingController =
           TextEditingController();
-      final TextEditingController _UrlEditingController =
-          TextEditingController();
+      
       final TextEditingController _OpenTimeEditingController =
           TextEditingController();
       final TextEditingController _CloseTimeEditingController =
@@ -43,6 +42,8 @@ class _adddestinationscreenState extends State<adddestinationscreen> {
           TextEditingController();
       final TextEditingController _DesBudgetEditingController =
           TextEditingController();
+      final TextEditingController _latitudeController = TextEditingController();
+      final TextEditingController _longitudeController = TextEditingController();
       String DesRate = "1";
         List<String> Ratelist = [
           "1","2","3","4","5","6","7","8","9","10",
@@ -126,22 +127,35 @@ class _adddestinationscreenState extends State<adddestinationscreen> {
                                   ),border: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),)),),
                                     const SizedBox(height: 20,),
-                    TextFormField(
-                              textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? ""
-                                      : null,
-                              onFieldSubmitted: (v) {},
-                              controller: _UrlEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Redirect Link',
-                                  labelStyle: TextStyle(color: Colors.amber),
-                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),)),),
+                                  TextFormField(
+                                          controller: _latitudeController,
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            labelText: 'Latitude',
+                                            labelStyle: TextStyle(color: Colors.amber),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(width: 2.0),
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(width: 2.0),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        TextFormField(
+                                          controller: _longitudeController,
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            labelText: 'Longitude',
+                                            labelStyle: TextStyle(color: Colors.amber),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(width: 2.0),
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(width: 2.0),
+                                            ),
+                                          ),
+                                        ),
                                     const SizedBox(height: 20,),
                       Row(
                             children: [
@@ -421,13 +435,13 @@ Future<void> _selectFromCamera(index) async {
   //////////////
 void insertDestination() {
     String DesName = _DesnameEditingController.text;
-    String Url = _UrlEditingController.text;
     String OpenTime = _OpenTimeEditingController.text;
     String CloseTime = _CloseTimeEditingController.text;
     String SuggestTime = _SuggestTimeEditingController.text;
     String Activity = _ActivityEditingController.text;
     String DesBudget = _DesBudgetEditingController.text;
-
+    String Latitude = _latitudeController.text;
+    String Longtitude = _longitudeController.text;
     String base64Image = base64Encode(_images[0]!.readAsBytesSync());
     String base64Image1 = base64Encode(_images[1]!.readAsBytesSync());
     String base64Image2 = base64Encode(_images[2]!.readAsBytesSync());
@@ -435,7 +449,6 @@ void insertDestination() {
         body: {
           "userid": widget.user.id.toString(),
           "desname": DesName,
-          "url": Url,
           "opentime": OpenTime,
           "closetime": CloseTime,
           "suggesttime": SuggestTime,
@@ -443,6 +456,8 @@ void insertDestination() {
           "desbudget": DesBudget,
           "desstate": DesState,
           "desrate": DesRate,
+          "latitude": Latitude,
+          "longtitude": Longtitude,
           "image": base64Image,
           "image1": base64Image1,
           "image2": base64Image2

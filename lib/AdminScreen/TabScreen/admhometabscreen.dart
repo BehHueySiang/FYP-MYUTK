@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myutk/UserScreen/UserHotel/hotellistscreen.dart';
 import 'package:myutk/UserScreen/UserReview/reviewlistscreen.dart';
+import 'package:myutk/Notification/admnotificationscreen.dart';
 import 'package:myutk/models/tripday.dart';
 import 'package:myutk/models/tripinfo.dart';
 import 'package:myutk/models/user.dart';
@@ -105,7 +106,11 @@ class _admhometabscreenState extends State<admhometabscreen> {
               icon: const Icon(Icons.search)),
               IconButton(
               onPressed: () {
-                
+                  
+                   Navigator.push(
+                        context,
+                         MaterialPageRoute(builder: (context) => AdmNotificationScreen(user: widget.user)),);
+              
               },
               icon: const Icon(Icons.notifications_active)),
               

@@ -253,7 +253,7 @@ class _AddUserTripScreenState extends State<AddUserTripScreen> {
           title: Text("Add to Trip"),
           content: SingleChildScrollView(
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Text("Do you want to add ${Tripinfolist[index].tripname} to homescreen?"),
+              Text("Do you want to add ${Tripinfolist[index].tripname} to trip itinerary?"),
               const SizedBox(height: 15,),
              ])),
           actions: <Widget>[

@@ -29,7 +29,9 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
       late double screenHeight, screenWidth, cardwitdh;
       final TextEditingController _DesnameEditingController =
           TextEditingController();
-      final TextEditingController _UrlEditingController =
+      final TextEditingController _LongtitudeEditingController =
+          TextEditingController();
+          final TextEditingController _LatitudeEditingController =
           TextEditingController();
       final TextEditingController _OpenTimeEditingController =
           TextEditingController();
@@ -55,7 +57,8 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
     super.initState();
     print('Debug destination: ${widget.destination.toJson()}');
     _DesnameEditingController.text = widget.destination.desname.toString();
-    _UrlEditingController.text = widget.destination.url.toString();
+    _LongtitudeEditingController.text = widget.destination.longtitude.toString();
+    _LatitudeEditingController.text = widget.destination.latitude.toString();
     _OpenTimeEditingController.text = widget.destination.opentime.toString();
     _CloseTimeEditingController.text = widget.destination.closetime.toString();
     _SuggestTimeEditingController.text = widget.destination.suggesttime.toString();
@@ -191,10 +194,27 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
                                       ? ""
                                       : null,
                               onFieldSubmitted: (v) {},
-                              controller: _UrlEditingController,
+                              controller: _LatitudeEditingController,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
-                                  labelText: 'Redirect Link',
+                                  labelText: 'Latitude',
+                                  labelStyle: TextStyle(color: Colors.amber),
+                                   focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 2.0),
+                                  ),border: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 2.0),)),),
+                                    const SizedBox(height: 20,),
+                      TextFormField(
+                              textInputAction: TextInputAction.next,
+                              validator: (val) =>
+                                  val!.isEmpty || (val.length < 3)
+                                      ? ""
+                                      : null,
+                              onFieldSubmitted: (v) {},
+                              controller: _LongtitudeEditingController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration(
+                                  labelText: 'Longtitude',
                                   labelStyle: TextStyle(color: Colors.amber),
                                    focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),
@@ -389,7 +409,8 @@ class _editdestinationscreenState extends State<editdestinationscreen> {
   
 void updateDestination() {
     String DesName = _DesnameEditingController.text;
-    String Url = _UrlEditingController.text;
+    String Longtitude = _LongtitudeEditingController.text;
+    String Latitude = _LatitudeEditingController.text;
     String OpenTime = _OpenTimeEditingController.text;
     String CloseTime = _CloseTimeEditingController.text;
     String SuggestTime = _SuggestTimeEditingController.text;
@@ -401,7 +422,8 @@ void updateDestination() {
           "userid": widget.user.id.toString(),
           "DesId": widget.destination.desid,
           "desname": DesName,
-          "url": Url,
+          "longtitude": Longtitude,
+          "latitude": Latitude,
           "opentime": OpenTime,
           "closetime": CloseTime,
           "suggesttime": SuggestTime,
