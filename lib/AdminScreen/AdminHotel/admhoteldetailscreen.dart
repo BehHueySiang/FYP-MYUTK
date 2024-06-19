@@ -9,14 +9,11 @@ import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-
-
-
 class AdmHotelDetailScreen extends StatefulWidget {
   final User user;
- Hotel hotel;
+  Hotel hotel;
 
-   AdmHotelDetailScreen({super.key, required this.user, required this.hotel});
+  AdmHotelDetailScreen({super.key, required this.user, required this.hotel});
 
   @override
   State<AdmHotelDetailScreen> createState() => _AdmHotelDetailScreenState();
@@ -25,13 +22,11 @@ class AdmHotelDetailScreen extends StatefulWidget {
 class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
   late double screenHeight, screenWidth;
   late int axiscount = 2;
-  
-  
 
   @override
   void initState() {
     super.initState();
-    print("Hotel Detail");
+    print("Destination List");
   }
 
   @override
@@ -55,21 +50,22 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
         title: Image.asset("assets/images/Logo.png"),
         backgroundColor: Colors.amber[200],
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_active),
-          ),
+         
         ],
       ),
       backgroundColor: Colors.amber[50],
-      body: Column( // Wrap with Column
+      body: Column(
+        // Wrap with Column
         children: [
-          Expanded( // Wrap with Expanded
+          Expanded(
+            // Wrap with Expanded
             child: SingleChildScrollView(
               child: Center(
                 child: Column(
                   children: [
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Container(
                       width: screenWidth,
                       alignment: Alignment.center,
@@ -104,9 +100,12 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl:  "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
-                                    placeholder: (context, url) => const LinearProgressIndicator(),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                                    imageUrl:
+                                        "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    placeholder: (context, url) =>
+                                        const LinearProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   ),
                                 ),
                               ),
@@ -119,9 +118,12 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
-                                    placeholder: (context, url) => const LinearProgressIndicator(),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                                    imageUrl:
+                                        "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image2.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    placeholder: (context, url) =>
+                                        const LinearProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   ),
                                 ),
                               ),
@@ -134,9 +136,12 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
                                   child: CachedNetworkImage(
                                     width: screenWidth,
                                     fit: BoxFit.cover,
-                                    imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
-                                    placeholder: (context, url) => const LinearProgressIndicator(),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                                    imageUrl:
+                                        "${MyConfig().SERVER}/MyUTK/assets/Hotel/${widget.hotel.hotelid?.toString() ?? 'default'}_image3.png?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    placeholder: (context, url) =>
+                                        const LinearProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   ),
                                 ),
                               ),
@@ -145,7 +150,9 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
                         ),
                       ),
                     ),
-                  const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                       child: Table(
@@ -153,95 +160,179 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
                           0: FlexColumnWidth(4),
                           1: FlexColumnWidth(5),
                         },
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
                         children: [
                           TableRow(children: [
                             const TableCell(
                               child: Text(
                                 "Hotel Name: ",
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 5),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
                               ),
                             ),
                             TableCell(
                               child: Text(
                                 widget.hotel.hotelname.toString(),
-                                style: TextStyle(fontSize: 16, height: 5),
+                                style: TextStyle(fontSize: 13, height: 3),
                               ),
                             )
                           ]),
-                          
-                             TableRow(children: [
-                                 TableCell(
-                                  child: ElevatedButton(
-                               onPressed: (){_launchUrl(widget.hotel.bookurl.toString());},
-                                
-                                      
-                               child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.directions, color: Colors.black,),
-                                            SizedBox(width: 8), // Adjust spacing between icon and text
-                                            Text(
-                                              "Booking",
-                                              style: TextStyle(fontSize: 16, color: Colors.black, height: 1),
-                                            ),
-                                          ],
-                                        ),
-                                style: ButtonStyle(
-                                                        backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),),
-                              ),
-                                ),
-                                
-                                TableCell(
-                                   child: ElevatedButton(
-                               onPressed: (){_launchUrl(widget.hotel.hotelurl.toString());},
-                                
-                                      
-                               child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.directions, color: Colors.black,),
-                                            SizedBox(width: 8), // Adjust spacing between icon and text
-                                            Text(
-                                              "Direction",
-                                              style: TextStyle(fontSize: 16, color: Colors.black, height: 1),
-                                            ),
-                                          ],
-                                        ),
-                                style: ButtonStyle(
-                                                        backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),),
-                              ),
-                                )
-                              ]), 
                           TableRow(children: [
-                              const TableCell(
-                                child: Text(
-                                  "Note: ",
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 2),
+                            const TableCell(
+                              child: Text(
+                                "State: ",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
                                 ),
                               ),
-                              TableCell(
-                                child: Text(
-                                  widget.hotel.note.toString(),
-                                  style: TextStyle(fontSize: 16, height: 2),
+                            ),
+                            TableCell(
+                              child: Text(
+                                widget.hotel.hotelstate.toString(),
+                                style: TextStyle(fontSize: 13, height: 3),
+                              ),
+                            )
+                          ]),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceEvenly, // Adjust as needed
+                      children: [
+                        SizedBox(
+                          width: 5,
+                        ),
+                        SizedBox(
+                          width: 160, // Adjust the width as needed
+                          height: 50, // Adjust the height as needed
+                          child: ElevatedButton(
+                            onPressed: () {
+                              String? hotelname = widget.hotel.hotelname != null
+                                  ? widget.hotel.hotelname.toString()
+                                  : null;
+                              print(hotelname);
+                              if (hotelname != null) {
+                                _launchGoogleMaps(hotelname);
+                              } else {
+                                print('Latitude or longitude value is null');
+                              }
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.directions,
+                                  color: Colors.black,
                                 ),
-                              )
-                            ]),
-                            
-                              TableRow(children: [
-                                const TableCell(
-                                  child: Text(
-                                    "State: ",
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 2),
-                                  ),
+                                // Adjust spacing between icon and text
+                                Text(
+                                  "Directions",
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      height: 1),
                                 ),
-                                TableCell(
-                                  child: Text(
-                                    widget.hotel.hotelstate.toString(),
-                                    style: TextStyle(fontSize: 16, height: 2),
-                                  ),
-                                )
-                              ]),
-                                   TableRow(children: [
+                              ],
+                            ),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.amber),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10), // Adjust spacing between buttons
+                        SizedBox(
+                          width: 160, // Adjust the width as needed
+                          height: 50, // Adjust the height as needed
+                          child: ElevatedButton(
+                            onPressed: () {
+                              String? bookinglink =
+                                  widget.hotel.bookingurl != null
+                                      ? widget.hotel.bookingurl.toString()
+                                      : null;
+                              print(bookinglink);
+                              if (bookinglink != null) {
+                                _launchbookinglink(bookinglink);
+                              } else {
+                                print(' null');
+                              }
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.directions,
+                                  color: Colors.black,
+                                ),
+                                // Adjust spacing between icon and text
+                                Text(
+                                  "Booking Link",
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      height: 1),
+                                ),
+                              ],
+                            ),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.amber),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                      child: Table(
+                        columnWidths: const {
+                          0: FlexColumnWidth(10),
+                        },
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: [
+                          TableRow(children: [
+                            const TableCell(
+                              child: Text(
+                                "Activity: ",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    height: 2),
+                              ),
+                            ),
+                          ]),
+                          TableRow(children: [
+                            TableCell(
+                              child: Text(
+                                widget.hotel.note.toString(),
+                                style: TextStyle(fontSize: 13, height: 2),
+                              ),
+                            )
+                          ]),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                      child: Table(
+                        columnWidths: const {
+                          0: FlexColumnWidth(4),
+                          1: FlexColumnWidth(5),
+                        },
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: [
+                          TableRow(children: [
                             TableCell(
                               child: Row(
                                 children: [
@@ -249,7 +340,10 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
                                     flex: 10,
                                     child: Text(
                                       "Estimate Budget: ",
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 2),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                          height: 2),
                                     ),
                                   ),
                                   Expanded(
@@ -269,69 +363,74 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
                                     flex: 2,
                                     child: Text(
                                       "Rate: ",
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 2),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                          height: 2),
                                     ),
                                   ),
                                   Expanded(
                                     flex: 5,
                                     child: Text(
                                       " ${double.parse(widget.hotel.hotelrate.toString()).toStringAsFixed(0)} /10",
-                                      style: TextStyle(fontSize: 16, height: 2),
+                                      style: TextStyle(fontSize: 13, height: 2),
                                     ),
                                   ),
-                                  
                                 ],
                               ),
                             ),
                           ]),
                           TableRow(children: [
-                                 TableCell(
-                                  child: Text(
-                                     "RM ${double.parse(widget.hotel.hotelbudget.toString()).toStringAsFixed(0)} per person",
-                                    style: TextStyle( fontSize: 16, ),
-                                  ),
+                            TableCell(
+                              child: Text(
+                                "RM ${double.parse(widget.hotel.hotelbudget.toString()).toStringAsFixed(0)} per person",
+                                style: TextStyle(
+                                  fontSize: 16,
                                 ),
-                                const TableCell(
-                                  child: Text(
-                                    "",
-                                    style: TextStyle(fontSize: 16, height: 2),
-                                  ),
-                                )
-                              ]),
-                             TableRow(children: [
-                                 const TableCell(
-                                  child: Text(
-                                      " ",
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, height: 2),
-                                    ),
-                                ),
-                                
-                                TableCell(
-                                    
-                                      
-                                          child: ElevatedButton(
-                                              onPressed: () async{
-                                                        
-                                                          await Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  
-                                                                  builder: (content) => admhotellistscreen(user: widget.user)
-                                                                
-                                                                ),
-                                                              );
-              },
-                                              child: const Text("Back",style: TextStyle(color: Colors.black), ),
-                                              style: ButtonStyle(
-                                                        backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),))
-                                )
-                              ]),   
-                              
+                              ),
+                            ),
+                            TableCell(
+                              child: Text(
+                                "",
+                                style: TextStyle(fontSize: 16, height: 2),
+                              ),
+                            )
+                          ]),
                         ],
                       ),
-                      
                     ),
- 
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceEvenly, // Adjust as needed
+                      children: [
+                        SizedBox(
+                          width: 5,
+                        ),
+
+                        SizedBox(width: 170), // Adjust spacing between buttons
+                        SizedBox(
+                          width: 150, // Adjust the width as needed
+                          height: 50, // Adjust the height as needed
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              "Back",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.amber),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 30),
                   ],
                 ),
               ),
@@ -341,12 +440,19 @@ class _AdmHotelDetailScreenState extends State<AdmHotelDetailScreen> {
       ),
     );
   }
-  Future<void> _launchUrl( urlString) async {
-    if (await canLaunch(urlString)) {
-      await launch(urlString);
-    } else {
-      throw 'Could not launch $urlString';
+
+  Future<void> _launchGoogleMaps(String hotelname) async {
+    final Uri _url =
+        Uri.parse('https://www.google.com/maps/search/?api=1&query=$hotelname');
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
+  }
+
+  Future<void> _launchbookinglink(String bookinglink) async {
+    final Uri _url = Uri.parse(bookinglink);
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
     }
   }
 }
-

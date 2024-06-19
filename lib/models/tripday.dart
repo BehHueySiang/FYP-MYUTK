@@ -13,6 +13,8 @@ class Tripday {
   String? desstate;
   String? desrate;
   String? desbudget;
+  String? latitude;
+  String? longtitude;
   String? tripname;
   String? triptype;
   String? tripstate;
@@ -36,6 +38,8 @@ class Tripday {
       this.desstate,
       this.desrate,
       this.desbudget,
+      this.latitude,
+      this.longtitude,
       this.tripname,
       this.triptype,
       this.tripstate,
@@ -57,6 +61,8 @@ class Tripday {
     desstate = json['Des_State'];
     desrate = json['Des_Rate'];
     desbudget = json['Des_Budget'];
+    latitude = json['Latitude'];
+    longtitude = json['Longtitude'];
     tripname = json['Trip_Name'];
     triptype = json['Trip_Type'];
     tripstate = json['Trip_State'];
@@ -81,6 +87,8 @@ class Tripday {
     data['Des_State'] = desstate;
     data['Des_Rate'] = desrate;
     data['Des_Budget'] = desbudget;
+    data['Latitude'] = latitude;
+    data['Longtitude'] = longtitude;
     data['Trip_Name'] = tripname;
     data['Trip_Type'] = triptype;
     data['Trip_State'] = tripstate;

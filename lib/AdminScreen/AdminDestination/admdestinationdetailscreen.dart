@@ -278,7 +278,6 @@ class _AdmDestinationDetailScreenState
                             
                           ]),
                           TableRow(children: [
-                             
                             TableCell(
                               child: Text(
                                 widget.destination.activity.toString(),
@@ -469,13 +468,12 @@ class _AdmDestinationDetailScreenState
   }
 
   Future<void> _launchGoogleMaps(double la, double long) async {
-    final String googleMapsUrl =
-        'https://www.google.com/maps/search/?api=1&query=$la,$long';
-    if (await canLaunch(googleMapsUrl)) {
-      await launch(googleMapsUrl);
-    } else {
-      print('Could not launch Google Maps URL');
-    }
+    final Uri _url = Uri.parse(
+        'https://www.google.com/maps/search/?api=1&query=$la,$long');
+    if (!await launchUrl(_url)) {
+      throw Exception ('Could not launch $_url');
+  
+    } 
   }
 
 }

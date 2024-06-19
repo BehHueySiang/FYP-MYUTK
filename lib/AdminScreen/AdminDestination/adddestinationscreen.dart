@@ -50,7 +50,7 @@ class _adddestinationscreenState extends State<adddestinationscreen> {
         ];
         String DesState = "Kedah";
         List<String> Statelist = [
-          "Kedah","Pulau Penang","Perlis"
+          "Kedah","Pulau Pinang","Perlis"
         ];
 
       @override

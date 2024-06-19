@@ -216,7 +216,7 @@ Widget build(BuildContext context) {
                               color: Colors.amber[100],
                               child: InkWell(
                                 onTap: () async {
-                                  Des destination =Des.fromJson(Deslist[index].toJson());
+                                  Des destination =Des.fromJson(Tripdaylist[index].toJson());
                                   await Navigator.push(context, MaterialPageRoute(builder: (content) => AdmDestinationDetailScreen(user: widget.user, destination: destination)));
                                   loaddes(1);
                                 },

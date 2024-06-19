@@ -11,6 +11,9 @@ class Homedes {
   String? desstate;
   String? desrate;
   String? desbudget;
+  String? latitude;
+  String? longtitude;
+
   
   Homedes(
       {this.hdesid, 
@@ -25,6 +28,8 @@ class Homedes {
       this.desstate,
       this.desrate,
       this.desbudget,
+       this.latitude,
+      this.longtitude
       });
 
   Homedes.fromJson(Map<String, dynamic> json) {
@@ -40,7 +45,8 @@ class Homedes {
     desstate = json['Des_State'];
     desrate = json['Des_Rate'];
     desbudget = json['Des_Budget'];
-    
+     latitude = json['Latitude'];
+    longtitude = json['Longtitude'];
     
   }
 
@@ -58,6 +64,8 @@ class Homedes {
     data['Des_State'] = desstate;
     data['Des_Rate'] = desrate;
     data['Des_Budget'] = desbudget;
+    data['Latitude'] = latitude;
+    data['Longtitude'] = longtitude;
     return data;
   }
 }

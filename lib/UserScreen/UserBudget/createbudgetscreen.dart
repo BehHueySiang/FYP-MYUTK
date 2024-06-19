@@ -39,39 +39,41 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
   }
 
   Future<void> fetchTripNames() async {
-    try {
-      final response =
-          await http.get(Uri.parse('${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php'));
+  try {
+     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php"),
+     body:{"userid": widget.user.id.toString()}
+    ).then((response){
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body)['data']['Usertrip'];
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body)['data']['Usertrip'];
 
-        List<String> names = [];
-        Map<String, String> idMap = {};
+      List<String> names = [];
+      Map<String, String> idMap = {};
 
-        data.forEach((item) {
-          String tripName = item['Trip_Name'].toString();
-          String tripId = item['Utrip_id'].toString();
-          names.add(tripName);
-          idMap[tripName] = tripId;
-        });
+      data.forEach((item) {
+        String tripName = item['Trip_Name'].toString();
+        String tripId = item['Utrip_id'].toString();
+        names.add(tripName);
+        idMap[tripName] = tripId;
+      });
 
-        setState(() {
-          tripNames = names;
-          tripIdMap = idMap;
-          if (tripNames.isNotEmpty) {
-            selectedTripName = tripNames[0]; // Initialize selected trip name
-            selectedTripId = tripIdMap[selectedTripName!]; // Initialize selected trip ID
-            loadusertrip(); // Load trip info for the initial selected trip
-          }
-        });
-      } else {
-        throw Exception('Failed to fetch trip names');
-      }
-    } catch (e) {
-      print('Error fetching trip names: $e');
-    }
+      setState(() {
+        tripNames = names;
+        tripIdMap = idMap;
+        if (tripNames.isNotEmpty) {
+          selectedTripName = tripNames[0]; // Initialize selected trip name
+          selectedTripId = tripIdMap[selectedTripName!]; // Initialize selected trip ID
+          loadusertrip(); // Load trip info for the initial selected trip
+        }
+      });
+    } else {
+      throw Exception('Failed to fetch trip names');
+    }});
+  } catch (e) {
+    print('Error fetching trip names: $e');
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -333,6 +335,7 @@ class _CreateBudgetScreenState extends State<CreateBudgetScreen> {
 
     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php"),
         body: {
+          "userid": widget.user.id.toString(),
           "tripid": selectedTripId!,
         }).then((response) {
       print(response.body);
@@ -392,6 +395,5 @@ class MinimumTotalBudgetWidget extends StatelessWidget {
     );
   }
 }
-
 
 

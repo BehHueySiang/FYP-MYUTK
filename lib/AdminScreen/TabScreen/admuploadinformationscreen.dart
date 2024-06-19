@@ -10,6 +10,7 @@ import 'package:myutk/ipconfig.dart';
 import 'package:myutk/EntryScreen/loginscreen.dart';
 import 'package:myutk/AdminScreen/AdminDestination/admdestinationlistscreen.dart';
 import 'package:myutk/AdminScreen/AdminHotel/admhotellistscreen.dart';
+import 'package:myutk/AdminScreen/AdminReview/admreviewlistscreen.dart';
 
 
 class admuploadinformationscreen extends StatefulWidget {
@@ -57,14 +58,9 @@ class _admuploadinformationscreenState extends State<admuploadinformationscreen>
                     "assets/images/Logo.png",
                   ),
          backgroundColor: Colors.amber[200],
+         automaticallyImplyLeading: false,
         actions: [
-        
-             IconButton(
-              onPressed: () {
-                
-              },
-              icon: const Icon(Icons.notifications_active)),
-       
+      
               
               ]
             ),
@@ -192,7 +188,7 @@ class _admuploadinformationscreenState extends State<admuploadinformationscreen>
                           await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (content) => admdestinationlistscreen(user: widget.user,)
+                              builder: (content) => AdmReviewListScreen(user: widget.user,)
                             ),
                           );},
                   child: Stack(

@@ -27,7 +27,7 @@ class _EditTripItineraryScreenState extends State<EditTripItineraryScreen> {
   int index = 0;
   List<String> triptypelist = ["One state Trip", "Two state Trip", "Three state Trip",];
   String triptype = "One state Trip";
-  List<String> statelist = ["Kedah", "Pulau Penang", "Perlis","Kedah + Perlis","Kedah + Pulau Penang","Pulau Penang + Perlis","Kedah + Pulau Penang + Perlis",];
+  List<String> statelist = ["Kedah", "Pulau Pinang", "Perlis","Kedah + Perlis","Kedah + Pulau Penang","Pulau Penang + Perlis","Kedah + Pulau Penang + Perlis",];
   String state = "Kedah";
   List<String> Daylist = ["1", "2", "3"];
   String daynum = "1";

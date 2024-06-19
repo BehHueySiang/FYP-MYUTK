@@ -7,36 +7,36 @@ import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 import 'package:myutk/Notification/sendnotificationscreen.dart';
-
-
-
+import 'package:myutk/Notification/notificationdetailscreen.dart';
 class NotificationScreen extends StatefulWidget {
   final User user;
-  
-  const NotificationScreen({super.key, required this.user,});
+
+  const NotificationScreen({
+    super.key,
+    required this.user,
+  });
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  Notify notification =  Notify();
+  Notify notification = Notify();
   late double screenHeight, screenWidth;
   TextEditingController _searchController = TextEditingController();
   late int axiscount = 2;
   late List<Widget> tabchildren;
-  String maintitle = "Notification"; 
+  String maintitle = "Notification";
   List<Notify> Notifylist = <Notify>[];
- 
+
   var color;
-  
+
   @override
   void initState() {
     super.initState();
     loadnotification();
     print("Notification Screen");
   }
-
 
   @override
   void dispose() {
@@ -55,117 +55,123 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-         title: Image.asset("assets/images/Logo.png"),
+        title: Image.asset("assets/images/Logo.png"),
         backgroundColor: Colors.amber[200],
-       
-        actions: [ Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 16.0), // Adjust the right padding as needed
-                  child: Container(
-                    height: 40.0, // Set the height of the search bar
-                    width: screenWidth * 0.35, // Set the width of the search bar
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: (keyword) {
-                        // You can perform search on each keystroke or update a debouncer for better performance
-                      },
-                      onSubmitted: (keyword) {
-                        //_performSearch(keyword);
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Search',
-                        labelStyle: TextStyle(color: Colors.black),
-                        filled: true,
-                        fillColor: Color.fromARGB(255, 252, 252, 252),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        suffixIcon: Icon(Icons.search),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-         
-        ],
-         
-      ),
-
-      
-      backgroundColor: Colors.amber[50],
-      
-      body: Column(children: [
-        const SizedBox(height: 20,),
-              Container(
-                width: screenWidth,
-                alignment: Alignment.center,
-                color: Color.fromARGB(255, 239, 219, 157),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Notification',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-             Expanded(
-  child: Notifylist.isEmpty
-      ? Center(
-          child: Text("No Data"),
-        )
-      : ListView.builder(
-          itemCount: Notifylist.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(6.0),
+        actions: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  right: 16.0), // Adjust the right padding as needed
               child: Container(
-                height: 80,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 2), // Outline color and width
-                  borderRadius: BorderRadius.circular(10), // Add border radius for rounded corners if desired
-                  color: Colors.amber[100],
-                ),
-                child: ListTile(
-                  onTap: () async {
-                    // Handle tap
+                height: 40.0, // Set the height of the search bar
+                width: screenWidth * 0.35, // Set the width of the search bar
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (keyword) {
+                    // You can perform search on each keystroke or update a debouncer for better performance
                   },
-                  
-                  title: Text(
-                    Notifylist[index].title.toString(),
-                    
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                  onSubmitted: (keyword) {
+                    //_performSearch(keyword);
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Search',
+                    labelStyle: TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 252, 252, 252),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
                     ),
-                    
-                  ),
-                  
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      onDeleteDialog(index); 
-                    },
+                    suffixIcon: Icon(Icons.search),
                   ),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          ),
+        ],
       ),
-     ]
-    ),
-  ); 
-}
+      backgroundColor: Colors.amber[50],
+      body: Column(children: [
+        const SizedBox(
+          height: 20,
+        ),
+        Container(
+          width: screenWidth,
+          alignment: Alignment.center,
+          color: Color.fromARGB(255, 239, 219, 157),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Notification',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+        Expanded(
+          child: Notifylist.isEmpty
+              ? Center(
+                  child: Text("No Data"),
+                )
+              : ListView.builder(
+                  itemCount: Notifylist.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Container(
+                        height: 80,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.black,
+                              width: 2), // Outline color and width
+                          borderRadius: BorderRadius.circular(
+                              10), // Add border radius for rounded corners if desired
+                          color: Colors.amber[100],
+                        ),
+                        child: ListTile(
+                          onTap: () async {
+                             Notify notify =Notifylist[index];
+                                                        
+                                            await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (content) =>
+                                                      NotificationDetailScreen(
+                                                          user: widget.user,
+                                                          notify:
+                                                              notify),
+                                                ));
+                          },
+                          title: Text(
+                            Notifylist[index].title.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              onDeleteDialog(index);
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ]),
+    );
+  }
 
   void loadnotification() {
     if (widget.user.id == "na") {
@@ -177,10 +183,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_notification.php"),
         body: {
-         "userid": widget.user.id.toString(),
-          
-          }).then((response) {
-            log(response.body);
+          "userid": widget.user.id.toString(),
+        }).then((response) {
+      log(response.body);
       print(response.body);
       //log(response.body);
       Notifylist.clear();
@@ -190,11 +195,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
           var extractdata = jsondata['data'];
           extractdata['Notify'].forEach((v) {
             Notifylist.add(Notify.fromJson(v));
-             
-          Notifylist.forEach((element) {
-           
-          });
 
+            Notifylist.forEach((element) {});
           });
           print(Notifylist[0].title);
         }
@@ -202,7 +204,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
       }
     });
   }
- void onDeleteDialog(int index) {
+
+  void onDeleteDialog(int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -240,9 +243,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   void deleteReview(int index) {
-    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/delete_notification.php"),
+    http.post(
+        Uri.parse("${MyConfig().SERVER}/MyUTK/php/delete_notification.php"),
         body: {
-         
           "NotificationId": Notifylist[index].notificationid
         }).then((response) {
       print(response.body);
@@ -260,7 +263,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       }
     });
   }
- /*void _performSearch(String keyword) {
+  /*void _performSearch(String keyword) {
   
     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_review.php"),
         body: {
@@ -284,5 +287,4 @@ class _NotificationScreenState extends State<NotificationScreen> {
     });
   
   }*/
-   
 }

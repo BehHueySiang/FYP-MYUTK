@@ -39,11 +39,11 @@ class _edithotelscreenState extends State<edithotelscreen> {
           TextEditingController();
       String hotelrate = "1";
         List<String> Ratelist = [
-          "1","2","3","4","5","6","7","8","9","10",
+          "1","2","3","4","5"
         ];
         String hotelstate = "Kedah";
         List<String> Statelist = [
-          "Kedah","Pulau Penang","Perlis"
+          "Kedah","Pulau Pinang","Perlis"
         ];
 
        @override
@@ -51,8 +51,7 @@ class _edithotelscreenState extends State<edithotelscreen> {
     super.initState();
     print('Debug destination: ${widget.hotel.toJson()}');
     _HotelnameEditingController.text = widget.hotel.hotelname.toString();
-    _BookUrlEditingController.text = widget.hotel.bookurl.toString();
-    _HotelUrlEditingController.text = widget.hotel.hotelurl.toString();
+    _BookUrlEditingController.text = widget.hotel.bookingurl.toString();
     _NoteEditingController.text = widget.hotel.note.toString();
     _HotelBudgetEditingController.text = widget.hotel.hotelbudget.toString();
     hotelrate = widget.hotel.hotelrate.toString();
@@ -193,23 +192,7 @@ class _edithotelscreenState extends State<edithotelscreen> {
                                   ),border: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),)),),
                                     const SizedBox(height: 20,),
-                     TextFormField(
-                              textInputAction: TextInputAction.next,
-                              validator: (val) =>
-                                  val!.isEmpty || (val.length < 3)
-                                      ? ""
-                                      : null,
-                              onFieldSubmitted: (v) {},
-                              controller: _HotelUrlEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Hotel Direction',
-                                  labelStyle: TextStyle(color: Colors.amber),
-                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),)),),
-                        const SizedBox(height: 20,),
+                     
                TextFormField(
                               textInputAction: TextInputAction.next,
                               
@@ -333,7 +316,6 @@ class _edithotelscreenState extends State<edithotelscreen> {
 void updatehotel() {
     String HotelName = _HotelnameEditingController.text;
     String BookUrl = _BookUrlEditingController.text;
-    String HotelUrl = _HotelUrlEditingController.text;
     String Note = _NoteEditingController.text;
     String HotelBudget = _HotelBudgetEditingController.text;
 
@@ -342,8 +324,7 @@ void updatehotel() {
           "userid": widget.user.id.toString(),
           "HotelId": widget.hotel.hotelid,
           "hotelname": HotelName,
-          "bookurl": BookUrl,
-          "hotelurl": HotelUrl,
+          "bookingurl": BookUrl,
           "note": Note,
           "hotelbudget": HotelBudget,
           "hotelstate": hotelstate,

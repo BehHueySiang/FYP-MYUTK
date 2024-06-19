@@ -11,19 +11,20 @@ import 'package:myutk/ipconfig.dart';
 import 'package:myutk/UserScreen/UserBudget/budgetlistdetailscreen.dart';
 import 'package:myutk/UserScreen/UserBudget/editbudgetscreen.dart';
 
-
-
 class BudgetTabScreen extends StatefulWidget {
   final User user;
-  
-  const BudgetTabScreen({super.key, required this.user,});
+
+  const BudgetTabScreen({
+    super.key,
+    required this.user,
+  });
 
   @override
   State<BudgetTabScreen> createState() => _BudgetTabScreenState();
 }
 
 class _BudgetTabScreenState extends State<BudgetTabScreen> {
-  Tripinfo tripinfo =Tripinfo();
+  Tripinfo tripinfo = Tripinfo();
   Budgetinfo budget = Budgetinfo();
   late double screenHeight, screenWidth;
   TextEditingController _searchController = TextEditingController();
@@ -33,10 +34,10 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
   int numofpage = 1, curpage = 1, numberofresult = 0, index = 0;
   List<Tripinfo> Tripinfolist = <Tripinfo>[];
   List<Budgetinfo> Budgetinfolist = <Budgetinfo>[];
-  List<Usertrip> usertripList =<Usertrip> [];
- 
+  List<Usertrip> usertripList = <Usertrip>[];
+
   var color;
-  
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +45,6 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
     loadusertrip();
     print("Budgettabscreen");
   }
-
 
   @override
   void dispose() {
@@ -63,199 +63,218 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-         title: Image.asset("assets/images/Logo.png"),
+        title: Image.asset("assets/images/Logo.png"),
         backgroundColor: Colors.amber[200],
         automaticallyImplyLeading: false,
-        actions: [ Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 16.0), // Adjust the right padding as needed
-                  child: Container(
-                    height: 40.0, // Set the height of the search bar
-                    width: screenWidth * 0.35, // Set the width of the search bar
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: (keyword) {
-                        // You can perform search on each keystroke or update a debouncer for better performance
-                      },
-                      onSubmitted: (keyword) {
-                       // _performSearch(keyword);
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Search',
-                        labelStyle: TextStyle(color: Colors.black),
-                        filled: true,
-                        fillColor: Color.fromARGB(255, 252, 252, 252),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        suffixIcon: Icon(Icons.search),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_active),
-          ),
-        ],
+        actions: [],
       ),
-
-      
       backgroundColor: Colors.amber[50],
       body: Column(children: [
-        const SizedBox(height: 20,),
-              Container(
-                width: screenWidth,
-                alignment: Alignment.center,
-                color: Color.fromARGB(255, 239, 219, 157),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Let's travel with own budget planning",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+        const SizedBox(
+          height: 20,
+        ),
+        Container(
+          width: screenWidth,
+          alignment: Alignment.center,
+          color: Color.fromARGB(255, 239, 219, 157),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Let's travel with own budget planning",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+        SizedBox(height: 20),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: EdgeInsets.only(
+                right: 16.0), // Adjust the right padding as needed
+            child: Container(
+              height: 40.0, // Set the height of the search bar
+              width: screenWidth * 0.5, // Set the width of the search bar
+              child: TextField(
+                controller: _searchController,
+                onChanged: (keyword) {
+                  // You can perform search on each keystroke or update a debouncer for better performance
+                },
+                onSubmitted: (keyword) {
+                  _performSearch(keyword);
+                },
+                decoration: InputDecoration(
+                  labelText: 'Search',
+                  labelStyle: TextStyle(color: Colors.black),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 244, 217, 138),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  suffixIcon: Icon(Icons.search),
+                ),
               ),
-              SizedBox(height: 20),
-             
-              const SizedBox(height: 10,),
-           Expanded(
-            
-            child: Budgetinfolist.isEmpty
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Expanded(
+          child: Budgetinfolist.isEmpty
               ? Center(
                   child: Text("No Data"),
                 )
-: GridView.builder(
+              : GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: axiscount,
+                    childAspectRatio: (6 /
+                        2), // Adjust this value according to your images aspect ratio
+                    // You may need to adjust childAspectRatio according to your item's aspect ratio
+                  ),
+                  itemCount: Budgetinfolist.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      // Padding highlighted
+                      padding: const EdgeInsets.all(8.0),
 
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: axiscount, 
-      childAspectRatio: (6/ 2), // Adjust this value according to your images aspect ratio
-      // You may need to adjust childAspectRatio according to your item's aspect ratio
-    ),
-    itemCount: Budgetinfolist.length,
-    itemBuilder: (context, index) {
-      return Padding( // Padding highlighted
-      padding: const EdgeInsets.all(8.0),
-     
-        
-        child:SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Card(
-          child: InkWell(
-                     onTap: () async {
-                        Budgetinfo budgetinfo = Budgetinfo.fromJson(Budgetinfolist[index].toJson());
-                        int budgetid = int.parse(Budgetinfolist[index].budgetid.toString());
-                        await Navigator.push(context, MaterialPageRoute(builder: (content) => 
-                        BudgetListDetailScreen(user: widget.user, budgetinfo: budgetinfo , Budgetid: budgetid, ),));
-                      },
-          child: Container(
-            width: 550, // Set the width of the Card
-    height: 600, //
-          child: Row(
-            children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  ColorFiltered(
-                    colorFilter: ColorFilter.mode(
-                      Colors.white.withOpacity(0.8), // Adjust the opacity level here (0.0 - 1.0)
-                      BlendMode.srcOver,
-                    ),
-                    child:  CachedNetworkImage(
-                              width: 400, // Adjust image width as needed
-                              height: 200,
-                              fit: BoxFit.cover,
-                              imageUrl: "${MyConfig().SERVER}/MyUTK/assets/Budget/${Budgetinfolist[index].budgetid.toString()}_image.png?v=${DateTime.now().millisecondsSinceEpoch}",////////
-                            
-                            ),
-                            
-                  ),
-                  Positioned(
-                    child: Text(
-                      Budgetinfolist[index].budgetname.toString(),
-                      style: const TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),Stack(children:[Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-             
-                children:  [
-                  IconButton(
-                    icon: Icon(Icons.visibility),
-                    onPressed: () {
-                      // Handle view action
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () async{
-                    
-              
-              Budgetinfo budgetinfo =Budgetinfo.fromJson(Budgetinfolist[index].toJson());
-                          await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                
-                                  builder: (content) => EditBudgetScreen(user: widget.user, budgetinfo: budgetinfo),
-                                      ));
-                                      loadbudgetinfo();           
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      onDeleteDialog(index);
-                       loadbudgetinfo();
-                                        },
+                      child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Card(
+                              child: InkWell(
+                            onTap: () async {
+                              Budgetinfo budgetinfo = Budgetinfolist[index];
+                              int? budgetid =
+                                  int.tryParse(budgetinfo.budgetid.toString());
+                              if (budgetid != null) {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (content) =>
+                                        BudgetListDetailScreen(
+                                      user: widget.user,
+                                      budgetinfo: budgetinfo,
+                                      Budgetid: budgetid,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                // Handle the error or show a message to the user
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Invalid budget ID")),
+                                );
+                              }
+                            },
+                            child: Container(
+                              width: 450, // Set the width of the Card
+                              height: 600, //
+                              child: Row(
+                                children: [
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      ColorFiltered(
+                                        colorFilter: ColorFilter.mode(
+                                          Colors.white.withOpacity(
+                                              0.8), // Adjust the opacity level here (0.0 - 1.0)
+                                          BlendMode.srcOver,
+                                        ),
+                                        child: CachedNetworkImage(
+                                          width:
+                                              350, // Adjust image width as needed
+                                          height: 200,
+                                          fit: BoxFit.cover,
+                                          imageUrl:
+                                              "${MyConfig().SERVER}/MyUTK/assets/Budget/${Budgetinfolist[index].budgetid.toString()}_image.png?v=${DateTime.now().millisecondsSinceEpoch}", ////////
+                                        ),
+                                      ),
+                                      Positioned(
+                                        child: Text(
+                                          Budgetinfolist[index]
+                                              .budgetname
+                                              .toString(),
+                                          style: const TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ]
+                                  Stack(children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        
+                                        IconButton(
+                                          icon: Icon(Icons.edit),
+                                          onPressed: () async {
+                                            Budgetinfo budgetinfo =
+                                                Budgetinfo.fromJson(
+                                                    Budgetinfolist[index]
+                                                        .toJson());
+                                            await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (content) =>
+                                                      EditBudgetScreen(
+                                                          user: widget.user,
+                                                          budgetinfo:
+                                                              budgetinfo),
+                                                ));
+                                            loadbudgetinfo();
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.delete),
+                                          onPressed: () {
+                                            onDeleteDialog(index);
+                                            loadbudgetinfo();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ]),
+                                ],
                               ),
-              
-                            ],
-                           ),
-                          ),
-                         )
-                        ) 
-                      ),
-                     ); 
-                    },
-                   ),
-                  ),
-                 ]
+                            ),
+                          ))),
+                    );
+                  },
                 ),
-                floatingActionButton: FloatingActionButton(
-                    onPressed: () async {
-                      if (widget.user.id != "na") {
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (content) => CreateBudgetScreen(user: widget.user, ),
-                                    ));
-                        loadbudgetinfo();
-                         } else {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text("Please login/register an account")));
-                      }
-                    },
-                    child: const Text(
-                      "+",
-                      style: TextStyle(fontSize: 32),
-                    ),backgroundColor: Colors.amber,),
-          
-          ); 
+        ),
+      ]),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          if (widget.user.id != "na") {
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (content) => CreateBudgetScreen(
+                    user: widget.user,
+                  ),
+                ));
+            loadbudgetinfo();
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Please login/register an account")));
+          }
+        },
+        child: const Text(
+          "+",
+          style: TextStyle(fontSize: 32),
+        ),
+        backgroundColor: Colors.amber,
+      ),
+    );
   }
 
   void loadbudgetinfo() {
@@ -268,24 +287,20 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
 
     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetinfo.php"),
         body: {
-         "userid": widget.user.id.toString(),
-          }).then((response) {
+          "userid": widget.user.id.toString(),
+        }).then((response) {
+      print(widget.user.id);
       print(response.body);
       //log(response.body);
       Budgetinfolist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
-          
-       
           var extractdata = jsondata['data'];
           extractdata['Budgetinfo'].forEach((v) {
             Budgetinfolist.add(Budgetinfo.fromJson(v));
-             
-          Budgetinfolist.forEach((element) {
-           
-          });
 
+            Budgetinfolist.forEach((element) {});
           });
           print(Budgetinfolist[0].budgetname);
         }
@@ -293,6 +308,7 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
       }
     });
   }
+
   void onDeleteDialog(int index) {
     showDialog(
       context: context,
@@ -343,21 +359,18 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
         if (jsondata['status'] == "success") {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Delete Success")));
-         loadbudgetinfo();
+          loadbudgetinfo();
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Failed")));
         }
       }
     });
-  } 
-  void loadusertrip() {
-    
+  }
 
+  void loadusertrip() {
     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loaduseritinerary.php"),
-        body: {
-          
-        }).then((response) {
+        body: {}).then((response) {
       print(response.body);
       usertripList.clear();
       if (response.statusCode == 200) {
@@ -375,6 +388,23 @@ class _BudgetTabScreenState extends State<BudgetTabScreen> {
     });
   }
 
-
-   
+  void _performSearch(String keyword) {
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetinfo.php"),
+        body: {"userid": widget.user.id, "search": keyword}).then((response) {
+      //print(response.body);
+      print(response.body);
+      Budgetinfolist.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          var extractdata = jsondata['data'];
+          extractdata['BudgetInfo'].forEach((v) {
+            Budgetinfolist.add(Budgetinfo.fromJson(v));
+          });
+          print(Budgetinfolist[0].budgetname);
+        }
+        setState(() {});
+      }
+    });
+  }
 }

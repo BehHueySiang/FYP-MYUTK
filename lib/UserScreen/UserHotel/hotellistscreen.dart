@@ -202,31 +202,53 @@ class _HotelListScreenState extends State<HotelListScreen> {
                   ),
                 ),
               SizedBox(
-                height: 50,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: numofpage,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    //build the list for textbutton with scroll
-                    if ((curpage - 1) == index) {
-                      //set current page number active
-                      color = Colors.amber[800];
-                    } else {
-                      color = Colors.black;
-                    }
-                    return TextButton(
-                        onPressed: () {
-                          curpage = index + 1;
-                          loadhotel(index + 1);
-                        },
-                        child: Text(
-                          (index + 1).toString(),
-                          style: TextStyle(color: color, fontSize: 18),
-                        ));
-                  },
-                ),
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Previous page button
+                  TextButton(
+                    onPressed: curpage > 1
+                        ? () {
+                            setState(() {
+                              curpage--;
+                              loadhotel(curpage);
+                            });
+                          }
+                        : null,
+                    child: Text(
+                      "<<",
+                      style: TextStyle(
+                        color: curpage > 1 ? Colors.black : Colors.grey,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    curpage.toString(),
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                  ),
+                  // Next page button
+                  TextButton(
+                    onPressed: curpage < numofpage
+                        ? () {
+                            setState(() {
+                              curpage++;
+                              loadhotel(curpage);
+                            });
+                          }
+                        : null,
+                    child: Text(
+                      ">>",
+                      style: TextStyle(
+                        color: curpage < numofpage ? Colors.black : Colors.grey,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
               ),
+            ),
             ]),
       floatingActionButton: FloatingActionButton(
           onPressed: () async {

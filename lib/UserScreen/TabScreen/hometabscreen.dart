@@ -19,6 +19,10 @@ import 'package:myutk/ipconfig.dart';
 import 'package:myutk/UserScreen/UserDestination/destinationlistscreen.dart';
 import 'package:myutk/UserScreen/UserItinerary/AddUserTripscreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:myutk/AdminScreen/AdminDestination/admdestinationdetailscreen.dart';
+import 'package:myutk/UserScreen/UserItinerary/homeitinerarylistdetail.dart';
+import 'package:myutk/AdminScreen/AdminHotel/admhoteldetailscreen.dart';
+import 'package:myutk/UserScreen/UserReview/reviewdetailscreen.dart';
 
 import 'package:badges/badges.dart' as Badges;
 
@@ -94,7 +98,7 @@ class _hometabscreenState extends State<hometabscreen> {
           backgroundColor: Colors.amber[200],
           automaticallyImplyLeading: false,
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+            
             Notifylist.isNotEmpty
                 ? Align(
                     alignment: Alignment.center,
@@ -209,7 +213,19 @@ class _hometabscreenState extends State<hometabscreen> {
                       child: Card(
                         color: Color.fromARGB(255, 238, 216, 150),
                         child: InkWell(
-                          onTap: () async {},
+                          onTap: () async {
+                            // Ensure the correct destination is passed
+                            Des destination = Des.fromJson(Hdeslist[index].toJson());
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (content) => AdmDestinationDetailScreen(
+                                  user: widget.user,
+                                  destination: destination,
+                                ),
+                              ),
+                            );
+                          },
                           child: Column(
                             children: [
                               CachedNetworkImage(
@@ -361,7 +377,18 @@ class _hometabscreenState extends State<hometabscreen> {
                       child: Card(
                         color: Color.fromARGB(255, 238, 216, 150),
                         child: InkWell(
-                          onTap: () async {},
+                          onTap: () async {
+                            Tripinfo tripinfo =
+                                Tripinfo.fromJson(Htriplist[index].toJson());
+                            await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (content) =>
+                                      HomeItineraryListDetailScreen(
+                                          user: widget.user,
+                                          tripinfo: tripinfo),
+                                ));
+                          },
                           child: Column(
                             children: [
                               CachedNetworkImage(
@@ -467,7 +494,15 @@ class _hometabscreenState extends State<hometabscreen> {
                       child: Card(
                         color: Color.fromARGB(255, 238, 216, 150),
                         child: InkWell(
-                          onTap: () async {},
+                          onTap: () async {
+                            Hotel hotel =
+                                Hotel.fromJson(Hhotellist[index].toJson());
+                            await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (content) => AdmHotelDetailScreen(
+                                        user: widget.user, hotel: hotel)));
+                          },
                           child: Column(
                             children: [
                               CachedNetworkImage(
@@ -570,7 +605,15 @@ class _hometabscreenState extends State<hometabscreen> {
                         color: Color.fromARGB(255, 238, 216, 150),
                         child: InkWell(
                           onTap: () async {
-                            loadhreview();
+                            Review review = Review.fromJson(
+                                        Reviewlist[index].toJson());
+                                    await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (content) =>
+                                                ReviewDetailScreen(
+                                                    user: widget.user,
+                                                    review: review)));
                           },
                           child: Column(
                             children: [
@@ -677,57 +720,55 @@ class _hometabscreenState extends State<hometabscreen> {
   }
 
   //Homedes backend
-  void loaddes(int pageno) {
-    if (widget.user.id == "na") {
-      setState(() {
-        // titlecenter = "Unregistered User";
-      });
-      return;
+ void loaddes(int pageno) {
+  if (widget.user.id == "na") {
+    setState(() {
+      // titlecenter = "Unregistered User";
+    });
+    return;
+  }
+
+  http.post(
+    Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
+    body: {"pageno": pageno.toString()},
+  ).then((response) {
+    print(response.body);
+    Deslist.clear();
+    if (response.statusCode == 200) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        numofpage = int.parse(jsondata['numofpage']); // get number of pages
+        numberofresult = int.parse(jsondata['numberofresult']);
+        var extractdata = jsondata['data'];
+        extractdata['Des'].forEach((v) {
+          Deslist.add(Des.fromJson(v));
+        });
+      }
+      setState(() {});
     }
+  });
+}
 
-    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/load_des.php"),
-        body: {"pageno": pageno.toString()}).then((response) {
-      print(response.body);
-      //log(response.body);
-      Deslist.clear();
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == "success") {
-          numofpage = int.parse(jsondata['numofpage']); //get number of pages
-          numberofresult = int.parse(jsondata['numberofresult']);
-          print(numberofresult);
-          var extractdata = jsondata['data'];
-          extractdata['Des'].forEach((v) {
-            Deslist.add(Des.fromJson(v));
-
-            Deslist.forEach((element) {});
-          });
-        }
-        setState(() {});
+// Function to Load Home Destinations
+void loadhdes() {
+  http.post(
+    Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadhomedes.php"),
+    body: {"userid": widget.user.id},
+  ).then((response) {
+    print(response.body);
+    Hdeslist.clear();
+    if (response.statusCode == 200) {
+      var jsondata = jsonDecode(response.body);
+      if (jsondata['status'] == "success") {
+        var extractdata = jsondata['data'];
+        extractdata['Homedes'].forEach((v) {
+          Hdeslist.add(Homedes.fromJson(v));
+        });
       }
-    });
-  }
-
-  void loadhdes() {
-    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadhomedes.php"),
-        body: {}).then((response) {
-      print(response.body);
-      //log(response.body);
-      Hdeslist.clear();
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == "success") {
-          var extractdata = jsondata['data'];
-          extractdata['Homedes'].forEach((v) {
-            Hdeslist.add(Homedes.fromJson(v));
-
-            Hdeslist.forEach((element) {});
-          });
-        }
-        setState(() {});
-      }
-    });
-  }
+      setState(() {});
+    }
+  });
+}
 
   //Homedes backend
 

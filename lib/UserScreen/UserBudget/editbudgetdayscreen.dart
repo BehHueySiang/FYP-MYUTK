@@ -10,14 +10,16 @@ import 'package:myutk/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myutk/ipconfig.dart';
 
-
-
 class EditBudgetDayScreen extends StatefulWidget {
   final User user;
-  final String budgetinfo;
+  final Budgetinfo budgetinfo;
   final Budgetday budgetday;
-  
-  const EditBudgetDayScreen({super.key, required this.user,required this.budgetinfo, required this.budgetday});
+
+  const EditBudgetDayScreen(
+      {super.key,
+      required this.user,
+      required this.budgetinfo,
+      required this.budgetday});
 
   @override
   State<EditBudgetDayScreen> createState() => _EditBudgetDayScreenState();
@@ -30,25 +32,27 @@ class _EditBudgetDayScreenState extends State<EditBudgetDayScreen> {
   late int axiscount = 2;
   late List<Widget> tabchildren;
   String maintitle = "Adm Destination List";
-    int numofpage = 1, curpage = 1, numberofresult = 0, index = 0;
+  int numofpage = 1, curpage = 1, numberofresult = 0, index = 0;
   List<Des> Deslist = <Des>[];
-    List<Budgetinfo> Budgetinfolist = <Budgetinfo>[];
-   String expendtype = "Destination";
-        List<String> expendtypelist = [
-          "Destination","Food","Accommodation","Souviner","other"
-        ];
-   String Budgetday = "1";
-        List<String> bdaylist= [
-          "1","2","3"
-        ];
-  
+  List<Budgetinfo> Budgetinfolist = <Budgetinfo>[];
+  String expendtype = "Destination";
+  List<String> expendtypelist = [
+    "Destination",
+    "Food",
+    "Accommodation",
+    "Souviner",
+    "other"
+  ];
+  String Budgetday = "1";
+  List<String> bdaylist = ["1", "2", "3"];
+
   final TextEditingController _ExpendAmountEditingController =
       TextEditingController();
   final TextEditingController _ExpendNameEditingController =
       TextEditingController();
- 
+
   var color;
-  
+
   @override
   void initState() {
     super.initState();
@@ -56,10 +60,10 @@ class _EditBudgetDayScreenState extends State<EditBudgetDayScreen> {
     expendtype = widget.budgetday.expendtype.toString();
     _ExpendNameEditingController.text = widget.budgetday.expendname.toString();
     Budgetday = widget.budgetday.bdayname.toString();
-    _ExpendAmountEditingController.text = widget.budgetday.expendamount.toString();
+    _ExpendAmountEditingController.text =
+        widget.budgetday.expendamount.toString();
     print("Add Expenditure");
   }
-
 
   @override
   void dispose() {
@@ -78,39 +82,44 @@ class _EditBudgetDayScreenState extends State<EditBudgetDayScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text(maintitle,style: TextStyle(color: Colors.black,),),
-         backgroundColor: Colors.amber[200],
+        title: Text(
+          maintitle,
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: Colors.amber[200],
       ),
-
-      
       backgroundColor: Colors.amber[50],
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(children: [
-        const SizedBox(height: 20,),
-              Container(
-                width: screenWidth,
-                alignment: Alignment.center,
-                color: Color.fromARGB(255, 239, 219, 157),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Add Expenditure',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            width: screenWidth,
+            alignment: Alignment.center,
+            color: Color.fromARGB(255, 239, 219, 157),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Add Expenditure',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
+                ],
               ),
-              SizedBox(height: 20),
-                SizedBox(
-           height: screenHeight / 3, 
-           child:  GestureDetector(
+            ),
+          ),
+          SizedBox(height: 20),
+          SizedBox(
+            height: screenHeight / 3,
+            child: GestureDetector(
               onTap: () {
                 _selectFromCamera();
               },
@@ -119,166 +128,116 @@ class _EditBudgetDayScreenState extends State<EditBudgetDayScreen> {
                 child: Card(
                   child: Container(
                       width: screenWidth,
-                    decoration: BoxDecoration(
+                      decoration: BoxDecoration(
                         image: DecorationImage(
-                        image: _image == null
-                        ? NetworkImage(MyConfig().SERVER+"/MyUTK/assets/BudgetDay/"+widget.budgetday.bdayid.toString() +"_image.png")
-                        : FileImage(_image!) as ImageProvider,
-                        fit: BoxFit.fill,
+                          image: _image == null
+                              ? NetworkImage(MyConfig().SERVER +
+                                  "/MyUTK/assets/BudgetDay/" +
+                                  widget.budgetday.bdayid.toString() +
+                                  "_image.png")
+                              : FileImage(_image!) as ImageProvider,
+                          fit: BoxFit.fill,
                         ),
-                        )
-                      ),
+                      )),
                 ),
               ),
-            ),),
-     SizedBox(
-                    height: 60,
-                    child: DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Expenditure Type',
-                        labelStyle: TextStyle(color: Colors.amber),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2.0),
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2.0),
-                        ),
-                      ),
-                      value: expendtype,
-                      onChanged: (newValue) {
-                        setState(() {
-                          expendtype = newValue!;
-                          print(expendtype);
-                        });
-                      },
-                      items: expendtypelist.map((expendtype) {
-                        return DropdownMenuItem(
-                          value: expendtype,
-                          child: Text(expendtype),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-              const SizedBox(height: 20),
-                TextFormField(
-                              textInputAction: TextInputAction.next,
-                              onFieldSubmitted: (v) {},
-                              controller: _ExpendNameEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Expenditure Name',
-                                  labelStyle: TextStyle(color: Colors.amber),
-                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),)),),
-                                    const SizedBox(height: 20,),
-                   const SizedBox(height: 20),
-                TextFormField(
-                              textInputAction: TextInputAction.next,
-                              onFieldSubmitted: (v) {},
-                              controller: _ExpendAmountEditingController,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                  labelText: 'Expenditure Amount',
-                                  labelStyle: TextStyle(color: Colors.amber),
-                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),)),),
-                                    const SizedBox(height: 20,),
-                 Row(
-                    mainAxisAlignment: MainAxisAlignment.end, // Aligns children to the start (left) of the row
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                           updatetripinfo();
-                        },
-                        child: const Text(
-                          "Update",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),
-                        ),
-                      ),
-                      // Add other widgets here if needed
-                    ],
-                  )
-
-
-             ]
-            ),),
-          ); 
-  }
-
-  
-  
-                          
-   void _showAddToTripDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Add to Budget"),
-          content: SingleChildScrollView(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Text("Please select day you want to add this expense to? "),
-              const SizedBox(height: 15,),
-               SizedBox(
-                              height: 60,
-                              child: DropdownButtonFormField(
-                                decoration: const InputDecoration(
-                                  labelText: 'Days',
-                                  labelStyle: TextStyle(color: Colors.black),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(width: 2.0),
-                                  ),
-                                ),
-                                value: Budgetday,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    Budgetday = newValue!;
-                                    print(Budgetday);
-                                  });
-                                },
-                                items: bdaylist.map((Budgetday) {
-                                  return DropdownMenuItem(
-                                    value: Budgetday,
-                                    child: Text(
-                                      Budgetday,
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),])),
-          actions: <Widget>[
-            
-            TextButton(
-              child: Text("Yes"),
-              onPressed: () {
-                
-                updatebudgetday();
-                updatetripinfo();
+            ),
+          ),
+          SizedBox(
+            height: 60,
+            child: DropdownButtonFormField(
+              decoration: const InputDecoration(
+                labelText: 'Expenditure Type',
+                labelStyle: TextStyle(color: Colors.amber),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                ),
+              ),
+              value: expendtype,
+              onChanged: (newValue) {
+                setState(() {
+                  expendtype = newValue!;
+                  print(expendtype);
+                });
+              },
+              items: expendtypelist.map((expendtype) {
+                return DropdownMenuItem(
+                  value: expendtype,
+                  child: Text(expendtype),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (v) {},
+            controller: _ExpendNameEditingController,
+            keyboardType: TextInputType.text,
+            decoration: const InputDecoration(
+                labelText: 'Expenditure Name',
+                labelStyle: TextStyle(color: Colors.amber),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                )),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (v) {},
+            controller: _ExpendAmountEditingController,
+            keyboardType: TextInputType.text,
+            decoration: const InputDecoration(
+                labelText: 'Expenditure Amount',
+                labelStyle: TextStyle(color: Colors.amber),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                )),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment
+                .end, // Aligns children to the start (left) of the row
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                   updatebudgetday();
+                   
               
-                
-                
-              },
-            ),
-            TextButton(
-              child: Text("No"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+
+                 
+                },
+                child: const Text(
+                  "Update",
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.amber),
+                ),
+              ),
+              // Add other widgets here if needed
+            ],
+          )
+        ]),
+      ),
     );
   }
+
   Future<void> _selectFromCamera() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
@@ -328,8 +287,7 @@ class _EditBudgetDayScreenState extends State<EditBudgetDayScreen> {
     }
   }
 
-
-void loadbudgetinfo(int index) {
+  void loadbudgetinfo(int index) {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -340,24 +298,18 @@ void loadbudgetinfo(int index) {
     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/loadbudgetinfo.php"),
         body: {
           "userid": widget.user.id.toString(),
-         
-          }).then((response) {
+        }).then((response) {
       print(response.body);
       //log(response.body);
       Budgetinfolist.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
-          
-       
           var extractdata = jsondata['data'];
           extractdata['Budgetinfo'].forEach((v) {
             Budgetinfolist.add(Budgetinfo.fromJson(v));
-             
-          Budgetinfolist.forEach((element) {
-           
-          });
 
+            Budgetinfolist.forEach((element) {});
           });
           print(Budgetinfolist[0].budgetname);
         }
@@ -366,76 +318,69 @@ void loadbudgetinfo(int index) {
     });
   }
 
-  void updatebudgetday() {
-    String base64Image = base64Encode(_image!.readAsBytesSync());
+    Future<void>  updatebudgetday() async {
     String expendname = _ExpendNameEditingController.text;
     String expendamount = _ExpendAmountEditingController.text;
 
-    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatetripinfo.php"),
+    http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatebudgetday.php"),
         body: {
-           "userid": widget.user.id,
-          "Budget_id": widget.budgetinfo,
-          "Bday_Name": Budgetday,
+          "userid": widget.user.id,
+          "Budget_id": widget.budgetday.bdayid,
           "Expend_Type": expendtype,
           "Expend_Name": expendname,
           "Expend_Amount": expendamount,
-          "image": base64Image
-          
-          
+        }).then((response) {
+      print(response.body);
+      print(
+        widget.user.id,
+      );
+      print(
+        widget.budgetday.bdayid,
+      );
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == 'success') {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Update Successfully")));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text("Failed")));
+        }
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Failed")));
+        Navigator.pop(context);
+      }
+    });
+  }
+
+    Future<void>  updatetripinfo() async{
+    String expendamount = _ExpendAmountEditingController.text;
+    http.post(
+        Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatetotalexpenditure.php"),
+        body: {
+          "Budgetid": widget.budgetinfo.budgetid.toString(),
+          "Total_Expenditure": expendamount,
+          "action": 'add',
         }).then((response) {
       print(response.body);
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == 'success') {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Insert Successfully")));
-         
-              
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Insert Failed")));
-        }
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Insert Failed")));
-        Navigator.pop(context);
-      }
-    });
-  }
-  
-
-void updatetripinfo()  {
- 
-    
-     String expendamount = _ExpendAmountEditingController.text;
-     http.post(Uri.parse("${MyConfig().SERVER}/MyUTK/php/updatetotalexpenditure.php"),
-        body: {
-          "Budgetid" : widget.budgetinfo,
-          "Total_Expenditure": expendamount,
-          "action": 'add',
-          
-         }).then((response) {
-      print(response.body);
-      if (response.statusCode == 200) {
-        var jsondata = jsonDecode(response.body);
-        if (jsondata['status'] == 'success') {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Insert Successfully")));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Update total expenditure Successfully")));
           loadbudgetinfo(index);
-              
         } else {
           ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Insert Failed")));
+              .showSnackBar(const SnackBar(content: Text("Failed")));
         }
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Insert Failed")));
+            .showSnackBar(const SnackBar(content: Text("Failed")));
         Navigator.pop(context);
       }
     });
   }
- 
-   
 }

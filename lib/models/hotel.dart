@@ -2,8 +2,7 @@ class Hotel {
   String? hotelid;
   String? userId;
   String? hotelname;
-  String? bookurl;
-  String? hotelurl;
+  String? bookingurl;
   String? note;
   String? hotelstate;
   String? hotelbudget;
@@ -15,8 +14,7 @@ class Hotel {
       {this.hotelid,
       this.userId,
       this.hotelname,
-      this.bookurl,
-      this.hotelurl,
+      this.bookingurl,
       this.note,
       this.hotelstate,
       this.hotelbudget,
@@ -26,8 +24,7 @@ class Hotel {
     hotelid = json['Hotel_id'];
     userId = json['userid'];
     hotelname = json['Hotel_Name'];
-    bookurl = json['Book_Url'];
-    hotelurl = json['Hotel_Url'];
+    bookingurl = json['Booking_Url'];
     note = json['Note'];
     hotelstate = json['Hotel_State'];
     hotelbudget = json['Hotel_Budget'];
@@ -41,8 +38,7 @@ class Hotel {
     data['Hotel_id'] = hotelid;
     data['user_id'] = userId;
     data['Hotel_Name'] = hotelname;
-    data['Book_Url'] = bookurl;
-    data['Hotel_Url'] = hotelurl;
+    data['Booking_Url'] = bookingurl;
     data['Note'] = note;
     data['Hotel_State'] = hotelstate;
     data['Hotel_Budget'] = hotelbudget;
